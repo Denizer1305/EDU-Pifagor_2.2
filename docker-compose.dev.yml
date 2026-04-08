@@ -1,0 +1,99 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: pifagor-db-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: pifagor-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/docker/backend/Dockerfile
+    container_name: pifagor-backend-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: sh /app/deploy/docker/backend/entrypoint.sh
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: deploy/docker/backend/Dockerfile
+    container_name: pifagor-celery-worker-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: celery -A backend.config.celery_app app worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - backend
+      - redis
+      - db
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: deploy/docker/backend/Dockerfile
+    container_name: pifagor-celery-beat-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: celery -A backend.config.celery_app app beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - backend
+      - redis
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/docker/frontend/Dockerfile
+    container_name: pifagor-frontend-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/frontend/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_dev_data:

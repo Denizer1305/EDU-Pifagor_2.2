@@ -1,0 +1,100 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: pifagor-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: pifagor-redis
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/docker/backend/Dockerfile
+    container_name: pifagor-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: gunicorn backend.config.wsgi:application --bind 0.0.0.0:8000
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - static_data:/app/backend/staticfiles
+      - media_data:/app/backend/media
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: deploy/docker/backend/Dockerfile
+    container_name: pifagor-celery-worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: celery -A backend.config.celery_app app worker --loglevel=info
+    depends_on:
+      - backend
+      - redis
+      - db
+    volumes:
+      - media_data:/app/backend/media
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: deploy/docker/backend/Dockerfile
+    container_name: pifagor-celery-beat
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: celery -A backend.config.celery_app app beat --loglevel=info
+    depends_on:
+      - backend
+      - redis
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/docker/frontend/Dockerfile
+    container_name: pifagor-frontend
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: .
+      dockerfile: deploy/docker/nginx/Dockerfile
+    container_name: pifagor-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - static_data:/app/backend/staticfiles
+      - media_data:/app/backend/media
+
+volumes:
+  postgres_data:
+  static_data:
+  media_data:
