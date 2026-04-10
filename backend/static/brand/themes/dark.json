@@ -1,0 +1,7 @@
+{
+  "name": "dark",
+  "display_name": "dark",
+  "logo_dir": "brand/logo/dark",
+  "watermark_dir": "brand/watermarks/dark",
+  "document_mode": "light"
+}

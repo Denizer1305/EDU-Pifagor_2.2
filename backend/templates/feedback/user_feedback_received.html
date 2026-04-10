@@ -1,0 +1,13 @@
+{% extends "emails/shared/base_email.html" %}
+{% block content %}
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Ваше обращение успешно зарегистрировано в платформе «Пифагор».</p>
+<div style="padding:16px;border-radius:14px;background:#EEF1F6;margin:20px 0;">
+  <div style="font-size:14px;line-height:1.8;color:#34495E;">
+    <b>Тема:</b> {{ subject }}<br/>
+    <b>Номер обращения:</b> {{ ticket_id }}<br/>
+    <b>Дата:</b> {{ created_at }}
+  </div>
+</div>
+<p style="margin:0;font-size:15px;line-height:1.7;">Мы обработаем ваше сообщение и при необходимости свяжемся с вами.</p>
+{% endblock %}

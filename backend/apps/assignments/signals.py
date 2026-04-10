@@ -1,0 +1,1 @@
+"""Signals for apps.assignments."""

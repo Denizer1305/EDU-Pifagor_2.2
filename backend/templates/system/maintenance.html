@@ -1,0 +1,13 @@
+{% extends "emails/shared/base_email.html" %}
+{% block content %}
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">В платформе «Пифагор» запланированы технические работы.</p>
+<div style="padding:16px;border-radius:14px;background:rgba(255,183,77,0.12);margin:20px 0;border:1px solid rgba(255,183,77,0.35);">
+  <div style="font-size:14px;line-height:1.8;color:#34495E;">
+    <b>Начало:</b> {{ start_at }}<br/>
+    <b>Окончание:</b> {{ end_at }}<br/>
+    <b>Комментарий:</b> {{ maintenance_comment }}
+  </div>
+</div>
+<p style="margin:0;font-size:15px;line-height:1.7;">Во время работ отдельные функции платформы могут быть временно недоступны.</p>
+{% endblock %}

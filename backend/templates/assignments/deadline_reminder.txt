@@ -1,0 +1,9 @@
+Здравствуйте, {{ first_name|default:"пользователь" }}!
+
+До завершения задания "{{ assignment_title }}" осталось {{ days_left }} дн.
+Курс: {{ course_title }}
+Дедлайн: {{ deadline_at }}
+Статус: {{ current_status }}
+
+Открыть задание:
+{{ assignment_url }}

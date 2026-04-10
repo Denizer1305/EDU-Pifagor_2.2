@@ -1,0 +1,9 @@
+Здравствуйте, {{ first_name|default:"пользователь" }}!
+
+Для вас опубликовано новое задание: {{ assignment_title }}
+Курс: {{ course_title }}
+Тип: {{ assignment_type }}
+Дедлайн: {{ deadline_at }}
+
+Открыть задание:
+{{ assignment_url }}

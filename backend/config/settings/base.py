@@ -13,6 +13,16 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split("
 
 LANGUAGE_CODE = "ru"
 TIME_ZONE = os.getenv("DJANGO_TIME_ZONE", "Europe/Moscow")
+
+LANGUAGES = [
+    ("ru", "Русский"),
+    ("en", "English"),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
+
 USE_I18N = True
 USE_TZ = True
 
@@ -135,3 +145,6 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@edu-pifagor.ru")
 
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://redis:6379/1")
+
+EXCEPTION_HANDLER: "api.exceptions.custom_exception_handler"
+DEFAULT_PAGINATION_CLASS: "api.pagination.DefaultPageNumberPagination"

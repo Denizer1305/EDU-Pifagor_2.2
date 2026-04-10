@@ -1,0 +1,12 @@
+{% extends "emails/shared/base_email.html" %}
+{% block content %}
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Работа платформы «Пифагор» восстановлена в полном объёме.</p>
+<div style="padding:16px;border-radius:14px;background:rgba(76,175,80,0.12);margin:20px 0;border:1px solid rgba(76,175,80,0.28);">
+  <div style="font-size:14px;line-height:1.8;color:#34495E;">
+    <b>Проблема:</b> {{ incident_title }}<br/>
+    <b>Решение завершено:</b> {{ resolved_at }}
+  </div>
+</div>
+<p style="margin:0;font-size:15px;line-height:1.7;">Спасибо за понимание. Если вы продолжаете сталкиваться с ошибками, пожалуйста, сообщите об этом через форму обратной связи.</p>
+{% endblock %}

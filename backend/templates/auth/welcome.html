@@ -1,0 +1,13 @@
+{% extends "emails/shared/base_email.html" %}
+{% block content %}
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Добро пожаловать в образовательную платформу <b>«Пифагор»</b>. Ваш аккаунт успешно создан, и теперь вам доступны курсы, задания, расписание, уведомления и аналитика.</p>
+<table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0;">
+  <tr>
+    <td style="border-radius:12px;background:#4A6FA5;">
+      <a href="{{ login_url }}" style="display:inline-block;padding:14px 24px;color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:700;">Перейти в платформу</a>
+    </td>
+  </tr>
+</table>
+<p style="margin:0;font-size:15px;line-height:1.7;">Если вы не создавали этот аккаунт, свяжитесь с администратором платформы.</p>
+{% endblock %}

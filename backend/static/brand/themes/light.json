@@ -1,0 +1,7 @@
+{
+  "name": "light",
+  "display_name": "light",
+  "logo_dir": "brand/logo/light",
+  "watermark_dir": "brand/watermarks/light",
+  "document_mode": "light"
+}

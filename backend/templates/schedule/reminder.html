@@ -1,0 +1,19 @@
+{% extends "emails/shared/base_email.html" %}
+{% block content %}
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Напоминаем о ближайшем событии в расписании: <b>{{ event_title }}</b>.</p>
+<div style="padding:16px;border-radius:14px;background:rgba(52,152,219,0.10);margin:20px 0;border:1px solid rgba(52,152,219,0.24);">
+  <div style="font-size:14px;line-height:1.8;color:#34495E;">
+    <b>Дата:</b> {{ event_date }}<br/>
+    <b>Время:</b> {{ event_time }}<br/>
+    <b>Место / формат:</b> {{ event_place|default:"См. расписание" }}
+  </div>
+</div>
+<table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0;">
+  <tr>
+    <td style="border-radius:12px;background:#4A6FA5;">
+      <a href="{{ schedule_url }}" style="display:inline-block;padding:14px 24px;color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:700;">Открыть расписание</a>
+    </td>
+  </tr>
+</table>
+{% endblock %}

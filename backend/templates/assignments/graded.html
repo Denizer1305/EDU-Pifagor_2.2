@@ -1,0 +1,19 @@
+{% extends "emails/shared/base_email.html" %}
+{% block content %}
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Ваше задание <b>{{ assignment_title }}</b> было проверено.</p>
+<div style="padding:16px;border-radius:14px;background:rgba(76,175,80,0.12);margin:20px 0;border:1px solid rgba(76,175,80,0.28);">
+  <div style="font-size:14px;line-height:1.8;color:#34495E;">
+    <b>Оценка:</b> {{ grade }}<br/>
+    <b>Баллы:</b> {{ score }} / {{ max_score }}<br/>
+    <b>Комментарий преподавателя:</b> {{ feedback|default:"Без комментария" }}
+  </div>
+</div>
+<table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0;">
+  <tr>
+    <td style="border-radius:12px;background:#4A6FA5;">
+      <a href="{{ result_url }}" style="display:inline-block;padding:14px 24px;color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:700;">Открыть результат</a>
+    </td>
+  </tr>
+</table>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "emails/shared/base_email.html" %}
+{% block content %}
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Чтобы завершить регистрацию и подтвердить адрес электронной почты, нажмите кнопку ниже.</p>
+<table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0;">
+  <tr>
+    <td style="border-radius:12px;background:#4A6FA5;">
+      <a href="{{ verification_url }}" style="display:inline-block;padding:14px 24px;color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:700;">Подтвердить email</a>
+    </td>
+  </tr>
+</table>
+<p style="margin:0 0 12px 0;font-size:15px;line-height:1.7;">Ссылка действует до <b>{{ expires_at }}</b>.</p>
+<p style="margin:0;font-size:15px;line-height:1.7;">Если кнопка не работает, откройте ссылку вручную: {{ verification_url }}</p>
+{% endblock %}

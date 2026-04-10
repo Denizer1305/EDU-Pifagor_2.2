@@ -1,0 +1,7 @@
+{% extends "emails/shared/base_email.html" %}
+{% block content %}
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
+<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Команда платформы <b>«Пифагор»</b> поздравляет вас с днём рождения!</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;">Желаем вдохновения, уверенности в своих силах, интересных задач и больших успехов в учёбе и работе.</p>
+<p style="margin:0;font-size:15px;line-height:1.7;">Пусть новый год вашей жизни будет наполнен ростом, открытиями и хорошими результатами.</p>
+{% endblock %}
