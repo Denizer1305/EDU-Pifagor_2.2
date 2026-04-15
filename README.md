@@ -62,8 +62,9 @@ edu-pifagor/
 
 ```bash
 cd backend
-python -m venv ../.venv
-../.venv/Scripts/python -m pip install -r requirements/dev.txt
+python -m venv .venv
+.venv/Scripts/python 
+pip install -r requirements/dev.txt
 ```
 
 #### Frontend
