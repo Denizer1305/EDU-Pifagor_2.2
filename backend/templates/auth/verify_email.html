@@ -1,14 +1,82 @@
-{% extends "emails/shared/base_email.html" %}
-{% block content %}
-<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
-<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Чтобы завершить регистрацию и подтвердить адрес электронной почты, нажмите кнопку ниже.</p>
-<table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0;">
-  <tr>
-    <td style="border-radius:12px;background:#4A6FA5;">
-      <a href="{{ verification_url }}" style="display:inline-block;padding:14px 24px;color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:700;">Подтвердить email</a>
-    </td>
-  </tr>
-</table>
-<p style="margin:0 0 12px 0;font-size:15px;line-height:1.7;">Ссылка действует до <b>{{ expires_at }}</b>.</p>
-<p style="margin:0;font-size:15px;line-height:1.7;">Если кнопка не работает, откройте ссылку вручную: {{ verification_url }}</p>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Подтверждение электронной почты — Пифагор</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0;padding:0;background-color:#EEF1F6;font-family:'PT Sans',Arial,sans-serif;color:#2F2F2F;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#EEF1F6;margin:0;padding:32px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:680px;background:#FFFFFF;border-radius:28px;overflow:hidden;border:1px solid rgba(57,68,88,0.08);box-shadow:0 18px 44px rgba(57,68,88,0.10);">
+                    <tr>
+                        <td style="padding:28px 36px 18px 36px;text-align:center;background:linear-gradient(180deg,#fcfcfd 0%,#f4f6fa 46%,#ffffff 100%);">
+                            <img src="{{ site_url }}/assets/image/logo/logo.svg" alt="Пифагор" width="82" style="display:block;margin:0 auto 18px auto;" />
+                            <div style="font-family:'Forum',Georgia,serif;font-size:34px;line-height:1;color:#394458;letter-spacing:0.08em;">
+                                ПИФАГОР
+                            </div>
+                            <div style="margin-top:12px;display:inline-block;padding:8px 16px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(57,68,88,0.08);color:#4A6FA5;font-size:13px;font-weight:700;">
+                                Подтверждение почты
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding:8px 36px 36px 36px;">
+                            <div style="font-family:'Forum',Georgia,serif;font-size:40px;line-height:0.98;color:#394458;text-align:center;margin-bottom:18px;">
+                                Подтвердите адрес почты
+                            </div>
+
+                            <p style="margin:0 0 16px 0;font-size:16px;line-height:1.85;color:#2F2F2F;text-align:center;">
+                                Здравствуйте, <strong style="color:#394458;">{{ user_name }}</strong>!
+                                Для завершения регистрации введите код подтверждения:
+                            </p>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 22px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <div style="display:inline-block;padding:20px 28px;border-radius:24px;background:#EEF1F6;border:1px solid rgba(57,68,88,0.08);font-size:34px;line-height:1;font-weight:700;letter-spacing:0.24em;color:#394458;">
+                                            {{ code }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0 0 22px 0;font-size:14px;line-height:1.8;color:#8A8A9F;text-align:center;">
+                                Код действует ограниченное время. Не передавайте его другим людям.
+                            </p>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 26px 0;">
+                                <tr>
+                                    <td style="padding:18px;border-radius:22px;background:rgba(57,68,88,0.04);border:1px solid rgba(57,68,88,0.08);">
+                                        <div style="font-size:15px;line-height:1.8;color:#2F2F2F;">
+                                            <strong style="color:#394458;">Важно:</strong><br />
+                                            Если вы не запрашивали подтверждение почты, просто проигнорируйте это письмо.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0;font-size:13px;line-height:1.75;color:#8A8A9F;text-align:center;">
+                                Либо откройте страницу подтверждения и введите код вручную.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding:24px 36px;background:#FFFFFF;border-top:1px solid rgba(57,68,88,0.08);text-align:center;">
+                            <p style="margin:0 0 8px 0;font-size:13px;line-height:1.7;color:#8A8A9F;">
+                                Пифагор — современная цифровая образовательная среда
+                            </p>
+                            <p style="margin:0;font-size:12px;line-height:1.7;color:#8A8A9F;">
+                                © {{ year }} Пифагор. Все права защищены.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
