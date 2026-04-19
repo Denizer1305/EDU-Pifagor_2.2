@@ -3,12 +3,13 @@ from .auth import (
    RegisterSerializer,
    ChangePasswordSerializer,
    PasswordResetSerializer,
-   PasswordResetConfirmSerializer)
+   PasswordResetConfirmSerializer
+)
 from .user import (
     UserListSerializer,
     UserDetailSerializer,
     UserUpdateSerializer,
-    UserCurrentSerializer,
+    CurrentUserSerializer,
 )
 from .profile import (
     Profile,
@@ -21,6 +22,20 @@ from .role import (
     UserRoleSerializer,
 )
 
+from .teacher import (
+    TeacherProfileListSerializer,
+    TeacherProfileDetailSerializer,
+    TeacherProfileUpdateSerializer,
+)
+from .student import (
+    StudentProfileDetailSerializer,
+    StudentProfileUpdateSerializer,
+)
+from .parent import (
+    ParentStudentSerializer,
+    ParentProfileDetailSerializer,
+    ParentProfileUpdateSerializer,
+)
 
 __all__ = [
     'LoginSerializer',
@@ -32,7 +47,7 @@ __all__ = [
     'UserListSerializer',
     'UserDetailSerializer',
     'UserUpdateSerializer',
-    'UserCurrentSerializer',
+    'CurrentUserSerializer',
 
     'Profile',
     'ProfileSerializer',
@@ -41,4 +56,15 @@ __all__ = [
 
     'RoleSerializer',
     'UserRoleSerializer',
+
+    'TeacherProfileListSerializer',
+    'TeacherProfileDetailSerializer',
+    'TeacherProfileUpdateSerializer',
+
+    'ParentProfileDetailSerializer',
+    'ParentProfileUpdateSerializer',
+    'ParentStudentSerializer',
+
+    'StudentProfileDetailSerializer',
+    'StudentProfileUpdateSerializer',
 ]

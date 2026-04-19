@@ -19,6 +19,7 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def create_user(self, email, password=None, **extra_fields):
+        """Создает пользователя с заданными атрибутами."""
         if not email:
             raise ValueError(_('Адрес эл.почты обязателен для регистрации.'))
 
@@ -32,6 +33,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
+        """Создает пользователя с заданными атрибутами."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -96,18 +98,23 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = 'users_user'
         verbose_name = _("Пользователь")
         verbose_name_plural = _("Пользователи")
-        ordering = ("-created_at",)
+        ordering = (
+            "-created_at",
+        )
 
     def __str__(self):
+        """Возвращает строковое представление объекта."""
         return self.email
 
     @property
     def full_name(self):
+        """Возвращает полное имя пользователя."""
         if hasattr(self, 'profile') and self.profile:
             return self.profile.full_name
         return self.email
 
     def clean(self) -> None:
+        """Выполняет валидацию и нормализацию полей."""
         super().clean()
 
         if self.email:

@@ -11,12 +11,21 @@ class StudentProfile(models.Model):
     """
 
     class StudentStatusChoices(models.TextChoices):
-        ACTIVE = 'active', _('Активный')
-        ACADEMIC_LEAD = 'academic_lead', _('Академический отпуск')
-        TRANSFERRED = 'tramsferred', _('Переведен')
-        GRADUATED = 'graduated', _('Выпустился')
-        ARCHIVED = 'archived', _('В архиве')
-
+        ACTIVE = (
+            'active', _('Активный'),
+        )
+        ACADEMIC_LEAD = (
+            'academic_lead', _('Академический отпуск'),
+        )
+        TRAMSFERRED = (
+            'tramsferred', _('Переведен'),
+        )
+        GRADUATED = (
+            'graduated', _('Выпустился'),
+        )
+        ARCHIVED = (
+            'archived', _('В архиве'),
+        )
     user = models.OneToOneField(
         "users.User",
         on_delete=models.CASCADE,
@@ -57,9 +66,10 @@ class StudentProfile(models.Model):
     )
 
     class Meta:
-        dt_table = "users_student_profile"
+        db_table = "users_student_profile"
         verbose_name = _("Профиль студента")
         verbose_name_plural = _("Профили студентов")
 
     def __str__(self) -> str:
+        """Возвращает строковое представление объекта."""
         return self.user.full_name

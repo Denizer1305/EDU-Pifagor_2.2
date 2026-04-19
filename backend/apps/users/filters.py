@@ -1,6 +1,6 @@
 import django_filters
 
-from users.models import Profile, TeacherProfile, User
+from apps.users.models import Profile, TeacherProfile, User
 
 
 class UserFilter(django_filters.FilterSet):
@@ -25,14 +25,13 @@ class UserFilter(django_filters.FilterSet):
     class Meta:
         model = User
         fields = (
-            "email",
-            "is_active",
-            "is_email_verified",
-            "created_at",
+            'email', 'is_active',
+            'is_email_verified', 'created_at',
         )
 
 
 class ProfileFilter(django_filters.FilterSet):
+    """Фильтр для profile."""
     first_name = django_filters.CharFilter(
         field_name="first_name",
         lookup_expr="icontains"
@@ -49,13 +48,13 @@ class ProfileFilter(django_filters.FilterSet):
     class Meta:
         model = Profile
         fields = (
-            "first_name",
-            "last_name",
-            "city"
+            'first_name', 'last_name',
+            'city',
         )
 
 
 class TeacherProfileFilter(django_filters.FilterSet):
+    """Фильтр для teacher profile."""
     is_public = django_filters.BooleanFilter(
         field_name="is_public",
     )
@@ -69,7 +68,6 @@ class TeacherProfileFilter(django_filters.FilterSet):
     class Meta:
         model = TeacherProfile
         fields = (
-            "is_public",
-            "show_on_teacher_page",
-            "experience_year",
+            'is_public', 'show_on_teacher_page',
+            'experience_year',
         )

@@ -42,7 +42,10 @@ class Role(models.Model):
         db_table = "users_roles"
         verbose_name = _("Роль")
         verbose_name_plural = _("Роли")
-        ordering = ("id",)
+        ordering = (
+            "id",
+        )
 
-    def __str__(self):
-        return f"{self.name} - {self.code}"
+    def __str__(self) -> str:
+        """Возвращает строковое представление объекта."""
+        return f"{self.name} ({self.code})"

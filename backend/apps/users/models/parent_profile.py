@@ -50,9 +50,10 @@ class ParentProfile(models.Model):
     )
 
     class Meta:
-        dt_table = "users_parent_profile"
+        db_table = "users_parent_profile"
         verbose_name = _("Профиль родителя")
         verbose_name_plural = _("Профили родителей")
 
     def __str__(self) -> str:
+        """Возвращает строковое представление объекта."""
         return self.user.full_name

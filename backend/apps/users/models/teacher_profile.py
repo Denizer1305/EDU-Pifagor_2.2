@@ -81,4 +81,5 @@ class TeacherProfile(models.Model):
         verbose_name_plural = _("Профили преподавателей")
 
     def __str__(self) -> str:
+        """Возвращает строковое представление объекта."""
         return self.user.full_name

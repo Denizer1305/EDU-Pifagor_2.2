@@ -4,17 +4,19 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
-from users.models import Profile
+from apps.users.models import Profile
 
 
 User = get_user_model()
 
 
 class LoginSerializer(serializers.Serializer):
+    """Сериализатор login."""
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True, write_only=True, trim_whitespace=False)
 
     def validate(self, attrs):
+        """Выполняет общую валидацию входных данных."""
         email = attrs.get('email').strip().lower()
         password = attrs.get('password')
 
@@ -38,6 +40,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class RegisterSerializer(serializers.Serializer):
+    """Сериализатор register."""
     email = serializers.EmailField(required=True)
     phone = serializers.CharField(required=True)
     password = serializers.CharField(
@@ -52,6 +55,7 @@ class RegisterSerializer(serializers.Serializer):
     patronymic = serializers.CharField(required=False, max_length=150, write_only=True)
 
     def validate_email(self, value):
+        """Выполняет валидацию значения поля."""
         value = value.strip().lower()
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError(
@@ -60,6 +64,7 @@ class RegisterSerializer(serializers.Serializer):
         return value
 
     def validate(self, attrs):
+        """Выполняет общую валидацию входных данных."""
         password = attrs.get('password')
         password_repeat = attrs.get('password_repeat')
         email = attrs.get('email')
@@ -78,6 +83,7 @@ class RegisterSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
+        """Создает и возвращает новый объект."""
         email = validated_data.pop('email', None)
 
         profile_data = {
@@ -94,13 +100,16 @@ class RegisterSerializer(serializers.Serializer):
 
 
 class PasswordResetSerializer(serializers.Serializer):
+    """Сериализатор password reset."""
     email = serializers.EmailField(required=True)
 
     def validate_email(self, value):
+        """Выполняет валидацию значения поля."""
         return value.strip().lower()
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Сериализатор password reset confirm."""
     password = serializers.CharField(
         required=True, write_only=True, trim_whitespace=False
     )
@@ -109,6 +118,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
+        """Выполняет общую валидацию входных данных."""
         if attrs.get('password') != attrs.get('password_repeat'):
             raise serializers.ValidationError(
                 {"password_repeat": _("Пароли не совпадают.")}
@@ -117,6 +127,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
+    """Сериализатор change password."""
     old_password = serializers.CharField(
         required=True, write_only=True, trim_whitespace=False
     )
@@ -128,6 +139,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     )
 
     def validate_old_password(self, value):
+        """Выполняет валидацию значения поля."""
         user = self.context['request'].user
         if not user.check_password(value):
             raise serializers.ValidationError(
@@ -136,6 +148,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         return value
 
     def validate(self, attrs):
+        """Выполняет общую валидацию входных данных."""
         if attrs.get('old_password') == attrs.get('new_password'):
             raise serializers.ValidationError(
                 {"new_password": _("Новый пароль не может совпадать с текущим.")}

@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from users.models import User
+from apps.users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +22,7 @@ def _send_templated_email(
     txt_template: str,
     context: dict,
 ) -> None:
+    """Формирует и отправляет письмо по шаблону."""
     html_body = render_to_string(html_template, context)
     text_body = render_to_string(txt_template, context)
 
@@ -36,11 +37,14 @@ def _send_templated_email(
 
 
 @shared_task(
-    autoretry_for=(Exception,),
+    autoretry_for=(
+        Exception,
+    ),
     retry_backoff=True,
     retry_kwargs={"max_retries": 3},
 )
 def send_welcome_email_task(user_id: int) -> None:
+    """Celery-задача для отправки уведомления по email."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -67,11 +71,14 @@ def send_welcome_email_task(user_id: int) -> None:
 
 
 @shared_task(
-    autoretry_for=(Exception,),
+    autoretry_for=(
+        Exception,
+    ),
     retry_backoff=True,
     retry_kwargs={"max_retries": 3},
 )
 def send_verify_email_task(user_id: int, verification_url: str, expires_at: str) -> None:
+    """Celery-задача для отправки уведомления по email."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -99,11 +106,14 @@ def send_verify_email_task(user_id: int, verification_url: str, expires_at: str)
 
 
 @shared_task(
-    autoretry_for=(Exception,),
+    autoretry_for=(
+        Exception,
+    ),
     retry_backoff=True,
     retry_kwargs={"max_retries": 3},
 )
 def send_reset_password_email_task(user_id: int, reset_url: str, expires_at: str) -> None:
+    """Celery-задача для отправки уведомления по email."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -131,11 +141,14 @@ def send_reset_password_email_task(user_id: int, reset_url: str, expires_at: str
 
 
 @shared_task(
-    autoretry_for=(Exception,),
+    autoretry_for=(
+        Exception,
+    ),
     retry_backoff=True,
     retry_kwargs={"max_retries": 3},
 )
 def send_password_changed_email_task(user_id: int) -> None:
+    """Celery-задача для отправки уведомления по email."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -163,6 +176,7 @@ def send_password_changed_email_task(user_id: int) -> None:
 
 @shared_task
 def send_birthday_email_task(user_id: int) -> None:
+    """Celery-задача для отправки уведомления по email."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
