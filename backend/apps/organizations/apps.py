@@ -1,5 +1,12 @@
 from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
 
 class OrganizationsConfig(AppConfig):
-    name = 'organizations'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.organizations"
+    label = "organizations"
+    verbose_name = _("Организации")
+
+    def ready(self):
+        import apps.organizations.signals  # noqa: F401

@@ -7,6 +7,7 @@ PHONE_PATTERN = re.compile(r"^[0-9+\-() ]+$")
 
 
 def validate_phone(value: str) -> None:
+    """Проверяет корректность номера телефона."""
     if not value:
         return
 
@@ -27,6 +28,7 @@ def validate_phone(value: str) -> None:
 
 
 def validate_email(email: str | None, reset_email: str | None) -> None:
+    """Проверяет корректность email и его ограничения."""
     if not email and not reset_email:
         return
 
