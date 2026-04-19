@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "apps.common.apps.CommonConfig",
     "apps.users.apps.UsersConfig",
     "apps.organizations.apps.OrganizationsConfig",
-    # "apps.education",
+    "apps.education.apps.EducationConfig",
     # "apps.courses",
     # "apps.content",
     # "apps.assignments",

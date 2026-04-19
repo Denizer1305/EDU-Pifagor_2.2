@@ -1,1 +1,14 @@
-"""Serializers package for apps.education."""
+from .academic import AcademicYearSerializer, EducationPeriodSerializer
+from .curriculum import CurriculumItemSerializer, CurriculumSerializer
+from .enrollment import StudentGroupEnrollmentSerializer
+from .load import GroupSubjectSerializer, TeacherGroupSubjectSerializer
+
+__all__ = [
+    "AcademicYearSerializer",
+    "EducationPeriodSerializer",
+    "StudentGroupEnrollmentSerializer",
+    "GroupSubjectSerializer",
+    "TeacherGroupSubjectSerializer",
+    "CurriculumSerializer",
+    "CurriculumItemSerializer",
+]
