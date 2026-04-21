@@ -1,18 +1,35 @@
-from .group_services import assign_group_curator, create_group, remove_group_curator, update_group
+from .group_services import (
+    assign_group_curator,
+    clear_group_join_code,
+    create_group,
+    disable_group_join_code,
+    remove_group_curator,
+    set_group_join_code,
+    update_group,
+)
 from .organization_services import (
+    clear_teacher_registration_code,
     create_department,
     create_organization,
     create_organization_type,
+    disable_teacher_registration_code,
+    set_teacher_registration_code,
     update_department,
     update_organization,
     update_organization_type,
 )
-from .subject_services import create_subject, create_subject_category, update_subject, update_subject_category
+from .subject_services import (
+    create_subject,
+    create_subject_category,
+    update_subject,
+    update_subject_category,
+)
 from .teacher_services import (
     assign_teacher_subject,
     assign_teacher_to_organization,
     remove_teacher_from_organization,
     remove_teacher_subject,
+    set_primary_teacher_organization,
 )
 
 __all__ = [
@@ -20,6 +37,9 @@ __all__ = [
     "update_organization_type",
     "create_organization",
     "update_organization",
+    "set_teacher_registration_code",
+    "disable_teacher_registration_code",
+    "clear_teacher_registration_code",
     "create_department",
     "update_department",
     "create_subject_category",
@@ -28,10 +48,14 @@ __all__ = [
     "update_subject",
     "create_group",
     "update_group",
+    "set_group_join_code",
+    "disable_group_join_code",
+    "clear_group_join_code",
     "assign_group_curator",
     "remove_group_curator",
     "assign_teacher_to_organization",
     "remove_teacher_from_organization",
+    "set_primary_teacher_organization",
     "assign_teacher_subject",
     "remove_teacher_subject",
 ]

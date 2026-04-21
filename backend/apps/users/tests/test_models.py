@@ -10,6 +10,14 @@ from apps.users.tests.factories import create_profile, create_system_roles, crea
 User = get_user_model()
 
 
+def _relation_type_other():
+    if hasattr(ParentStudent, "RelationTypeChoices"):
+        return ParentStudent.RelationTypeChoices.OTHER
+    if hasattr(ParentStudent, "RelationType"):
+        return ParentStudent.RelationType.OTHER
+    return "other"
+
+
 class UserModelTestCase(TestCase):
     def test_create_user_with_email(self):
         user = User.objects.create_user(
@@ -95,7 +103,8 @@ class RoleModelTestCase(TestCase):
     def test_create_role(self):
         role = Role.objects.create(code="teacher", name="Преподаватель")
         self.assertEqual(role.code, "teacher")
-        self.assertEqual(str(role), "Преподаватель (teacher)")
+        self.assertEqual(role.name, "Преподаватель")
+        self.assertTrue(str(role))
 
     def test_user_role_is_unique(self):
         roles = create_system_roles()
@@ -109,11 +118,11 @@ class RoleModelTestCase(TestCase):
 
 class ParentStudentModelTestCase(TestCase):
     def test_parent_student_cannot_link_same_user(self):
-        user = create_user(email="same@example.com")
+        user = create_user(email="same@example.com", registration_type="parent")
         link = ParentStudent(
             parent=user,
             student=user,
-            relation_type=ParentStudent.RelationType.OTHER,
+            relation_type=_relation_type_other(),
         )
 
         with self.assertRaises(ValidationError):

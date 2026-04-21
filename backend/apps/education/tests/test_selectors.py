@@ -81,15 +81,24 @@ class EnrollmentSelectorsTestCase(TestCase):
         self.assertEqual(queryset.count(), 1)
 
     def test_get_active_student_group_enrollments_queryset(self):
-        create_student_group_enrollment(status="active")
+        active_enrollment = create_student_group_enrollment(status="active")
+
         create_student_group_enrollment(
-            student=create_student_group_enrollment().student,
-            group=create_student_group_enrollment().group,
-            academic_year=create_student_group_enrollment().academic_year,
+            student=active_enrollment.student,
+            group=active_enrollment.group,
+            academic_year=create_academic_year(
+                name="2034/2035",
+                start_date=date(2034, 9, 1),
+                end_date=date(2035, 6, 30),
+            ),
+            status="active",
+            journal_number=2,
         )
+
         queryset = get_active_student_group_enrollments_queryset()
 
         self.assertGreaterEqual(queryset.count(), 1)
+        self.assertIn(active_enrollment, queryset)
 
 
 class LoadSelectorsTestCase(TestCase):

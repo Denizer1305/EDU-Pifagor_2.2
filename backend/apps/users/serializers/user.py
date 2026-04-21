@@ -3,128 +3,110 @@ from __future__ import annotations
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from apps.users.models import ParentProfile, StudentProfile, TeacherProfile, UserRole
+from apps.users.serializers.profile import ProfileDetailSerializer
+from apps.users.serializers.role import UserRoleSerializer
+
 User = get_user_model()
 
 
-class UserListSerializer(serializers.ModelSerializer):
-    """Сериализатор user list."""
-    full_name = serializers.CharField(read_only=True)
+def _user_role_queryset(obj):
+    queryset = obj.user_roles.select_related("role")
+    model_fields = {field.name for field in UserRole._meta.get_fields()}
+    if "is_active" in model_fields:
+        queryset = queryset.filter(is_active=True)
+    return queryset
 
+
+class TeacherProfileShortSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = TeacherProfile
         fields = (
-            'id', 'email',
-            'full_name', 'is_email_verified',
-            'is_active', 'is_staff',
-            'created_at',
+            "id", "public_title",
+            "short_bio", "is_public",
+            "show_on_teachers_page",
+            "requested_organization", "requested_department",
+            "verification_status", "code_verified_at",
+            "verified_at",
         )
         read_only_fields = fields
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
-    """Сериализатор user detail."""
-    full_name = serializers.CharField(read_only=True)
-
+class StudentProfileShortSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = StudentProfile
         fields = (
-            'id', 'email',
-            'reset_email', 'full_name',
-            'is_email_verified', 'is_active',
-            'is_staff', 'is_superuser',
-            'last_login', 'created_at',
-            'updated_at',
+            "id", "student_code",
+            "requested_organization",
+            "requested_department", "requested_group",
+            "verification_status", "verified_at",
         )
-        read_only_fields = (
-            'id', 'full_name',
-            'is_staff', 'is_superuser',
-            'last_login', 'created_at',
-            'updated_at',
+        read_only_fields = fields
+
+
+class ParentProfileShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ParentProfile
+        fields = (
+            "id", "occupation",
+            "work_place", "created_at",
         )
+        read_only_fields = fields
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
-    """Сериализатор current user."""
-    full_name = serializers.CharField(read_only=True)
+    profile = serializers.SerializerMethodField()
     roles = serializers.SerializerMethodField()
-    profile_id = serializers.SerializerMethodField()
-    teacher_profile_id = serializers.SerializerMethodField()
-    student_profile_id = serializers.SerializerMethodField()
-    parent_profile_id = serializers.SerializerMethodField()
+    teacher_profile = serializers.SerializerMethodField()
+    student_profile = serializers.SerializerMethodField()
+    parent_profile = serializers.SerializerMethodField()
+    reviewed_by_id = serializers.IntegerField(source="reviewed_by.id", read_only=True)
+    reviewed_by_email = serializers.EmailField(
+        source="reviewed_by.email",
+        read_only=True,
+        default=None,
+    )
+    is_email_verified = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
-            'id', 'email',
-            'reset_email', 'full_name',
-            'is_email_verified', 'is_active',
-            'is_staff', 'is_superuser',
-            'roles', 'profile_id',
-            'teacher_profile_id', 'student_profile_id',
-            'parent_profile_id', 'created_at',
+            "id", "email",
+            "registration_type", "onboarding_status",
+            "onboarding_completed_at", "is_email_verified",
+            "is_active", "reviewed_by_id",
+            "reviewed_by_email", "reviewed_at",
+            "review_comment", "profile",
+            "roles", "teacher_profile",
+            "student_profile", "parent_profile",
+            "created_at", "updated_at",
         )
         read_only_fields = fields
 
+    def get_is_email_verified(self, obj):
+        if hasattr(obj, "is_email_verified"):
+            return obj.is_email_verified
+        return False
+
+    def get_profile(self, obj):
+        if hasattr(obj, "profile"):
+            return ProfileDetailSerializer(obj.profile).data
+        return None
+
     def get_roles(self, obj):
-        """Вычисляет и возвращает значение поля."""
-        if not hasattr(obj, "user_roles"):
-            return []
-        return list(obj.user_roles.values_list("role__code", flat=True))
+        return UserRoleSerializer(_user_role_queryset(obj), many=True).data
 
-    def get_profile_id(self, obj):
-        """Вычисляет и возвращает значение поля."""
-        return getattr(getattr(obj, "profile", None), "id", None)
+    def get_teacher_profile(self, obj):
+        if hasattr(obj, "teacher_profile"):
+            return TeacherProfileShortSerializer(obj.teacher_profile).data
+        return None
 
-    def get_teacher_profile_id(self, obj):
-        """Вычисляет и возвращает значение поля."""
-        return getattr(getattr(obj, "teacher_profile", None), "id", None)
+    def get_student_profile(self, obj):
+        if hasattr(obj, "student_profile"):
+            return StudentProfileShortSerializer(obj.student_profile).data
+        return None
 
-    def get_student_profile_id(self, obj):
-        """Вычисляет и возвращает значение поля."""
-        return getattr(getattr(obj, "student_profile", None), "id", None)
-
-    def get_parent_profile_id(self, obj):
-        """Вычисляет и возвращает значение поля."""
-        return getattr(getattr(obj, "parent_profile", None), "id", None)
-
-
-class UserUpdateSerializer(serializers.ModelSerializer):
-    """Сериализатор user update."""
-    class Meta:
-        model = User
-        fields = (
-            'email', 'reset_email',
-            'is_active', 'is_email_verified',
-        )
-
-    def validate_email(self, value: str) -> str:
-        """Выполняет валидацию значения поля."""
-        value = value.strip().lower()
-        user = self.instance
-
-        qs = User.objects.filter(email=value)
-        if user is not None:
-            qs = qs.exclude(pk=user.pk)
-
-        if qs.exists():
-            raise serializers.ValidationError("Пользователь с такой электронной почтой уже существует.")
-
-        return value
-
-    def validate_reset_email(self, value: str | None) -> str | None:
-        """Выполняет валидацию значения поля."""
-        if not value:
-            return None
-        return value.strip().lower()
-
-    def validate(self, attrs):
-        """Выполняет общую валидацию входных данных."""
-        email = attrs.get("email", getattr(self.instance, "email", None))
-        reset_email = attrs.get("reset_email", getattr(self.instance, "reset_email", None))
-
-        if email and reset_email and email == reset_email:
-            raise serializers.ValidationError(
-                {"reset_email": "Резервная почта не может совпадать с основной."}
-            )
-
-        return attrs
+    def get_parent_profile(self, obj):
+        if hasattr(obj, "parent_profile"):
+            return ParentProfileShortSerializer(obj.parent_profile).data
+        return None

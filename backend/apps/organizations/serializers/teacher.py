@@ -8,10 +8,21 @@ from apps.organizations.models import Organization, Subject, TeacherOrganization
 User = get_user_model()
 
 
+class TeacherOrganizationShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = (
+            "id", "name",
+            "short_name",
+        )
+        read_only_fields = fields
+
+
 class TeacherOrganizationSerializer(serializers.ModelSerializer):
-    organization = serializers.StringRelatedField(read_only=True)
+    organization = TeacherOrganizationShortSerializer(read_only=True)
     teacher_email = serializers.EmailField(source="teacher.email", read_only=True)
     teacher_full_name = serializers.CharField(source="teacher.full_name", read_only=True)
+    is_current = serializers.BooleanField(read_only=True)
 
     organization_id = serializers.PrimaryKeyRelatedField(
         queryset=Organization.objects.all(),
@@ -30,19 +41,36 @@ class TeacherOrganizationSerializer(serializers.ModelSerializer):
             "id", "teacher_id",
             "teacher_email", "teacher_full_name",
             "organization", "organization_id",
-            "employment_type", "is_primary",
-            "starts_at", "ends_at",
-            "notes", "is_active",
+            "position", "employment_type",
+            "is_primary", "starts_at",
+            "ends_at", "notes",
+            "is_active", "is_current",
             "created_at", "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
-            "updated_at",
+            "id", "is_current",
+            "created_at", "updated_at",
         )
+
+    def validate_position(self, value):
+        return value.strip()
+
+    def validate_notes(self, value):
+        return value.strip()
+
+
+class TeacherSubjectShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = (
+            "id", "name",
+            "short_name",
+        )
+        read_only_fields = fields
 
 
 class TeacherSubjectSerializer(serializers.ModelSerializer):
-    subject = serializers.StringRelatedField(read_only=True)
+    subject = TeacherSubjectShortSerializer(read_only=True)
     teacher_email = serializers.EmailField(source="teacher.email", read_only=True)
     teacher_full_name = serializers.CharField(source="teacher.full_name", read_only=True)
 

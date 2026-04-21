@@ -106,17 +106,74 @@ class StudentGroupEnrollment(models.Model):
     def clean(self) -> None:
         super().clean()
 
+        errors: dict[str, str] = {}
+
         if self.completion_date and self.completion_date < self.enrollment_date:
-            raise ValidationError(
-                {"completion_date": _("Дата завершения не может быть раньше даты зачисления.")}
+            errors["completion_date"] = _(
+                "Дата завершения не может быть раньше даты зачисления."
             )
 
         if self.enrollment_date < self.academic_year.start_date:
-            raise ValidationError(
-                {"enrollment_date": _("Дата зачисления не может быть раньше начала учебного года.")}
+            errors["enrollment_date"] = _(
+                "Дата зачисления не может быть раньше начала учебного года."
+            )
+
+        if self.enrollment_date > self.academic_year.end_date:
+            errors["enrollment_date"] = _(
+                "Дата зачисления не может быть позже окончания учебного года."
             )
 
         if self.completion_date and self.completion_date > self.academic_year.end_date:
-            raise ValidationError(
-                {"completion_date": _("Дата завершения не может быть позже окончания учебного года.")}
+            errors["completion_date"] = _(
+                "Дата завершения не может быть позже окончания учебного года."
             )
+
+        if self.student_id:
+            registration_type = getattr(self.student, "registration_type", "")
+            if registration_type and registration_type != "student":
+                errors["student"] = _(
+                    "Зачисление в группу может быть создано только для пользователя с типом регистрации student."
+                )
+
+            is_email_verified = getattr(self.student, "is_email_verified", None)
+            if is_email_verified is False:
+                errors["student"] = _(
+                    "Нельзя зачислить студента с неподтвержденной электронной почтой."
+                )
+
+            onboarding_status = getattr(self.student, "onboarding_status", "")
+            if onboarding_status and onboarding_status != "active":
+                errors["student"] = _(
+                    "Нельзя зачислить студента с незавершенным онбордингом."
+                )
+
+            student_profile = getattr(self.student, "student_profile", None)
+            if student_profile is not None:
+                verification_status = getattr(student_profile, "verification_status", "")
+                if verification_status and verification_status != "approved":
+                    errors["student"] = _(
+                        "Нельзя зачислить студента без подтвержденного студенческого профиля."
+                    )
+
+        if self.group_id:
+            if hasattr(self.group, "is_active") and not self.group.is_active:
+                errors["group"] = _("Нельзя зачислить студента в неактивную группу.")
+
+            group_academic_year = getattr(self.group, "academic_year", "")
+            if group_academic_year and group_academic_year != self.academic_year.name:
+                errors["academic_year"] = _(
+                    "Учебный год зачисления должен совпадать с учебным годом группы."
+                )
+
+        if self.status == self.StatusChoices.ACTIVE and self.completion_date:
+            errors["status"] = _(
+                "Активное зачисление не может иметь дату завершения."
+            )
+
+        if self.status != self.StatusChoices.ACTIVE and not self.completion_date:
+            errors["completion_date"] = _(
+                "Для завершенного, переведенного, архивного, приостановленного или отчисленного зачисления требуется дата завершения."
+            )
+
+        if errors:
+            raise ValidationError(errors)

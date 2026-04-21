@@ -3,7 +3,9 @@ from __future__ import annotations
 import logging
 
 from rest_framework import generics, status
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.organizations.filters import (
     GroupCuratorFilter,
@@ -20,6 +22,7 @@ from apps.organizations.selectors import (
 )
 from apps.organizations.serializers import (
     GroupCuratorSerializer,
+    GroupJoinCodeSerializer,
     GroupSerializer,
     TeacherOrganizationSerializer,
     TeacherSubjectSerializer,
@@ -28,15 +31,18 @@ from apps.organizations.services import (
     assign_group_curator,
     assign_teacher_subject,
     assign_teacher_to_organization,
+    clear_group_join_code,
     create_group,
     remove_group_curator,
     remove_teacher_from_organization,
     remove_teacher_subject,
+    set_group_join_code,
+    set_primary_teacher_organization,
     update_group,
 )
 
-
 logger = logging.getLogger(__name__)
+
 
 class GroupListView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
@@ -112,6 +118,42 @@ class GroupDetailView(generics.RetrieveUpdateDestroyAPIView):
         return self.update(request, *args, **kwargs)
 
 
+class GroupJoinCodeView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, pk, *args, **kwargs):
+        logger.info("GroupJoinCodeView.post called group_id=%s", pk)
+        group = get_groups_queryset().filter(pk=pk).first()
+        if group is None:
+            return Response({"detail": "Группа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = GroupJoinCodeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        group = set_group_join_code(
+            group=group,
+            raw_code=serializer.validated_data["join_code"],
+            expires_at=serializer.validated_data.get("join_code_expires_at"),
+        )
+
+        return Response(
+            GroupSerializer(group).data,
+            status=status.HTTP_200_OK,
+        )
+
+    def delete(self, request, pk, *args, **kwargs):
+        logger.info("GroupJoinCodeView.delete called group_id=%s", pk)
+        group = get_groups_queryset().filter(pk=pk).first()
+        if group is None:
+            return Response({"detail": "Группа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+
+        group = clear_group_join_code(group=group)
+        return Response(
+            GroupSerializer(group).data,
+            status=status.HTTP_200_OK,
+        )
+
+
 class GroupCuratorListView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = GroupCuratorSerializer
@@ -141,6 +183,7 @@ class GroupCuratorListView(generics.ListCreateAPIView):
             group=serializer.validated_data["group"],
             teacher=serializer.validated_data["teacher"],
             is_primary=serializer.validated_data.get("is_primary", True),
+            is_active=serializer.validated_data.get("is_active", True),
             starts_at=serializer.validated_data.get("starts_at"),
             ends_at=serializer.validated_data.get("ends_at"),
             notes=serializer.validated_data.get("notes", ""),
@@ -169,6 +212,7 @@ class GroupCuratorDetailView(generics.RetrieveUpdateDestroyAPIView):
         group = serializer.validated_data.get("group", instance.group)
         teacher = serializer.validated_data.get("teacher", instance.teacher)
         is_primary = serializer.validated_data.get("is_primary", instance.is_primary)
+        is_active = serializer.validated_data.get("is_active", instance.is_active)
         starts_at = serializer.validated_data.get("starts_at", instance.starts_at)
         ends_at = serializer.validated_data.get("ends_at", instance.ends_at)
         notes = serializer.validated_data.get("notes", instance.notes)
@@ -177,6 +221,7 @@ class GroupCuratorDetailView(generics.RetrieveUpdateDestroyAPIView):
             group=group,
             teacher=teacher,
             is_primary=is_primary,
+            is_active=is_active,
             starts_at=starts_at,
             ends_at=ends_at,
             notes=notes,
@@ -227,6 +272,7 @@ class TeacherOrganizationListView(generics.ListCreateAPIView):
         link = assign_teacher_to_organization(
             teacher=serializer.validated_data["teacher"],
             organization=serializer.validated_data["organization"],
+            position=serializer.validated_data.get("position", ""),
             employment_type=serializer.validated_data.get("employment_type"),
             is_primary=serializer.validated_data.get("is_primary", False),
             starts_at=serializer.validated_data.get("starts_at"),
@@ -257,6 +303,7 @@ class TeacherOrganizationDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         teacher = serializer.validated_data.get("teacher", instance.teacher)
         organization = serializer.validated_data.get("organization", instance.organization)
+        position = serializer.validated_data.get("position", instance.position)
         employment_type = serializer.validated_data.get("employment_type", instance.employment_type)
         is_primary = serializer.validated_data.get("is_primary", instance.is_primary)
         starts_at = serializer.validated_data.get("starts_at", instance.starts_at)
@@ -267,6 +314,7 @@ class TeacherOrganizationDetailView(generics.RetrieveUpdateDestroyAPIView):
         link = assign_teacher_to_organization(
             teacher=teacher,
             organization=organization,
+            position=position,
             employment_type=employment_type,
             is_primary=is_primary,
             starts_at=starts_at,
@@ -291,6 +339,26 @@ class TeacherOrganizationDetailView(generics.RetrieveUpdateDestroyAPIView):
             organization=instance.organization,
         )
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class TeacherOrganizationSetPrimaryView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, pk, *args, **kwargs):
+        logger.info("TeacherOrganizationSetPrimaryView.post called link_id=%s", pk)
+        instance = get_teacher_organizations_queryset().filter(pk=pk).first()
+        if instance is None:
+            return Response({"detail": "Связь преподавателя с организацией не найдена."}, status=status.HTTP_404_NOT_FOUND)
+
+        link = set_primary_teacher_organization(
+            teacher=instance.teacher,
+            organization=instance.organization,
+        )
+
+        return Response(
+            TeacherOrganizationSerializer(link).data,
+            status=status.HTTP_200_OK,
+        )
 
 
 class TeacherSubjectListView(generics.ListCreateAPIView):

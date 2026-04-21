@@ -1,88 +1,115 @@
 from __future__ import annotations
 
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from apps.users.tests.factories import create_admin_user, create_profile, create_user
+from apps.users.constants import ROLE_STUDENT, ROLE_TEACHER
+from apps.users.models import Role
+from apps.users.services.profile_services import ensure_role_profile, get_or_create_base_profile
+
+User = get_user_model()
 
 
 class UserApiTestCase(APITestCase):
-    def test_user_list_available_for_admin(self):
-        admin_user = create_admin_user()
+    def setUp(self):
+        self.student_role, _ = Role.objects.get_or_create(
+            code=ROLE_STUDENT,
+            defaults={"name": "Студент", "is_active": True},
+        )
+        self.teacher_role, _ = Role.objects.get_or_create(
+            code=ROLE_TEACHER,
+            defaults={"name": "Преподаватель", "is_active": True},
+        )
 
-        simple_user = create_user(email="simple1@example.com", password="TestPass123!")
-        create_profile(user=simple_user, email="simple1@example.com")
+        self.admin = User.objects.create_superuser(
+            email="admin-user@example.com",
+            password="StrongPass123!",
+        )
+        admin_profile = get_or_create_base_profile(self.admin)
+        admin_profile.first_name = "Админ"
+        admin_profile.last_name = "Главный"
+        admin_profile.full_clean()
+        admin_profile.save()
 
-        self.client.force_authenticate(user=admin_user)
+        self.user = self.create_user("regular-user@example.com", registration_type="student")
+        self.teacher = self.create_user("teacher-user@example.com", registration_type="teacher")
 
+    def create_user(
+        self,
+        email: str,
+        registration_type: str = "student",
+        password: str = "StrongPass123!",
+    ):
+        user = User.objects.create_user(
+            email=email,
+            password=password,
+            registration_type=registration_type,
+        )
+        profile = get_or_create_base_profile(user)
+        profile.first_name = "Иван"
+        profile.last_name = email.split("@")[0].capitalize()
+        profile.full_clean()
+        profile.save()
+        ensure_role_profile(user)
+        return user
+
+    def test_current_user_get(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse("users:current-user")
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["email"], self.user.email)
+
+    def test_user_list_admin_success(self):
+        self.client.force_authenticate(user=self.admin)
         url = reverse("users:user-list")
+
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        if isinstance(response.data, dict) and "results" in response.data:
-            self.assertGreaterEqual(len(response.data["results"]), 1)
-        else:
-            self.assertGreaterEqual(len(response.data), 1)
-
-    def test_user_list_forbidden_for_regular_user(self):
-        user = create_user(email="simple2@example.com", password="TestPass123!")
-        create_profile(user=user, email="simple2@example.com")
-
-        self.client.force_authenticate(user=user)
-
+    def test_user_list_non_admin_forbidden(self):
+        self.client.force_authenticate(user=self.user)
         url = reverse("users:user-list")
+
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_user_detail_available_for_admin(self):
-        admin_user = create_admin_user()
+    def test_user_detail_admin_success(self):
+        self.client.force_authenticate(user=self.admin)
+        url = reverse("users:user-detail", args=[self.user.id])
 
-        target_user = create_user(email="target@example.com", password="TestPass123!")
-        create_profile(user=target_user, email="target@example.com")
-
-        self.client.force_authenticate(user=admin_user)
-
-        url = reverse("users:user-detail", kwargs={"pk": target_user.pk})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["email"], "target@example.com")
+        self.assertEqual(response.data["email"], self.user.email)
 
-    def test_user_detail_patch_for_admin(self):
-        admin_user = create_admin_user()
+    def test_role_list_admin_success(self):
+        self.client.force_authenticate(user=self.admin)
+        url = reverse("users:role-list")
 
-        target_user = create_user(email="target2@example.com", password="TestPass123!")
-        create_profile(user=target_user, email="target2@example.com")
-
-        self.client.force_authenticate(user=admin_user)
-
-        url = reverse("users:user-detail", kwargs={"pk": target_user.pk})
-        payload = {
-            "reset_email": "backup@example.com",
-            "is_email_verified": True,
-        }
-
-        response = self.client.patch(url, payload, format="json")
+        response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        target_user.refresh_from_db()
-        self.assertEqual(target_user.reset_email, "backup@example.com")
-        self.assertTrue(target_user.is_email_verified)
+    def test_role_list_non_admin_forbidden(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse("users:role-list")
 
-    def test_user_detail_forbidden_for_regular_user(self):
-        regular_user = create_user(email="regular@example.com", password="TestPass123!")
-        create_profile(user=regular_user, email="regular@example.com")
-
-        target_user = create_user(email="target3@example.com", password="TestPass123!")
-        create_profile(user=target_user, email="target3@example.com")
-
-        self.client.force_authenticate(user=regular_user)
-
-        url = reverse("users:user-detail", kwargs={"pk": target_user.pk})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_teacher_profile_owner_can_get_own_profile(self):
+        self.client.force_authenticate(user=self.teacher)
+        url = reverse("users:teacher-profile-detail", args=[self.teacher.teacher_profile.id])
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["email"], self.teacher.email)

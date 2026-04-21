@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -67,4 +68,39 @@ def validate_date_range(*, starts_at, ends_at) -> None:
     if starts_at and ends_at and ends_at < starts_at:
         raise ValidationError(
             _("Дата окончания не может быть раньше даты начала.")
+        )
+
+
+def validate_future_datetime(*, value, field_label: str = _("Дата")) -> None:
+    """
+    Проверяет, что datetime находится в будущем.
+    """
+    if value is None:
+        return
+
+    if value <= timezone.now():
+        raise ValidationError(
+            _("%(field_label)s должна быть в будущем.") % {"field_label": field_label}
+        )
+
+
+def validate_raw_access_code(value: str, *, field_label: str = _("Код")) -> None:
+    """
+    Проверяет сырой код доступа/регистрации до хеширования.
+    """
+    value = (value or "").strip()
+
+    if not value:
+        raise ValidationError(
+            _("%(field_label)s не может быть пустым.") % {"field_label": field_label}
+        )
+
+    if len(value) < 6:
+        raise ValidationError(
+            _("%(field_label)s должен содержать не менее 6 символов.") % {"field_label": field_label}
+        )
+
+    if len(value) > 128:
+        raise ValidationError(
+            _("%(field_label)s не должен превышать 128 символов.") % {"field_label": field_label}
         )

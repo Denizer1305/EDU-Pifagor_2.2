@@ -9,19 +9,38 @@ class SubjectCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectCategory
         fields = (
-            'id', 'code',
-            'name', 'description',
-            'is_active', 'created_at',
-            'updated_at',
+            "id", "code",
+            "name", "description",
+            "is_active", "created_at",
+            "updated_at",
         )
         read_only_fields = (
-            'id', 'created_at',
-            'updated_at',
+            "id", "created_at",
+            "updated_at",
         )
+
+    def validate_code(self, value):
+        return value.strip()
+
+    def validate_name(self, value):
+        return value.strip()
+
+    def validate_description(self, value):
+        return value.strip()
+
+
+class SubjectCategoryShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectCategory
+        fields = (
+            "id", "code",
+            "name",
+        )
+        read_only_fields = fields
 
 
 class SubjectSerializer(serializers.ModelSerializer):
-    category = SubjectCategorySerializer(read_only=True)
+    category = SubjectCategoryShortSerializer(read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(
         queryset=SubjectCategory.objects.all(),
         source="category",
@@ -31,13 +50,22 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = (
-            'id', 'category',
-            'category_id', 'name',
-            'short_name', 'description',
-            'is_active', 'created_at',
-            'updated_at',
+            "id", "category",
+            "category_id", "name",
+            "short_name", "description",
+            "is_active", "created_at",
+            "updated_at",
         )
         read_only_fields = (
-            'id', 'created_at',
-            'updated_at',
+            "id", "created_at",
+            "updated_at",
         )
+
+    def validate_name(self, value):
+        return value.strip()
+
+    def validate_short_name(self, value):
+        return value.strip()
+
+    def validate_description(self, value):
+        return value.strip()

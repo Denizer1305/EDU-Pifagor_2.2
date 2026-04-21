@@ -37,9 +37,7 @@ class PermissionsTestCase(TestCase):
         self.assertFalse(permission.has_permission(request, view=None))
 
     def test_teacher_profile_owner_has_access(self):
-        (
-            user, teacher_profile,
-        ) = create_teacher_user()
+        user, teacher_profile = create_teacher_user()
         request = self.factory.get("/fake-url/")
         request.user = user
 
@@ -48,9 +46,7 @@ class PermissionsTestCase(TestCase):
 
     def test_teacher_profile_admin_has_access(self):
         admin = create_admin_user()
-        (
-            _, teacher_profile,
-        ) = create_teacher_user(email="teacher2@example.com")
+        _, teacher_profile = create_teacher_user(email="teacher2@example.com")
 
         request = self.factory.get("/fake-url/")
         request.user = admin
@@ -60,9 +56,7 @@ class PermissionsTestCase(TestCase):
 
     def test_teacher_profile_other_user_denied(self):
         other_user = create_user(email="other@example.com", password="TestPass123!")
-        (
-            _, teacher_profile,
-        ) = create_teacher_user(email="teacher3@example.com")
+        _, teacher_profile = create_teacher_user(email="teacher3@example.com")
 
         request = self.factory.get("/fake-url/")
         request.user = other_user
@@ -71,9 +65,7 @@ class PermissionsTestCase(TestCase):
         self.assertFalse(permission.has_object_permission(request, view=None, obj=teacher_profile))
 
     def test_parent_profile_owner_has_access(self):
-        (
-            user, parent_profile,
-        ) = create_parent_user()
+        user, parent_profile = create_parent_user()
         request = self.factory.get("/fake-url/")
         request.user = user
 

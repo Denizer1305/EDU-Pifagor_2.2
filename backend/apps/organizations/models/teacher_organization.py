@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -12,18 +13,10 @@ class TeacherOrganization(models.Model):
     """
 
     class EmploymentTypeChoices(models.TextChoices):
-        MAIN = (
-            "main", _("Основное место работы"),
-        )
-        PART_TIME = (
-            "part_time", _("Совместительство"),
-        )
-        CONTRACT = (
-            "contract", _("Договор"),
-        )
-        OTHER = (
-            "other", _("Иное"),
-        )
+        MAIN = ("main", _("Основное место работы"))
+        PART_TIME = ("part_time", _("Совместительство"))
+        CONTRACT = ("contract", _("Договор"))
+        OTHER = ("other", _("Иное"))
 
     teacher = models.ForeignKey(
         "users.User",
@@ -38,6 +31,11 @@ class TeacherOrganization(models.Model):
         verbose_name=_("Организация"),
     )
 
+    position = models.CharField(
+        _("Должность"),
+        max_length=255,
+        blank=True,
+    )
     employment_type = models.CharField(
         _("Тип занятости"),
         max_length=32,
@@ -83,20 +81,34 @@ class TeacherOrganization(models.Model):
         db_table = "organizations_teacher_organization"
         verbose_name = _("Связь преподавателя с организацией")
         verbose_name_plural = _("Связи преподавателей с организациями")
-        ordering = (
-            "organization", "teacher",
-        )
+        ordering = ("organization", "teacher")
         constraints = [
             models.UniqueConstraint(
-                fields=(
-                    "teacher", "organization",
-                ),
+                fields=("teacher", "organization"),
                 name="unique_teacher_organization_link",
             )
         ]
 
     def __str__(self) -> str:
         return f"{self.teacher.full_name} — {self.organization}"
+
+    @property
+    def is_current(self) -> bool:
+        """
+        Является ли связь действующей на текущую дату.
+        """
+        if not self.is_active:
+            return False
+
+        today = timezone.localdate()
+
+        if self.starts_at and self.starts_at > today:
+            return False
+
+        if self.ends_at and self.ends_at < today:
+            return False
+
+        return True
 
     def clean(self) -> None:
         super().clean()
@@ -105,3 +117,28 @@ class TeacherOrganization(models.Model):
             raise ValidationError(
                 {"ends_at": _("Дата окончания не может быть раньше даты начала.")}
             )
+
+        if self.teacher_id and hasattr(self.teacher, "registration_type"):
+            if self.teacher.registration_type != "teacher":
+                raise ValidationError(
+                    {"teacher": _("Связь с организацией может быть создана только для пользователя с типом регистрации teacher.")}
+                )
+
+        if self.is_primary and not self.is_active:
+            raise ValidationError(
+                {"is_primary": _("Основная организация должна быть активной.")}
+            )
+
+        if self.is_primary and self.teacher_id:
+            queryset = self.__class__.objects.filter(
+                teacher_id=self.teacher_id,
+                is_primary=True,
+                is_active=True,
+            )
+            if self.pk:
+                queryset = queryset.exclude(pk=self.pk)
+
+            if queryset.exists():
+                raise ValidationError(
+                    {"is_primary": _("У преподавателя уже есть другая основная активная организация.")}
+                )

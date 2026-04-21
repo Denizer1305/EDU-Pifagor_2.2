@@ -7,6 +7,7 @@ from rest_framework.test import APITestCase
 from apps.organizations.tests.factories import (
     create_department,
     create_group,
+    create_group_curator,
     create_organization,
     create_organization_type,
     create_subject,
@@ -74,8 +75,6 @@ class OrganizationApiTestCase(APITestCase):
     def test_group_curator_list(self):
         group = create_group()
         teacher = create_teacher_user()
-        from apps.organizations.tests.factories import create_group_curator
-
         create_group_curator(group=group, teacher=teacher)
 
         url = reverse("organizations:group-curator-list")
@@ -119,3 +118,172 @@ class OrganizationApiTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["name"], "Новая школа")
+
+    def test_set_teacher_registration_code(self):
+        organization = create_organization()
+
+        url = reverse(
+            "organizations:organization-teacher-registration-code",
+            args=[organization.id],
+        )
+        payload = {
+            "teacher_registration_code": "TEACHER-API-123",
+        }
+
+        response = self.client.post(url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data["teacher_registration_code_is_active"])
+        self.assertTrue(response.data["has_active_teacher_registration_code"])
+
+    def test_disable_teacher_registration_code(self):
+        organization = create_organization()
+        organization.set_teacher_registration_code("TEACHER-DISABLE-123")
+        organization.save()
+
+        url = reverse(
+            "organizations:organization-teacher-registration-code-disable",
+            args=[organization.id],
+        )
+        response = self.client.post(url, {}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["teacher_registration_code_is_active"])
+
+    def test_clear_teacher_registration_code(self):
+        organization = create_organization()
+        organization.set_teacher_registration_code("TEACHER-CLEAR-123")
+        organization.save()
+
+        url = reverse(
+            "organizations:organization-teacher-registration-code",
+            args=[organization.id],
+        )
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["teacher_registration_code_is_active"])
+        self.assertFalse(response.data["has_active_teacher_registration_code"])
+
+    def test_set_group_join_code(self):
+        group = create_group()
+
+        url = reverse(
+            "organizations:group-join-code",
+            args=[group.id],
+        )
+        payload = {
+            "join_code": "GROUP-API-123",
+        }
+
+        response = self.client.post(url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data["join_code_is_active"])
+        self.assertTrue(response.data["has_active_join_code"])
+
+    def test_clear_group_join_code(self):
+        group = create_group()
+        group.set_join_code("GROUP-CLEAR-123")
+        group.save()
+
+        url = reverse(
+            "organizations:group-join-code",
+            args=[group.id],
+        )
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["join_code_is_active"])
+        self.assertFalse(response.data["has_active_join_code"])
+
+    def test_create_teacher_organization_with_position(self):
+        teacher = create_teacher_user()
+        organization = create_organization()
+
+        url = reverse("organizations:teacher-organization-list")
+        payload = {
+            "teacher_id": teacher.id,
+            "organization_id": organization.id,
+            "position": "Преподаватель информатики",
+            "employment_type": "main",
+            "is_primary": True,
+            "is_active": True,
+        }
+
+        response = self.client.post(url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["position"], "Преподаватель информатики")
+        self.assertTrue(response.data["is_primary"])
+
+    def test_set_primary_teacher_organization(self):
+        teacher = create_teacher_user()
+        organization_1 = create_organization(name="Организация 1", short_name="Орг1")
+        organization_2 = create_organization(name="Организация 2", short_name="Орг2")
+
+        create_teacher_organization(
+            teacher=teacher,
+            organization=organization_1,
+            is_primary=True,
+            is_active=True,
+        )
+        link_2 = create_teacher_organization(
+            teacher=teacher,
+            organization=organization_2,
+            is_primary=False,
+            is_active=True,
+        )
+
+        url = reverse(
+            "organizations:teacher-organization-set-primary",
+            args=[link_2.id],
+        )
+        response = self.client.post(url, {}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data["is_primary"])
+
+    def test_delete_teacher_organization_soft_deactivates(self):
+        teacher = create_teacher_user()
+        organization = create_organization()
+        link = create_teacher_organization(
+            teacher=teacher,
+            organization=organization,
+            is_primary=True,
+            is_active=True,
+        )
+
+        url = reverse(
+            "organizations:teacher-organization-detail",
+            args=[link.id],
+        )
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        link.refresh_from_db()
+        self.assertFalse(link.is_active)
+        self.assertFalse(link.is_primary)
+
+    def test_delete_group_curator_soft_deactivates(self):
+        group = create_group()
+        teacher = create_teacher_user()
+        curator = create_group_curator(
+            group=group,
+            teacher=teacher,
+            is_primary=True,
+            is_active=True,
+        )
+
+        url = reverse(
+            "organizations:group-curator-detail",
+            args=[curator.id],
+        )
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        curator.refresh_from_db()
+        self.assertFalse(curator.is_active)
+        self.assertFalse(curator.is_primary)

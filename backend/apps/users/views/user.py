@@ -1,48 +1,48 @@
 from __future__ import annotations
 
-import logging
-
-from rest_framework import generics, permissions
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.users.filters import UserFilter
+from apps.users.models import User
 from apps.users.permissions import CanManageUserRoles
-from apps.users.selectors.user_selectors import get_users_queryset
-from apps.users.serializers import UserDetailSerializer, UserListSerializer, UserUpdateSerializer
+from apps.users.serializers.user import CurrentUserSerializer
+
+try:
+    from apps.users.serializers.user import UserSerializer
+except ImportError:  # pragma: no cover
+    UserSerializer = CurrentUserSerializer
 
 
-logger = logging.getLogger(__name__)
+class CurrentUserAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
 
-class UserListView(generics.ListAPIView):
-    """Представление API для user list."""
-    permission_classes = [CanManageUserRoles]
-    serializer_class = UserListSerializer
+    def get(self, request, *args, **kwargs):
+        serializer = CurrentUserSerializer(
+            request.user,
+            context={"request": request},
+        )
+        return Response(serializer.data)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.select_related("profile").prefetch_related("user_roles__role")
+    serializer_class = UserSerializer
+    permission_classes = (CanManageUserRoles,)
     filterset_class = UserFilter
-    search_fields = (
-        "email", "profile__first_name",
-        "profile__last_name",
-    )
     ordering_fields = (
-        "created_at", "email",
+        "created_at",
+        "updated_at",
+        "email",
     )
-
-    def get_queryset(self):
-        """Возвращает queryset для текущего запроса."""
-        logger.info("UserListView.get_queryset called")
-        return get_users_queryset()
-
-
-class UserDetailView(generics.RetrieveUpdateAPIView):
-    """Представление API для user detail."""
-    permission_classes = [CanManageUserRoles]
-
-    def get_queryset(self):
-        """Возвращает queryset для текущего запроса."""
-        logger.info("UserDetailView.get_queryset called")
-        return get_users_queryset()
+    ordering = (
+        "-created_at",
+        "email",
+    )
 
     def get_serializer_class(self):
-        """Возвращает класс сериализатора для текущего действия."""
-        logger.info("UserDetailView.get_serializer_class called")
-        if self.request.method in permissions.SAFE_METHODS:
-            return UserDetailSerializer
-        return UserUpdateSerializer
+        if self.action in {"retrieve"}:
+            return CurrentUserSerializer
+        return UserSerializer

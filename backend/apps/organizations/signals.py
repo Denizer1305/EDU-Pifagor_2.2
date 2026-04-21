@@ -6,10 +6,12 @@ from django.dispatch import receiver
 from apps.organizations.models import (
     Department,
     Group,
+    GroupCurator,
     Organization,
     OrganizationType,
     Subject,
     SubjectCategory,
+    TeacherOrganization,
 )
 
 
@@ -63,3 +65,14 @@ def normalize_group_fields(sender, instance, **kwargs):
     instance.code = _strip_or_empty(instance.code)
     instance.academic_year = _strip_or_empty(instance.academic_year)
     instance.description = _strip_or_empty(instance.description)
+
+
+@receiver(pre_save, sender=GroupCurator)
+def normalize_group_curator_fields(sender, instance, **kwargs):
+    instance.notes = _strip_or_empty(instance.notes)
+
+
+@receiver(pre_save, sender=TeacherOrganization)
+def normalize_teacher_organization_fields(sender, instance, **kwargs):
+    instance.position = _strip_or_empty(instance.position)
+    instance.notes = _strip_or_empty(instance.notes)

@@ -110,11 +110,13 @@ class LoadServicesTestCase(TestCase):
             teacher=teacher,
             organization=group_subject.group.organization,
             is_primary=True,
+            is_active=True,
         )
         create_teacher_subject(
             teacher=teacher,
             subject=group_subject.subject,
             is_primary=True,
+            is_active=True,
         )
 
         assignment = assign_teacher_group_subject(

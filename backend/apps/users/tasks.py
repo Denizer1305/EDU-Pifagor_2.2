@@ -1,15 +1,22 @@
 from __future__ import annotations
 
 import logging
+from datetime import timedelta
 
 from celery import shared_task
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from apps.users.models import User
+from apps.users.constants import (
+    LINK_STATUS_PENDING,
+    ONBOARDING_STATUS_ACTIVE,
+    VERIFICATION_STATUS_PENDING,
+)
+from apps.users.models import ParentStudent, StudentProfile, TeacherProfile, User
 
 logger = logging.getLogger(__name__)
 
@@ -37,14 +44,12 @@ def _send_templated_email(
 
 
 @shared_task(
-    autoretry_for=(
-        Exception,
-    ),
+    autoretry_for=(Exception,),
     retry_backoff=True,
     retry_kwargs={"max_retries": 3},
 )
 def send_welcome_email_task(user_id: int) -> None:
-    """Celery-задача для отправки уведомления по email."""
+    """Отправляет приветственное письмо новому пользователю."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -71,14 +76,12 @@ def send_welcome_email_task(user_id: int) -> None:
 
 
 @shared_task(
-    autoretry_for=(
-        Exception,
-    ),
+    autoretry_for=(Exception,),
     retry_backoff=True,
     retry_kwargs={"max_retries": 3},
 )
 def send_verify_email_task(user_id: int, verification_url: str, expires_at: str) -> None:
-    """Celery-задача для отправки уведомления по email."""
+    """Отправляет письмо для подтверждения электронной почты."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -106,14 +109,12 @@ def send_verify_email_task(user_id: int, verification_url: str, expires_at: str)
 
 
 @shared_task(
-    autoretry_for=(
-        Exception,
-    ),
+    autoretry_for=(Exception,),
     retry_backoff=True,
     retry_kwargs={"max_retries": 3},
 )
 def send_reset_password_email_task(user_id: int, reset_url: str, expires_at: str) -> None:
-    """Celery-задача для отправки уведомления по email."""
+    """Отправляет письмо для восстановления пароля."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -141,14 +142,12 @@ def send_reset_password_email_task(user_id: int, reset_url: str, expires_at: str
 
 
 @shared_task(
-    autoretry_for=(
-        Exception,
-    ),
+    autoretry_for=(Exception,),
     retry_backoff=True,
     retry_kwargs={"max_retries": 3},
 )
 def send_password_changed_email_task(user_id: int) -> None:
-    """Celery-задача для отправки уведомления по email."""
+    """Отправляет уведомление об успешной смене пароля."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -176,7 +175,7 @@ def send_password_changed_email_task(user_id: int) -> None:
 
 @shared_task
 def send_birthday_email_task(user_id: int) -> None:
-    """Celery-задача для отправки уведомления по email."""
+    """Отправляет поздравительное письмо с днем рождения."""
     try:
         user = User.objects.select_related("profile").get(pk=user_id)
     except User.DoesNotExist:
@@ -199,3 +198,66 @@ def send_birthday_email_task(user_id: int) -> None:
         txt_template="templates/system/birthday.txt",
         context=context,
     )
+
+
+@shared_task
+def log_users_onboarding_report() -> dict:
+    """
+    Формирует диагностический отчёт по онбордингу пользователей.
+    """
+    report = {
+        "generated_at": timezone.now().isoformat(),
+        "pending_users": User.objects.exclude(
+            onboarding_status=ONBOARDING_STATUS_ACTIVE,
+        ).count(),
+        "pending_student_verifications": StudentProfile.objects.filter(
+            verification_status=VERIFICATION_STATUS_PENDING,
+        ).count(),
+        "pending_teacher_verifications": TeacherProfile.objects.filter(
+            verification_status=VERIFICATION_STATUS_PENDING,
+        ).count(),
+        "pending_parent_links": ParentStudent.objects.filter(
+            status=LINK_STATUS_PENDING,
+        ).count(),
+    }
+
+    logger.info("Отчёт по онбордингу пользователей: %s", report)
+    return report
+
+
+@shared_task
+def deactivate_stale_unverified_users(days: int = 30) -> dict:
+    """
+    Мягко деактивирует старые неподтверждённые учётные записи.
+
+    Условия:
+    - пользователь старше N дней;
+    - почта не подтверждена;
+    - онбординг не завершён.
+    """
+    threshold = timezone.now() - timedelta(days=days)
+
+    with transaction.atomic():
+        queryset = User.objects.filter(
+            is_active=True,
+            is_email_verified=False,
+            created_at__lt=threshold,
+        ).exclude(
+            onboarding_status=User.OnboardingStatusChoices.ACTIVE,
+        )
+
+        updated_count = queryset.update(
+            is_active=False,
+            onboarding_status=User.OnboardingStatusChoices.BLOCKED,
+            reviewed_at=timezone.now(),
+            review_comment=_("Учетная запись автоматически деактивирована из-за незавершённой верификации."),
+        )
+
+    result = {
+        "days": days,
+        "threshold": threshold.isoformat(),
+        "updated_count": updated_count,
+    }
+
+    logger.warning("Деактивация старых неподтверждённых пользователей завершена: %s", result)
+    return result

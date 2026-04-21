@@ -1,70 +1,60 @@
 from .auth import (
-   LoginSerializer,
-   RegisterSerializer,
-   ChangePasswordSerializer,
-   PasswordResetSerializer,
-   PasswordResetConfirmSerializer
-)
-from .user import (
-    UserListSerializer,
-    UserDetailSerializer,
-    UserUpdateSerializer,
-    CurrentUserSerializer,
-)
-from .profile import (
-    Profile,
-    ProfileSerializer,
-    ProfileDetailSerializer,
-    ProfileUpdateSerializer,
-)
-from .role import (
-    RoleSerializer,
-    UserRoleSerializer,
-)
-
-from .teacher import (
-    TeacherProfileListSerializer,
-    TeacherProfileDetailSerializer,
-    TeacherProfileUpdateSerializer,
-)
-from .student import (
-    StudentProfileDetailSerializer,
-    StudentProfileUpdateSerializer,
+    ChangePasswordSerializer,
+    LoginSerializer,
+    ParentRegistrationSerializer,
+    PasswordResetConfirmSerializer,
+    PasswordResetSerializer,
+    StudentRegistrationSerializer,
+    TeacherRegistrationSerializer,
 )
 from .parent import (
-    ParentStudentSerializer,
-    ParentProfileDetailSerializer,
+    ParentProfileSerializer,
     ParentProfileUpdateSerializer,
+    ParentStudentRequestSerializer,
+    ParentStudentReviewSerializer,
+    ParentStudentSerializer,
 )
+from .profile import (
+    ProfileDetailSerializer,
+    ProfileSerializer,
+    ProfileUpdateSerializer,
+)
+from .role import RoleSerializer, UserRoleSerializer
+from .student import (
+    StudentOnboardingSerializer,
+    StudentProfileReviewSerializer,
+    StudentProfileSerializer,
+)
+from .teacher import (
+    TeacherOnboardingSerializer,
+    TeacherProfileReviewSerializer,
+    TeacherProfileSerializer,
+)
+from .user import CurrentUserSerializer
 
 __all__ = [
-    'LoginSerializer',
-    'RegisterSerializer',
-    'ChangePasswordSerializer',
-    'PasswordResetSerializer',
-    'PasswordResetConfirmSerializer',
-
-    'UserListSerializer',
-    'UserDetailSerializer',
-    'UserUpdateSerializer',
-    'CurrentUserSerializer',
-
-    'Profile',
-    'ProfileSerializer',
-    'ProfileDetailSerializer',
-    'ProfileUpdateSerializer',
-
-    'RoleSerializer',
-    'UserRoleSerializer',
-
-    'TeacherProfileListSerializer',
-    'TeacherProfileDetailSerializer',
-    'TeacherProfileUpdateSerializer',
-
-    'ParentProfileDetailSerializer',
-    'ParentProfileUpdateSerializer',
-    'ParentStudentSerializer',
-
-    'StudentProfileDetailSerializer',
-    'StudentProfileUpdateSerializer',
+    "LoginSerializer",
+    "StudentRegistrationSerializer",
+    "ParentRegistrationSerializer",
+    "TeacherRegistrationSerializer",
+    "PasswordResetSerializer",
+    "PasswordResetConfirmSerializer",
+    "ChangePasswordSerializer",
+    "ProfileSerializer",
+    "ProfileDetailSerializer",
+    "ProfileUpdateSerializer",
+    "CurrentUserSerializer",
+    "StudentProfileSerializer",
+    "StudentOnboardingSerializer",
+    "StudentProfileReviewSerializer",
+    "TeacherProfileSerializer",
+    "TeacherOnboardingSerializer",
+    "TeacherProfileReviewSerializer",
+    "ParentProfileSerializer",
+    "ParentProfileUpdateSerializer",
+    "ParentStudentSerializer",
+    "ParentStudentRequestSerializer",
+    "ParentStudentReviewSerializer",
+    "RoleSerializer",
+    "UserRoleSerializer",
 ]

@@ -24,6 +24,12 @@ class ParentStudent(models.Model):
             "other", _("Иное"),
         )
 
+    class LinkStatusChoices(models.TextChoices):
+        PENDING = "pending", _("Ожидает подтверждения")
+        APPROVED = "approved", _("Подтверждено")
+        REJECTED = "rejected", _("Отклонено")
+        REVOKED = "revoked", _("Отозвано")
+
     parent = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
@@ -42,6 +48,42 @@ class ParentStudent(models.Model):
         max_length=32,
         choices=RelationType.choices,
         default=RelationType.OTHER,
+    )
+
+    status = models.CharField(
+        _("Статус связи"),
+        max_length=32,
+        choices=LinkStatusChoices.choices,
+        default=LinkStatusChoices.PENDING,
+    )
+
+    requested_by = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        related_name="requested_parent_student_links",
+        verbose_name=_("Инициатор запроса"),
+        blank=True,
+        null=True,
+    )
+
+    approved_by = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        related_name="approved_parent_student_links",
+        verbose_name=_("Подтвердил"),
+        blank=True,
+        null=True,
+    )
+
+    approved_at = models.DateTimeField(
+        _("Дата подтверждения"),
+        blank=True,
+        null=True,
+    )
+
+    comment = models.TextField(
+        _("Комментарий"),
+        blank=True,
     )
 
     is_primary = models.BooleanField(
@@ -80,3 +122,6 @@ class ParentStudent(models.Model):
 
         if self.parent_id == self.student_id:
             raise ValidationError(_("Нельзя связать пользователя с самим собой."))
+
+        if self.comment:
+            self.comment = self.comment.strip()

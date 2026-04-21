@@ -106,12 +106,43 @@ class GroupSubject(models.Model):
     def clean(self) -> None:
         super().clean()
 
-        if self.period.academic_year_id != self.academic_year_id:
-            raise ValidationError(
-                {"period": _("Учебный период должен принадлежать тому же учебному году.")}
-            )
+        errors: dict[str, str] = {}
+
+        if self.period_id and self.academic_year_id:
+            if self.period.academic_year_id != self.academic_year_id:
+                errors["period"] = _(
+                    "Учебный период должен принадлежать тому же учебному году."
+                )
+
+        if self.group_id:
+            if hasattr(self.group, "is_active") and not self.group.is_active:
+                errors["group"] = _("Нельзя назначить предмет неактивной группе.")
+
+            group_academic_year = getattr(self.group, "academic_year", "")
+            if group_academic_year and self.academic_year_id:
+                if group_academic_year != self.academic_year.name:
+                    errors["academic_year"] = _(
+                        "Учебный год предмета группы должен совпадать с учебным годом группы."
+                    )
+
+        if self.subject_id:
+            if hasattr(self.subject, "is_active") and not self.subject.is_active:
+                errors["subject"] = _("Нельзя назначить неактивный предмет.")
 
         if self.contact_hours > self.planned_hours:
-            raise ValidationError(
-                {"contact_hours": _("Контактные часы не могут превышать плановые часы.")}
+            errors["contact_hours"] = _(
+                "Контактные часы не могут превышать плановые часы."
             )
+
+        if self.independent_hours > self.planned_hours:
+            errors["independent_hours"] = _(
+                "Самостоятельные часы не могут превышать плановые часы."
+            )
+
+        if (self.contact_hours + self.independent_hours) > self.planned_hours:
+            errors["planned_hours"] = _(
+                "Сумма контактных и самостоятельных часов не может превышать плановые часы."
+            )
+
+        if errors:
+            raise ValidationError(errors)

@@ -58,6 +58,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     Профильные и ролевые данные данные вынесены в отдельные модели.
     """
 
+    class RegistrationTypeChoices(models.TextChoices):
+        UNKNOWN = "unknown", _("Не указан")
+        STUDENT = "student", _("Студент")
+        PARENT = "parent", _("Родитель")
+        TEACHER = "teacher", _("Преподаватель")
+
+    class OnboardingStatusChoices(models.TextChoices):
+        DRAFT = "draft", _("Черновик")
+        PENDING = "pending", _("Ожидает подтверждения")
+        ACTIVE = "active", _("Активирован")
+        REJECTED = "rejected", _("Отклонен")
+        BLOCKED = "blocked", _("Заблокирован")
+
     email = models.EmailField(
         _('Основная эл.почта'),
         unique=True,
@@ -68,6 +81,47 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         null=True,
     )
+
+    registration_type = models.CharField(
+        _("Тип регистрации"),
+        max_length=32,
+        choices=RegistrationTypeChoices.choices,
+        default=RegistrationTypeChoices.UNKNOWN,
+    )
+
+    onboarding_status = models.CharField(
+        _("Статус онбординга"),
+        max_length=32,
+        choices=OnboardingStatusChoices.choices,
+        default=OnboardingStatusChoices.DRAFT,
+    )
+
+    onboarding_completed_at = models.DateTimeField(
+        _("Дата завершения онбординга"),
+        blank=True,
+        null=True,
+    )
+
+    reviewed_by = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        related_name="reviewed_users",
+        verbose_name=_("Проверил"),
+        blank=True,
+        null=True,
+    )
+
+    reviewed_at = models.DateTimeField(
+        _("Дата проверки"),
+        blank=True,
+        null=True,
+    )
+
+    review_comment = models.TextField(
+        _("Комментарий проверки"),
+        blank=True,
+    )
+
     is_email_verified = models.BooleanField(
         _("Почта подтверждена"),
         default=False,
@@ -127,3 +181,14 @@ class User(AbstractBaseUser, PermissionsMixin):
             raise ValidationError(
                 {"reset_email": _("Резервная почта не может совпадать с основной.")}
             )
+
+        if self.review_comment:
+            self.review_comment = self.review_comment.strip()
+
+    @property
+    def is_fully_onboarded(self) -> bool:
+        return self.onboarding_status == self.OnboardingStatusChoices.ACTIVE
+
+    @property
+    def requires_verification(self) -> bool:
+        return self.onboarding_status == self.OnboardingStatusChoices.PENDING

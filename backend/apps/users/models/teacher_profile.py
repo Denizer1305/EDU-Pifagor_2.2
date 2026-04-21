@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
@@ -11,6 +12,12 @@ class TeacherProfile(models.Model):
     Содержит только данные преподавателя.
     Предметы, организации и прочие свзяи хранить в отдельных моделях.
     """
+
+    class VerificationStatusChoices(models.TextChoices):
+        NOT_VERIFIED = "not_verified", _("Не подтвержден")
+        PENDING = "pending", _("Ожидает подтверждения")
+        APPROVED = "approved", _("Подтвержден")
+        REJECTED = "rejected", _("Отклонен")
 
     user = models.OneToOneField(
         "users.User",
@@ -66,6 +73,57 @@ class TeacherProfile(models.Model):
         default=True,
     )
 
+    requested_organization = models.ForeignKey(
+        "organizations.Organization",
+        on_delete=models.SET_NULL,
+        related_name="teacher_profile_requests",
+        verbose_name=_("Запрошенная образовательная организация"),
+        blank=True,
+        null=True,
+    )
+
+    requested_department = models.ForeignKey(
+        "organizations.Department",
+        on_delete=models.SET_NULL,
+        related_name="teacher_profile_requests",
+        verbose_name=_("Запрошенное подразделение"),
+        blank=True,
+        null=True,
+    )
+
+    verification_status = models.CharField(
+        _("Статус подтверждения"),
+        max_length=32,
+        choices=VerificationStatusChoices.choices,
+        default=VerificationStatusChoices.NOT_VERIFIED,
+    )
+
+    code_verified_at = models.DateTimeField(
+        _("Дата подтверждения регистрационного кода"),
+        blank=True,
+        null=True,
+    )
+
+    verified_by = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        related_name="verified_teacher_profiles",
+        verbose_name=_("Подтвердил"),
+        blank=True,
+        null=True,
+    )
+
+    verified_at = models.DateTimeField(
+        _("Дата окончательного подтверждения"),
+        blank=True,
+        null=True,
+    )
+
+    verification_comment = models.TextField(
+        _("Комментарий проверки"),
+        blank=True,
+    )
+
     created_at = models.DateTimeField(
         _("Дата создания"),
         auto_now_add=True,
@@ -83,3 +141,17 @@ class TeacherProfile(models.Model):
     def __str__(self) -> str:
         """Возвращает строковое представление объекта."""
         return self.user.full_name
+
+    def clean(self) -> None:
+        """Выполняет валидацию и нормализацию полей."""
+        if self.verification_comment:
+            self.verification_comment = self.verification_comment.strip()
+
+        if (
+            self.requested_department
+            and self.requested_organization
+            and self.requested_department.organization_id != self.requested_organization_id
+        ):
+            raise ValidationError(
+                {"requested_department": _("Подразделение должно принадлежать выбранной организации.")}
+            )

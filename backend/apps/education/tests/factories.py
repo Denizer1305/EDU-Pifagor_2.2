@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from itertools import count
 from datetime import date
+from itertools import count
+
+from django.utils import timezone
 
 from apps.education.models import (
     AcademicYear,
@@ -20,15 +22,17 @@ from apps.organizations.tests.factories import (
     create_teacher_organization,
     create_teacher_subject,
 )
-from apps.users.constants import ROLE_STUDENT, ROLE_TEACHER
-from apps.users.tests.factories import assign_role, create_profile, create_user
+from apps.users.tests.factories import (
+    create_student_user as base_create_student_user,
+    create_teacher_user as base_create_teacher_user,
+)
 
 
 academic_year_counter = count(1)
 education_period_counter = count(1)
+curriculum_counter = count(1)
 student_counter = count(1)
 teacher_counter = count(1)
-curriculum_counter = count(1)
 
 
 def create_academic_year(
@@ -90,6 +94,52 @@ def create_education_period(
     )
 
 
+def _activate_student_user(user):
+    user.is_email_verified = True
+    user.onboarding_status = "active"
+    user.onboarding_completed_at = timezone.now()
+    user.save(
+        update_fields=(
+            "is_email_verified",
+            "onboarding_status",
+            "onboarding_completed_at",
+        )
+    )
+
+    if hasattr(user, "student_profile") and user.student_profile:
+        user.student_profile.verification_status = "approved"
+        user.student_profile.verified_at = timezone.now()
+        update_fields = ["verification_status", "verified_at"]
+        if hasattr(user.student_profile, "updated_at"):
+            update_fields.append("updated_at")
+        user.student_profile.save(update_fields=update_fields)
+
+    return user
+
+
+def _activate_teacher_user(user):
+    user.is_email_verified = True
+    user.onboarding_status = "active"
+    user.onboarding_completed_at = timezone.now()
+    user.save(
+        update_fields=(
+            "is_email_verified",
+            "onboarding_status",
+            "onboarding_completed_at",
+        )
+    )
+
+    if hasattr(user, "teacher_profile") and user.teacher_profile:
+        user.teacher_profile.verification_status = "approved"
+        user.teacher_profile.verified_at = timezone.now()
+        update_fields = ["verification_status", "verified_at"]
+        if hasattr(user.teacher_profile, "updated_at"):
+            update_fields.append("updated_at")
+        user.teacher_profile.save(update_fields=update_fields)
+
+    return user
+
+
 def create_student_user(
     *,
     email: str | None = None,
@@ -100,16 +150,12 @@ def create_student_user(
     if email is None:
         email = f"student_{index}@example.com"
 
-    user = create_user(email=email, password=password)
-    create_profile(
-        user=user,
+    created = base_create_student_user(
         email=email,
-        first_name="Студент",
-        last_name=f"Тестовый{index}",
-        patronymic="Иванович",
+        password=password,
     )
-    assign_role(user=user, code=ROLE_STUDENT)
-    return user
+    user = created[0] if isinstance(created, tuple) else created
+    return _activate_student_user(user)
 
 
 def create_teacher_user(
@@ -120,18 +166,14 @@ def create_teacher_user(
     index = next(teacher_counter)
 
     if email is None:
-        email = f"edu_teacher_{index}@example.com"
+        email = f"teacher_{index}@example.com"
 
-    user = create_user(email=email, password=password)
-    create_profile(
-        user=user,
+    created = base_create_teacher_user(
         email=email,
-        first_name="Преподаватель",
-        last_name=f"Тестовый{index}",
-        patronymic="Петрович",
+        password=password,
     )
-    assign_role(user=user, code=ROLE_TEACHER)
-    return user
+    user = created[0] if isinstance(created, tuple) else created
+    return _activate_teacher_user(user)
 
 
 def create_student_group_enrollment(
@@ -224,11 +266,13 @@ def create_teacher_group_subject(
         teacher=teacher,
         organization=group_subject.group.organization,
         is_primary=True,
+        is_active=True,
     )
     create_teacher_subject(
         teacher=teacher,
         subject=group_subject.subject,
         is_primary=True,
+        is_active=True,
     )
 
     return TeacherGroupSubject.objects.create(
@@ -296,7 +340,7 @@ def create_curriculum_item(
         period = create_education_period(
             academic_year=curriculum.academic_year,
             start_date=curriculum.academic_year.start_date,
-            end_date=date(2025, 12,31),
+            end_date=date(2025, 12, 31),
         )
     if subject is None:
         subject = create_subject()

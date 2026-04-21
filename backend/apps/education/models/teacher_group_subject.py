@@ -99,19 +99,86 @@ class TeacherGroupSubject(models.Model):
     def clean(self) -> None:
         super().clean()
 
+        errors: dict[str, str] = {}
         period = self.group_subject.period
+        group = self.group_subject.group
+        subject = self.group_subject.subject
 
         if self.ends_at and self.starts_at and self.ends_at < self.starts_at:
-            raise ValidationError(
-                {"ends_at": _("Дата окончания не может быть раньше даты начала.")}
-            )
+            errors["ends_at"] = _("Дата окончания не может быть раньше даты начала.")
 
         if self.starts_at and self.starts_at < period.start_date:
-            raise ValidationError(
-                {"starts_at": _("Дата начала не может быть раньше начала учебного периода.")}
+            errors["starts_at"] = _(
+                "Дата начала не может быть раньше начала учебного периода."
             )
 
         if self.ends_at and self.ends_at > period.end_date:
-            raise ValidationError(
-                {"ends_at": _("Дата окончания не может быть позже окончания учебного периода.")}
+            errors["ends_at"] = _(
+                "Дата окончания не может быть позже окончания учебного периода."
             )
+
+        if self.planned_hours > self.group_subject.planned_hours:
+            errors["planned_hours"] = _(
+                "Плановые часы преподавателя не могут превышать плановые часы предмета группы."
+            )
+
+        if self.teacher_id:
+            registration_type = getattr(self.teacher, "registration_type", "")
+            if registration_type and registration_type != "teacher":
+                errors["teacher"] = _(
+                    "Закрепление за предметом группы может быть создано только для пользователя с типом регистрации teacher."
+                )
+
+            is_email_verified = getattr(self.teacher, "is_email_verified", None)
+            if is_email_verified is False:
+                errors["teacher"] = _(
+                    "Нельзя назначить преподавателя с неподтвержденной электронной почтой."
+                )
+
+            onboarding_status = getattr(self.teacher, "onboarding_status", "")
+            if onboarding_status and onboarding_status != "active":
+                errors["teacher"] = _(
+                    "Нельзя назначить преподавателя с незавершенным онбордингом."
+                )
+
+            teacher_profile = getattr(self.teacher, "teacher_profile", None)
+            if teacher_profile is not None:
+                verification_status = getattr(teacher_profile, "verification_status", "")
+                if verification_status and verification_status != "approved":
+                    errors["teacher"] = _(
+                        "Нельзя назначить преподавателя без подтвержденного профиля преподавателя."
+                    )
+
+            teacher_organizations = getattr(self.teacher, "teacher_organizations", None)
+            if teacher_organizations is not None:
+                active_org_qs = teacher_organizations.filter(
+                    organization=group.organization,
+                    is_active=True,
+                )
+                if hasattr(active_org_qs.model, "starts_at"):
+                    active_org_qs = active_org_qs.filter(
+                        Q(starts_at__isnull=True) | Q(starts_at__lte=period.end_date),
+                        Q(ends_at__isnull=True) | Q(ends_at__gte=period.start_date),
+                    )
+
+                if not active_org_qs.exists():
+                    errors["teacher"] = _(
+                        "Преподаватель не имеет актуальной активной связи с организацией этой группы."
+                    )
+
+            teacher_subjects = getattr(self.teacher, "teacher_subjects", None)
+            if teacher_subjects is not None:
+                active_teacher_subjects = teacher_subjects.filter(is_active=True)
+                if active_teacher_subjects.exists():
+                    if not active_teacher_subjects.filter(subject=subject).exists():
+                        errors["teacher"] = _(
+                            "Преподаватель не закреплен за этим предметом."
+                        )
+
+        if self.is_primary and self.role == self.RoleChoices.ASSISTANT:
+            errors["role"] = _(
+                "Ассистент не может быть отмечен как основной преподаватель."
+            )
+
+        if errors:
+            raise ValidationError(errors)

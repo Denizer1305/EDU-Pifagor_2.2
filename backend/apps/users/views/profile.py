@@ -1,38 +1,47 @@
 from __future__ import annotations
 
-import logging
+from rest_framework import generics, viewsets
+from rest_framework.permissions import IsAuthenticated
 
-from rest_framework import generics, permissions
+from apps.users.filters import ProfileFilter
+from apps.users.models import Profile
+from apps.users.permissions import CanManageUserRoles
+from apps.users.serializers.profile import (
+    ProfileDetailSerializer,
+    ProfileSerializer,
+    ProfileUpdateSerializer,
+)
+from apps.users.services.profile_services import get_or_create_base_profile
 
-from apps.users.selectors.profile_selectors import get_profiles_queryset
-from apps.users.serializers import ProfileDetailSerializer, ProfileUpdateSerializer
 
-
-logger = logging.getLogger(__name__)
-
-class MyProfileView(generics.RetrieveUpdateAPIView):
-    """Представление API для my profile."""
-    permission_classes = [permissions.IsAuthenticated]
+class MyProfileAPIView(generics.RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        """Возвращает объект для текущего пользователя."""
-        logger.info("MyProfileView.get_object called")
-        return self.request.user.profile
+        return get_or_create_base_profile(self.request.user)
 
     def get_serializer_class(self):
-        """Возвращает класс сериализатора для текущего действия."""
-        logger.info("MyProfileView.get_serializer_class called")
-        if self.request.method in permissions.SAFE_METHODS:
-            return ProfileDetailSerializer
-        return ProfileUpdateSerializer
+        if self.request.method in {"PUT", "PATCH"}:
+            return ProfileUpdateSerializer
+        return ProfileDetailSerializer
 
 
-class ProfileDetailView(generics.RetrieveAPIView):
-    """Представление API для profile detail."""
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = ProfileDetailSerializer
-
-    def get_queryset(self):
-        """Возвращает queryset для текущего запроса."""
-        logger.info("ProfileDetailView.get_queryset called")
-        return get_profiles_queryset()
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.select_related(
+        "user",
+        "user__reviewed_by",
+    )
+    serializer_class = ProfileSerializer
+    permission_classes = (CanManageUserRoles,)
+    filterset_class = ProfileFilter
+    ordering_fields = (
+        "created_at",
+        "updated_at",
+        "last_name",
+        "first_name",
+    )
+    ordering = (
+        "last_name",
+        "first_name",
+        "patronymic",
+    )
