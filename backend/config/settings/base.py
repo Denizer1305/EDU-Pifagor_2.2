@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     # "apps.testing",
     # "apps.schedule",
     # "apps.notifications",
-    # "apps.feedback",
+    "apps.feedback.apps.FeedbackConfig",
     # "apps.analytics",
 ]
 
