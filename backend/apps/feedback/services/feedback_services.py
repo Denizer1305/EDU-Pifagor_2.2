@@ -5,18 +5,27 @@ from typing import Iterable
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.utils import timezone
 
-from apps.feedback.models import FeedbackAttachment, FeedbackRequest
+from apps.feedback.models import (
+    FeedbackAttachment,
+    FeedbackRequest,
+    FeedbackRequestContact,
+    FeedbackRequestProcessing,
+    FeedbackRequestTechnical,
+    FeedbackStatusHistory,
+)
+from apps.feedback.models.base import normalize_text
+from apps.feedback.services.feedback_processing_services import (
+    archive_feedback_request,
+    mark_feedback_as_spam,
+    mark_feedback_in_progress,
+    reject_feedback_request,
+    resolve_feedback_request,
+)
 
 logger = logging.getLogger(__name__)
 
-
 MAX_ATTACHMENTS_PER_REQUEST = 5
-
-
-def _normalize_text(value: str | None) -> str:
-    return (value or "").strip()
 
 
 def _get_profile(user):
@@ -77,10 +86,10 @@ def _apply_authenticated_user_defaults(
         organization_name = organization_name or _get_user_organization_name(user)
 
     return (
-        _normalize_text(full_name),
-        _normalize_text(email),
-        _normalize_text(phone),
-        _normalize_text(organization_name),
+        normalize_text(full_name),
+        normalize_text(email),
+        normalize_text(phone),
+        normalize_text(organization_name),
     )
 
 
@@ -103,8 +112,8 @@ def _extract_request_meta(request) -> dict[str, str | None]:
 
     return {
         "ip_address": ip_address,
-        "user_agent": _normalize_text(meta.get("HTTP_USER_AGENT", "")),
-        "referrer": _normalize_text(meta.get("HTTP_REFERER", "")),
+        "user_agent": normalize_text(meta.get("HTTP_USER_AGENT", "")),
+        "referrer": normalize_text(meta.get("HTTP_REFERER", "")),
     }
 
 
@@ -125,7 +134,11 @@ def _validate_attachments_payload(files: Iterable | None) -> list:
     return files_list
 
 
-def _create_attachment(*, feedback_request: FeedbackRequest, file_obj) -> FeedbackAttachment:
+def _create_attachment(
+    *,
+    feedback_request: FeedbackRequest,
+    file_obj,
+) -> FeedbackAttachment:
     attachment = FeedbackAttachment(
         feedback_request=feedback_request,
         file=file_obj,
@@ -141,6 +154,92 @@ def _create_attachment(*, feedback_request: FeedbackRequest, file_obj) -> Feedba
         attachment.original_name,
     )
     return attachment
+
+
+def _create_contact(
+    *,
+    feedback_request: FeedbackRequest,
+    full_name: str,
+    email: str,
+    phone: str,
+    organization_name: str,
+) -> FeedbackRequestContact:
+    contact = FeedbackRequestContact(
+        feedback_request=feedback_request,
+        full_name=full_name,
+        email=email,
+        phone=phone,
+        organization_name=organization_name,
+    )
+    contact.full_clean()
+    contact.save()
+    return contact
+
+
+def _create_technical(
+    *,
+    feedback_request: FeedbackRequest,
+    page_url: str,
+    frontend_route: str,
+    error_code: str,
+    error_title: str,
+    error_details: str,
+    client_platform: str,
+    app_version: str,
+    ip_address,
+    user_agent: str,
+    referrer: str,
+    extra_payload: dict | None = None,
+) -> FeedbackRequestTechnical:
+    technical = FeedbackRequestTechnical(
+        feedback_request=feedback_request,
+        page_url=normalize_text(page_url),
+        frontend_route=normalize_text(frontend_route),
+        error_code=normalize_text(error_code),
+        error_title=normalize_text(error_title),
+        error_details=normalize_text(error_details),
+        client_platform=normalize_text(client_platform),
+        app_version=normalize_text(app_version),
+        ip_address=ip_address,
+        user_agent=normalize_text(user_agent),
+        referrer=normalize_text(referrer),
+        extra_payload=extra_payload or {},
+    )
+    technical.full_clean()
+    technical.save()
+    return technical
+
+
+def _create_processing(
+    *,
+    feedback_request: FeedbackRequest,
+) -> FeedbackRequestProcessing:
+    processing = FeedbackRequestProcessing(
+        feedback_request=feedback_request,
+    )
+    processing.full_clean()
+    processing.save()
+    return processing
+
+
+def _create_status_history(
+    *,
+    feedback_request: FeedbackRequest,
+    from_status: str,
+    to_status: str,
+    changed_by=None,
+    comment: str = "",
+) -> FeedbackStatusHistory:
+    history = FeedbackStatusHistory(
+        feedback_request=feedback_request,
+        from_status=normalize_text(from_status),
+        to_status=to_status,
+        changed_by=changed_by,
+        comment=normalize_text(comment),
+    )
+    history.full_clean()
+    history.save()
+    return history
 
 
 @transaction.atomic
@@ -164,6 +263,7 @@ def create_feedback_request(
     error_details: str = "",
     client_platform: str = "",
     app_version: str = "",
+    extra_payload: dict | None = None,
     request=None,
 ) -> FeedbackRequest:
     logger.info(
@@ -189,33 +289,54 @@ def create_feedback_request(
         type = FeedbackRequest.TypeChoices.BUG
 
     if source == FeedbackRequest.SourceChoices.ERROR_MODAL and not subject:
-        subject = _normalize_text(error_title) or "Сообщение об ошибке"
+        subject = normalize_text(error_title) or "Сообщение об ошибке"
 
     feedback_request = FeedbackRequest(
         user=user if user and getattr(user, "is_authenticated", False) else None,
         type=type,
         status=FeedbackRequest.StatusChoices.NEW,
         source=source,
-        subject=_normalize_text(subject),
-        message=_normalize_text(message),
+        subject=normalize_text(subject),
+        message=normalize_text(message),
+        is_personal_data_consent=is_personal_data_consent,
+    )
+    feedback_request.full_clean()
+    feedback_request.save()
+
+    _create_contact(
+        feedback_request=feedback_request,
         full_name=full_name,
         email=email,
         phone=phone,
         organization_name=organization_name,
-        is_personal_data_consent=is_personal_data_consent,
-        page_url=_normalize_text(page_url),
-        frontend_route=_normalize_text(frontend_route),
-        error_code=_normalize_text(error_code),
-        error_title=_normalize_text(error_title),
-        error_details=_normalize_text(error_details),
-        client_platform=_normalize_text(client_platform),
-        app_version=_normalize_text(app_version),
+    )
+
+    _create_technical(
+        feedback_request=feedback_request,
+        page_url=page_url,
+        frontend_route=frontend_route,
+        error_code=error_code,
+        error_title=error_title,
+        error_details=error_details,
+        client_platform=client_platform,
+        app_version=app_version,
         ip_address=request_meta["ip_address"],
         user_agent=request_meta["user_agent"],
         referrer=request_meta["referrer"],
+        extra_payload=extra_payload,
     )
-    feedback_request.full_clean()
-    feedback_request.save()
+
+    _create_processing(
+        feedback_request=feedback_request,
+    )
+
+    _create_status_history(
+        feedback_request=feedback_request,
+        from_status="",
+        to_status=FeedbackRequest.StatusChoices.NEW,
+        changed_by=user if user and getattr(user, "is_authenticated", False) else None,
+        comment="Обращение создано.",
+    )
 
     for file_obj in files_list:
         _create_attachment(
@@ -281,6 +402,7 @@ def create_error_feedback_request(
     error_details: str = "",
     client_platform: str = "",
     app_version: str = "",
+    extra_payload: dict | None = None,
     request=None,
 ) -> FeedbackRequest:
     return create_feedback_request(
@@ -302,153 +424,6 @@ def create_error_feedback_request(
         error_details=error_details,
         client_platform=client_platform,
         app_version=app_version,
+        extra_payload=extra_payload,
         request=request,
     )
-
-
-@transaction.atomic
-def mark_feedback_in_progress(
-    *,
-    feedback_request: FeedbackRequest,
-    admin_user,
-    internal_note: str = "",
-) -> FeedbackRequest:
-    logger.info(
-        "mark_feedback_in_progress started feedback_request_id=%s admin_user_id=%s",
-        feedback_request.id,
-        getattr(admin_user, "id", None),
-    )
-
-    feedback_request.status = FeedbackRequest.StatusChoices.IN_PROGRESS
-    if internal_note:
-        feedback_request.internal_note = _normalize_text(internal_note)
-    feedback_request.full_clean()
-    feedback_request.save()
-
-    logger.info(
-        "mark_feedback_in_progress completed feedback_request_id=%s",
-        feedback_request.id,
-    )
-    return feedback_request
-
-
-@transaction.atomic
-def resolve_feedback_request(
-    *,
-    feedback_request: FeedbackRequest,
-    admin_user,
-    reply_message: str = "",
-    internal_note: str = "",
-) -> FeedbackRequest:
-    logger.info(
-        "resolve_feedback_request started feedback_request_id=%s admin_user_id=%s",
-        feedback_request.id,
-        getattr(admin_user, "id", None),
-    )
-
-    feedback_request.status = FeedbackRequest.StatusChoices.RESOLVED
-    feedback_request.is_processed = True
-    feedback_request.processed_at = timezone.now()
-    feedback_request.processed_by = admin_user
-    feedback_request.reply_message = _normalize_text(reply_message)
-    if internal_note:
-        feedback_request.internal_note = _normalize_text(internal_note)
-
-    feedback_request.full_clean()
-    feedback_request.save()
-
-    logger.info(
-        "resolve_feedback_request completed feedback_request_id=%s",
-        feedback_request.id,
-    )
-    return feedback_request
-
-
-@transaction.atomic
-def reject_feedback_request(
-    *,
-    feedback_request: FeedbackRequest,
-    admin_user,
-    reply_message: str = "",
-    internal_note: str = "",
-) -> FeedbackRequest:
-    logger.info(
-        "reject_feedback_request started feedback_request_id=%s admin_user_id=%s",
-        feedback_request.id,
-        getattr(admin_user, "id", None),
-    )
-
-    feedback_request.status = FeedbackRequest.StatusChoices.REJECTED
-    feedback_request.is_processed = True
-    feedback_request.processed_at = timezone.now()
-    feedback_request.processed_by = admin_user
-    feedback_request.reply_message = _normalize_text(reply_message)
-    if internal_note:
-        feedback_request.internal_note = _normalize_text(internal_note)
-
-    feedback_request.full_clean()
-    feedback_request.save()
-
-    logger.info(
-        "reject_feedback_request completed feedback_request_id=%s",
-        feedback_request.id,
-    )
-    return feedback_request
-
-
-@transaction.atomic
-def mark_feedback_as_spam(
-    *,
-    feedback_request: FeedbackRequest,
-    admin_user,
-    internal_note: str = "",
-) -> FeedbackRequest:
-    logger.info(
-        "mark_feedback_as_spam started feedback_request_id=%s admin_user_id=%s",
-        feedback_request.id,
-        getattr(admin_user, "id", None),
-    )
-
-    feedback_request.status = FeedbackRequest.StatusChoices.SPAM
-    feedback_request.is_spam_suspected = True
-    feedback_request.is_processed = True
-    feedback_request.processed_at = timezone.now()
-    feedback_request.processed_by = admin_user
-    if internal_note:
-        feedback_request.internal_note = _normalize_text(internal_note)
-
-    feedback_request.full_clean()
-    feedback_request.save()
-
-    logger.info(
-        "mark_feedback_as_spam completed feedback_request_id=%s",
-        feedback_request.id,
-    )
-    return feedback_request
-
-
-@transaction.atomic
-def archive_feedback_request(
-    *,
-    feedback_request: FeedbackRequest,
-    admin_user,
-    internal_note: str = "",
-) -> FeedbackRequest:
-    logger.info(
-        "archive_feedback_request started feedback_request_id=%s admin_user_id=%s",
-        feedback_request.id,
-        getattr(admin_user, "id", None),
-    )
-
-    feedback_request.status = FeedbackRequest.StatusChoices.ARCHIVED
-    if internal_note:
-        feedback_request.internal_note = _normalize_text(internal_note)
-
-    feedback_request.full_clean()
-    feedback_request.save()
-
-    logger.info(
-        "archive_feedback_request completed feedback_request_id=%s",
-        feedback_request.id,
-    )
-    return feedback_request

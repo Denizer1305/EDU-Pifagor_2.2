@@ -57,3 +57,4 @@ class IsFeedbackOwnerOrAdmin(BasePermission):
             return True
 
         return getattr(obj, "user_id", None) == user.id
+

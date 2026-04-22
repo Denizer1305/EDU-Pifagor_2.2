@@ -1,100 +1,120 @@
 from __future__ import annotations
 
 import os
+import uuid
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+
+from apps.feedback.models.base import TimeStampedModel, normalize_text
+from apps.feedback.models.feedback_request import FeedbackRequest
 
 
-def feedback_attachment_upload_to(instance, filename: str) -> str:
-    feedback_request_id = instance.feedback_request_id or "unassigned"
-    return f"feedback/{feedback_request_id}/{filename}"
+def feedback_attachment_upload_to(instance, filename):
+    """
+    Оставляем это имя для совместимости со старыми миграциями.
+    """
+    ext = os.path.splitext(filename)[1].lower()
+    return f"feedback/attachments/{uuid.uuid4().hex}{ext}"
 
 
-class FeedbackAttachment(models.Model):
-    class FileTypeChoices(models.TextChoices):
-        IMAGE = "image", _("Изображение")
-        PDF = "pdf", _("PDF")
-        DOC = "doc", _("DOC / DOCX")
-        OTHER = "other", _("Другое")
+class FeedbackAttachment(TimeStampedModel):
+    class FileKindChoices(models.TextChoices):
+        IMAGE = "image", "Изображение"
+        PDF = "pdf", "PDF"
+        DOCUMENT = "document", "Документ"
+        OTHER = "other", "Другое"
 
-    feedback_request = models.ForeignKey(
-        "feedback.FeedbackRequest",
-        on_delete=models.CASCADE,
-        related_name="attachments",
-        verbose_name=_("Обращение"),
-    )
-    file = models.FileField(
-        _("Файл"),
-        upload_to=feedback_attachment_upload_to,
-    )
-    original_name = models.CharField(
-        _("Оригинальное имя файла"),
-        max_length=255,
-        blank=True,
-    )
-    file_type = models.CharField(
-        _("Тип файла"),
-        max_length=16,
-        choices=FileTypeChoices.choices,
-        default=FileTypeChoices.OTHER,
-    )
-    file_size = models.PositiveIntegerField(
-        _("Размер файла в байтах"),
-        default=0,
-    )
-    created_at = models.DateTimeField(
-        _("Дата создания"),
-        auto_now_add=True,
-    )
+    ALLOWED_EXTENSIONS = {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".webp",
+        ".pdf",
+        ".doc",
+        ".docx",
+    }
+    MAX_FILE_SIZE = 10 * 1024 * 1024
 
     class Meta:
         db_table = "feedback_attachment"
-        verbose_name = _("Вложение обращения")
-        verbose_name_plural = _("Вложения обращений")
-        ordering = ("created_at",)
+        verbose_name = "Вложение обращения"
+        verbose_name_plural = "Вложения обращений"
+        indexes = [
+            models.Index(fields=("feedback_request", "created_at")),
+            models.Index(fields=("kind",)),
+        ]
 
-    def __str__(self) -> str:
-        return self.original_name or os.path.basename(self.file.name)
+    feedback_request = models.ForeignKey(
+        FeedbackRequest,
+        on_delete=models.CASCADE,
+        related_name="attachments",
+        verbose_name="Обращение",
+    )
+    file = models.FileField(
+        upload_to=feedback_attachment_upload_to,
+        verbose_name="Файл",
+    )
+    original_name = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Оригинальное имя файла",
+    )
+    mime_type = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="MIME-тип",
+    )
+    file_size = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Размер файла",
+    )
+    kind = models.CharField(
+        max_length=32,
+        choices=FileKindChoices.choices,
+        default=FileKindChoices.OTHER,
+        verbose_name="Тип файла",
+    )
 
-    def clean(self) -> None:
-        super().clean()
-
+    def clean(self):
         errors: dict[str, str] = {}
 
-        if self.file:
-            ext = os.path.splitext(self.file.name)[1].lower()
-            allowed_ext = {
-                ".jpg", ".jpeg", ".png", ".gif", ".webp",
-                ".pdf", ".doc", ".docx",
-            }
+        if not self.file:
+            errors["file"] = "Файл обязателен."
 
-            if ext in {".jpg", ".jpeg", ".png", ".gif", ".webp"}:
-                self.file_type = self.FileTypeChoices.IMAGE
-            elif ext == ".pdf":
-                self.file_type = self.FileTypeChoices.PDF
-            elif ext in {".doc", ".docx"}:
-                self.file_type = self.FileTypeChoices.DOC
-            else:
-                self.file_type = self.FileTypeChoices.OTHER
+        filename = getattr(self.file, "name", "") or self.original_name
+        ext = os.path.splitext(filename)[1].lower()
 
-            if ext not in allowed_ext:
-                errors["file"] = _(
-                    "Поддерживаются только изображения, PDF, DOC и DOCX."
-                )
+        if ext and ext not in self.ALLOWED_EXTENSIONS:
+            errors["file"] = "Поддерживаются только изображения, PDF, DOC и DOCX."
 
-            file_size = getattr(self.file, "size", 0) or 0
-            self.file_size = file_size
-
-            max_size = 10 * 1024 * 1024
-            if file_size > max_size:
-                errors["file"] = _(
-                    "Размер файла не должен превышать 10 МБ."
-                )
-
-            if not self.original_name:
-                self.original_name = os.path.basename(self.file.name)
+        file_size = getattr(self.file, "size", 0) or self.file_size
+        if file_size > self.MAX_FILE_SIZE:
+            errors["file"] = "Размер файла не должен превышать 10 МБ."
 
         if errors:
             raise ValidationError(errors)
+
+    def save(self, *args, **kwargs):
+        if self.file:
+            self.original_name = (
+                normalize_text(self.original_name) or os.path.basename(self.file.name)
+            )
+            self.file_size = getattr(self.file, "size", 0) or 0
+            self.mime_type = getattr(self.file, "content_type", "") or ""
+
+            ext = os.path.splitext(self.original_name)[1].lower()
+            if ext in {".jpg", ".jpeg", ".png", ".gif", ".webp"}:
+                self.kind = self.FileKindChoices.IMAGE
+            elif ext == ".pdf":
+                self.kind = self.FileKindChoices.PDF
+            elif ext in {".doc", ".docx"}:
+                self.kind = self.FileKindChoices.DOCUMENT
+            else:
+                self.kind = self.FileKindChoices.OTHER
+
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return self.original_name or f"Вложение #{self.pk}"

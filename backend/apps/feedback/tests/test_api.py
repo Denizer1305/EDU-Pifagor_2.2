@@ -52,6 +52,9 @@ class FeedbackApiTestCase(APITestCase):
             response.data["source"],
             FeedbackRequest.SourceChoices.CONTACTS_PAGE,
         )
+        self.assertEqual(response.data["email"], "public@example.com")
+        self.assertEqual(response.data["contact"]["email"], "public@example.com")
+        self.assertEqual(len(response.data["attachments"]), 1)
 
     def test_error_feedback_create_for_authenticated_user(self):
         self.client.force_authenticate(user=self.user)
@@ -84,16 +87,19 @@ class FeedbackApiTestCase(APITestCase):
         )
         self.assertEqual(response.data["user"], self.user.id)
         self.assertEqual(response.data["email"], self.user.email)
+        self.assertEqual(response.data["contact"]["email"], self.user.email)
+        self.assertEqual(
+            response.data["technical"]["error_code"],
+            "LESSON_LOAD_FAILED",
+        )
 
     def test_my_feedback_request_list_returns_only_own(self):
         own_request = create_feedback_request(
             user=self.user,
-            email=self.user.email,
             subject="Моё обращение",
         )
         create_feedback_request(
             user=self.other_user,
-            email=self.other_user.email,
             subject="Чужое обращение",
         )
 
@@ -109,15 +115,12 @@ class FeedbackApiTestCase(APITestCase):
     def test_my_feedback_request_list_filters_by_status(self):
         target = create_feedback_request(
             user=self.user,
-            email=self.user.email,
             status=FeedbackRequest.StatusChoices.NEW,
             subject="Новый запрос",
         )
         create_feedback_request(
             user=self.user,
-            email=self.user.email,
             status=FeedbackRequest.StatusChoices.RESOLVED,
-            is_processed=True,
             subject="Решённый запрос",
         )
 
@@ -133,12 +136,10 @@ class FeedbackApiTestCase(APITestCase):
     def test_my_feedback_request_list_filters_by_search(self):
         target = create_feedback_request(
             user=self.user,
-            email=self.user.email,
             subject="Ошибка открытия урока",
         )
         create_feedback_request(
             user=self.user,
-            email=self.user.email,
             subject="Вопрос по расписанию",
         )
 
@@ -154,14 +155,12 @@ class FeedbackApiTestCase(APITestCase):
     def test_my_feedback_request_list_filters_by_has_attachments(self):
         with_files = create_feedback_request(
             user=self.user,
-            email=self.user.email,
             subject="С файлом",
         )
         create_feedback_attachment(feedback_request=with_files)
 
         create_feedback_request(
             user=self.user,
-            email=self.user.email,
             subject="Без файла",
         )
 
@@ -177,7 +176,6 @@ class FeedbackApiTestCase(APITestCase):
     def test_my_feedback_request_detail_for_owner(self):
         feedback_request = create_feedback_request(
             user=self.user,
-            email=self.user.email,
             subject="Детальное обращение",
         )
 
@@ -187,11 +185,11 @@ class FeedbackApiTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["id"], feedback_request.id)
+        self.assertEqual(response.data["contact"]["email"], self.user.email)
 
     def test_my_feedback_request_detail_denied_for_other_user(self):
         feedback_request = create_feedback_request(
             user=self.other_user,
-            email=self.other_user.email,
         )
 
         self.client.force_authenticate(user=self.user)
@@ -202,7 +200,7 @@ class FeedbackApiTestCase(APITestCase):
 
     def test_admin_feedback_request_list(self):
         feedback_request = create_feedback_request(
-            email="admin_list@example.com",
+            subject="Админский список",
             status=FeedbackRequest.StatusChoices.NEW,
         )
 
@@ -218,13 +216,13 @@ class FeedbackApiTestCase(APITestCase):
         target = create_feedback_request(
             type=FeedbackRequest.TypeChoices.BUG,
             source=FeedbackRequest.SourceChoices.ERROR_MODAL,
-            email="bug_modal@example.com",
             subject="Ошибка в модальном окне",
+            error_code="BUG-001",
+            error_title="Ошибка",
         )
         create_feedback_request(
             type=FeedbackRequest.TypeChoices.QUESTION,
             source=FeedbackRequest.SourceChoices.CONTACTS_PAGE,
-            email="question_contacts@example.com",
             subject="Обычный вопрос",
         )
 
@@ -245,14 +243,10 @@ class FeedbackApiTestCase(APITestCase):
 
     def test_admin_feedback_request_list_filters_by_is_processed(self):
         processed_request = create_feedback_request(
-            email="processed@example.com",
             status=FeedbackRequest.StatusChoices.RESOLVED,
-            is_processed=True,
         )
         create_feedback_request(
-            email="not_processed@example.com",
             status=FeedbackRequest.StatusChoices.NEW,
-            is_processed=False,
         )
 
         self.client.force_authenticate(user=self.admin_user)
@@ -267,7 +261,6 @@ class FeedbackApiTestCase(APITestCase):
     def test_admin_feedback_request_list_filters_by_is_authenticated_sender(self):
         auth_request = create_feedback_request(
             user=self.user,
-            email=self.user.email,
             subject="От авторизованного",
         )
         create_feedback_request(
@@ -287,13 +280,11 @@ class FeedbackApiTestCase(APITestCase):
 
     def test_admin_feedback_request_list_filters_by_has_attachments(self):
         with_files = create_feedback_request(
-            email="with_files@example.com",
             subject="Со вложением",
         )
         create_feedback_attachment(feedback_request=with_files)
 
         create_feedback_request(
-            email="without_files@example.com",
             subject="Без вложения",
         )
 
@@ -308,12 +299,11 @@ class FeedbackApiTestCase(APITestCase):
 
     def test_admin_feedback_request_list_filters_by_search(self):
         target = create_feedback_request(
-            email="search_bug@example.com",
             subject="Ошибка загрузки урока",
             error_code="LESSON_LOAD_FAILED",
+            error_title="Ошибка загрузки урока",
         )
         create_feedback_request(
-            email="search_other@example.com",
             subject="Просто вопрос",
         )
 
@@ -335,7 +325,6 @@ class FeedbackApiTestCase(APITestCase):
 
     def test_admin_feedback_request_detail_patch_resolve(self):
         feedback_request = create_feedback_request(
-            email="admin_patch@example.com",
             status=FeedbackRequest.StatusChoices.NEW,
         )
 
@@ -357,6 +346,7 @@ class FeedbackApiTestCase(APITestCase):
             FeedbackRequest.StatusChoices.RESOLVED,
         )
         self.assertTrue(response.data["is_processed"])
+        self.assertEqual(response.data["processing"]["reply_message"], "Исправлено")
 
     def test_regular_user_cannot_access_admin_feedback_list(self):
         self.client.force_authenticate(user=self.user)

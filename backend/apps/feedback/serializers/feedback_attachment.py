@@ -7,13 +7,16 @@ from apps.feedback.models import FeedbackAttachment
 
 class FeedbackAttachmentSerializer(serializers.ModelSerializer):
     file_url = serializers.SerializerMethodField(read_only=True)
+    kind_display = serializers.CharField(source="get_kind_display", read_only=True)
 
     class Meta:
         model = FeedbackAttachment
         fields = (
             "id",
             "original_name",
-            "file_type",
+            "kind",
+            "kind_display",
+            "mime_type",
             "file_size",
             "file",
             "file_url",
@@ -22,7 +25,9 @@ class FeedbackAttachmentSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "id",
             "original_name",
-            "file_type",
+            "kind",
+            "kind_display",
+            "mime_type",
             "file_size",
             "file_url",
             "created_at",

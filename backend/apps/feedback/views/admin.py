@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.feedback.filters import FeedbackRequestFilter
+from apps.feedback.models import FeedbackRequestProcessing
 from apps.feedback.serializers import (
     FeedbackRequestAdminUpdateSerializer,
     FeedbackRequestDetailSerializer,
@@ -20,7 +21,7 @@ from apps.feedback.selectors import (
     get_feedback_request_by_id,
     get_feedback_requests_for_admin_queryset,
 )
-from apps.feedback.services import (
+from apps.feedback.services.feedback_services import (
     archive_feedback_request,
     mark_feedback_as_spam,
     mark_feedback_in_progress,
@@ -72,6 +73,13 @@ def _apply_feedback_filter(request, queryset):
     return filterset.qs
 
 
+def _get_or_create_processing(feedback_request):
+    processing, _ = FeedbackRequestProcessing.objects.get_or_create(
+        feedback_request=feedback_request,
+    )
+    return processing
+
+
 class IsAdminOrSuperuser(BasePermission):
     message = "У вас нет прав администратора."
 
@@ -112,7 +120,7 @@ class FeedbackRequestAdminDetailAPIView(APIView):
     - status=rejected -> отклонить
     - status=spam -> пометить как спам
     - status=archived -> архивировать
-    - без status -> обновить комментарии/флаги
+    - без status -> обновить processing-поля
     """
 
     permission_classes = (IsAdminOrSuperuser,)
@@ -157,7 +165,6 @@ class FeedbackRequestAdminDetailAPIView(APIView):
             )
 
         serializer = FeedbackRequestAdminUpdateSerializer(
-            feedback_request,
             data=request.data,
             partial=True,
             context={"request": request},
@@ -203,41 +210,46 @@ class FeedbackRequestAdminDetailAPIView(APIView):
                     internal_note=internal_note,
                 )
             else:
-                direct_fields = (
-                    "reply_message",
-                    "internal_note",
-                    "is_spam_suspected",
-                    "is_processed",
-                )
+                processing = _get_or_create_processing(feedback_request)
                 update_fields: list[str] = []
 
-                for field_name in direct_fields:
-                    if field_name in validated:
-                        setattr(feedback_request, field_name, validated[field_name])
-                        update_fields.append(field_name)
+                if "reply_message" in validated:
+                    processing.reply_message = reply_message
+                    update_fields.append("reply_message")
+
+                if "internal_note" in validated:
+                    processing.internal_note = internal_note
+                    update_fields.append("internal_note")
+
+                if "is_spam_suspected" in validated:
+                    processing.is_spam_suspected = validated["is_spam_suspected"]
+                    update_fields.append("is_spam_suspected")
 
                 if "is_processed" in validated:
                     if validated["is_processed"]:
-                        if not feedback_request.processed_at:
-                            feedback_request.processed_at = timezone.now()
+                        if not processing.processed_at:
+                            processing.processed_at = timezone.now()
                             update_fields.append("processed_at")
-                        if not feedback_request.processed_by_id:
-                            feedback_request.processed_by = request.user
+                        if not processing.processed_by_id:
+                            processing.processed_by = request.user
                             update_fields.append("processed_by")
                     else:
-                        feedback_request.processed_at = None
-                        feedback_request.processed_by = None
+                        processing.processed_at = None
+                        processing.processed_by = None
                         update_fields.extend(["processed_at", "processed_by"])
 
-                feedback_request.full_clean()
+                processing.full_clean()
+
                 if update_fields:
                     if "updated_at" not in update_fields:
                         update_fields.append("updated_at")
-                    feedback_request.save(update_fields=update_fields)
+                    processing.save(update_fields=update_fields)
+
         except DjangoValidationError as exc:
             payload = exc.message_dict if hasattr(exc, "message_dict") else {"detail": exc.messages}
             return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
+        feedback_request = self.get_object(pk)
         output_serializer = FeedbackRequestDetailSerializer(
             feedback_request,
             context={"request": request},

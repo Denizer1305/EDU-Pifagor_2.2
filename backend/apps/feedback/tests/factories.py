@@ -5,7 +5,14 @@ from itertools import count
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 
-from apps.feedback.models import FeedbackAttachment, FeedbackRequest
+from apps.feedback.models import (
+    FeedbackAttachment,
+    FeedbackRequest,
+    FeedbackRequestContact,
+    FeedbackRequestProcessing,
+    FeedbackRequestTechnical,
+    FeedbackStatusHistory,
+)
 from apps.users.tests.factories import create_admin_user, create_profile, create_user
 
 
@@ -88,7 +95,8 @@ def create_feedback_request(
     organization_name: str = "",
     is_personal_data_consent: bool = True,
     personal_data_consent_at=None,
-    is_processed: bool = False,
+    assigned_to=None,
+    assigned_at=None,
     processed_at=None,
     processed_by=None,
     reply_message: str = "",
@@ -104,6 +112,7 @@ def create_feedback_request(
     ip_address: str | None = None,
     user_agent: str = "",
     referrer: str = "",
+    extra_payload: dict | None = None,
 ):
     index = next(feedback_request_counter)
 
@@ -128,14 +137,21 @@ def create_feedback_request(
     if is_personal_data_consent and personal_data_consent_at is None:
         personal_data_consent_at = timezone.now()
 
-    if status == FeedbackRequest.StatusChoices.RESOLVED and not is_processed:
-        is_processed = True
+    final_statuses = {
+        FeedbackRequest.StatusChoices.RESOLVED,
+        FeedbackRequest.StatusChoices.REJECTED,
+        FeedbackRequest.StatusChoices.SPAM,
+        FeedbackRequest.StatusChoices.ARCHIVED,
+    }
 
-    if is_processed and processed_at is None:
+    if status in final_statuses and processed_at is None:
         processed_at = timezone.now()
 
     if processed_at is not None and processed_by is None:
         processed_by = create_feedback_admin_user()
+
+    if status == FeedbackRequest.StatusChoices.SPAM and not is_spam_suspected:
+        is_spam_suspected = True
 
     feedback_request = FeedbackRequest(
         user=user,
@@ -144,18 +160,24 @@ def create_feedback_request(
         source=source,
         subject=subject,
         message=message,
+        is_personal_data_consent=is_personal_data_consent,
+        personal_data_consent_at=personal_data_consent_at,
+    )
+    feedback_request.full_clean()
+    feedback_request.save()
+
+    contact = FeedbackRequestContact(
+        feedback_request=feedback_request,
         full_name=full_name,
         email=email,
         phone=phone,
         organization_name=organization_name,
-        is_personal_data_consent=is_personal_data_consent,
-        personal_data_consent_at=personal_data_consent_at,
-        is_processed=is_processed,
-        processed_at=processed_at,
-        processed_by=processed_by,
-        reply_message=reply_message,
-        internal_note=internal_note,
-        is_spam_suspected=is_spam_suspected,
+    )
+    contact.full_clean()
+    contact.save()
+
+    technical = FeedbackRequestTechnical(
+        feedback_request=feedback_request,
         page_url=page_url,
         frontend_route=frontend_route,
         error_code=error_code,
@@ -166,9 +188,34 @@ def create_feedback_request(
         ip_address=ip_address,
         user_agent=user_agent,
         referrer=referrer,
+        extra_payload=extra_payload or {},
     )
-    feedback_request.full_clean()
-    feedback_request.save()
+    technical.full_clean()
+    technical.save()
+
+    processing = FeedbackRequestProcessing(
+        feedback_request=feedback_request,
+        assigned_to=assigned_to,
+        assigned_at=assigned_at,
+        processed_by=processed_by,
+        processed_at=processed_at,
+        reply_message=reply_message,
+        internal_note=internal_note,
+        is_spam_suspected=is_spam_suspected,
+    )
+    processing.full_clean()
+    processing.save()
+
+    history = FeedbackStatusHistory(
+        feedback_request=feedback_request,
+        from_status="",
+        to_status=status,
+        changed_by=processed_by if processed_by else None,
+        comment="Тестовое создание обращения.",
+    )
+    history.full_clean()
+    history.save()
+
     return feedback_request
 
 

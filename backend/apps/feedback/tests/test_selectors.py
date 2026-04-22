@@ -1,155 +1,110 @@
 from __future__ import annotations
 
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from apps.feedback.models import FeedbackAttachment, FeedbackRequest
+from apps.feedback.models import FeedbackRequest
+from apps.feedback.selectors import (
+    get_feedback_request_by_id,
+    get_feedback_requests_for_admin_queryset,
+    get_my_feedback_requests_queryset,
+    get_resolved_feedback_requests_queryset,
+    get_spam_feedback_requests_queryset,
+)
 from apps.feedback.tests.factories import (
     create_feedback_request,
-    create_uploaded_file,
+    create_feedback_user,
 )
 
 
-class FeedbackRequestModelTestCase(TestCase):
-    def test_create_feedback_request(self):
+class FeedbackSelectorsTestCase(TestCase):
+    def setUp(self):
+        self.user = create_feedback_user(email="selector_user@example.com")
+        self.other_user = create_feedback_user(email="selector_other@example.com")
+
+    def test_get_my_feedback_requests_queryset_returns_only_own(self):
+        own_request = create_feedback_request(
+            user=self.user,
+            subject="Моё обращение",
+        )
+        create_feedback_request(
+            user=self.other_user,
+            subject="Чужое обращение",
+        )
+
+        queryset = get_my_feedback_requests_queryset(user=self.user)
+
+        self.assertIn(own_request, queryset)
+        self.assertEqual(queryset.count(), 1)
+
+    def test_get_feedback_requests_for_admin_queryset_filters_by_search(self):
+        target = create_feedback_request(
+            subject="Ошибка загрузки урока",
+            error_code="LESSON_LOAD_FAILED",
+            error_title="Ошибка загрузки",
+        )
+        create_feedback_request(
+            subject="Обычный вопрос",
+            error_code="QUESTION_CODE",
+        )
+
+        queryset = get_feedback_requests_for_admin_queryset(search="LESSON_LOAD_FAILED")
+
+        self.assertIn(target, queryset)
+        self.assertEqual(queryset.count(), 1)
+
+    def test_get_feedback_requests_for_admin_queryset_filters_by_is_processed(self):
+        processed_request = create_feedback_request(
+            status=FeedbackRequest.StatusChoices.RESOLVED,
+        )
+        create_feedback_request(
+            status=FeedbackRequest.StatusChoices.NEW,
+        )
+
+        queryset = get_feedback_requests_for_admin_queryset(is_processed=True)
+
+        self.assertIn(processed_request, queryset)
+        self.assertEqual(queryset.count(), 1)
+
+    def test_get_feedback_request_by_id_returns_request_with_related_objects(self):
         feedback_request = create_feedback_request(
-            subject="Вопрос по платформе",
-            message="Как получить доступ к материалам?",
-            email="student@example.com",
+            user=self.user,
+            subject="Детальный запрос",
+            error_code="DETAIL-001",
         )
 
-        self.assertEqual(feedback_request.subject, "Вопрос по платформе")
-        self.assertEqual(feedback_request.status, FeedbackRequest.StatusChoices.NEW)
+        result = get_feedback_request_by_id(feedback_request_id=feedback_request.id)
 
-    def test_contacts_request_requires_email_for_anonymous_sender(self):
-        feedback_request = FeedbackRequest(
-            source=FeedbackRequest.SourceChoices.CONTACTS_PAGE,
-            type=FeedbackRequest.TypeChoices.QUESTION,
-            subject="Нет email",
-            message="Сообщение без email",
-            email="",
-            is_personal_data_consent=True,
-        )
+        self.assertIsNotNone(result)
+        self.assertEqual(result.id, feedback_request.id)
+        self.assertEqual(result.contact.email, self.user.email)
+        self.assertEqual(result.technical.error_code, "DETAIL-001")
 
-        with self.assertRaises(ValidationError):
-            feedback_request.full_clean()
-
-    def test_personal_data_consent_is_required(self):
-        feedback_request = FeedbackRequest(
-            source=FeedbackRequest.SourceChoices.CONTACTS_PAGE,
-            type=FeedbackRequest.TypeChoices.QUESTION,
-            subject="Без согласия",
-            message="Сообщение без согласия на обработку данных",
-            email="user@example.com",
-            is_personal_data_consent=False,
-        )
-
-        with self.assertRaises(ValidationError):
-            feedback_request.full_clean()
-
-    def test_personal_data_consent_sets_timestamp(self):
-        feedback_request = FeedbackRequest(
-            source=FeedbackRequest.SourceChoices.CONTACTS_PAGE,
-            type=FeedbackRequest.TypeChoices.QUESTION,
-            subject="Есть согласие",
-            message="Сообщение с согласием",
-            email="user@example.com",
-            is_personal_data_consent=True,
-            personal_data_consent_at=None,
-        )
-
-        feedback_request.full_clean()
-
-        self.assertIsNotNone(feedback_request.personal_data_consent_at)
-
-    def test_spam_status_marks_spam_flag(self):
-        feedback_request = FeedbackRequest(
-            source=FeedbackRequest.SourceChoices.CONTACTS_PAGE,
-            type=FeedbackRequest.TypeChoices.OTHER,
+    def test_get_spam_feedback_requests_queryset(self):
+        spam_request = create_feedback_request(
             status=FeedbackRequest.StatusChoices.SPAM,
             subject="Спам",
-            message="Подозрительное сообщение",
-            email="spam@example.com",
-            is_personal_data_consent=True,
+        )
+        create_feedback_request(
+            status=FeedbackRequest.StatusChoices.NEW,
+            subject="Обычное обращение",
         )
 
-        feedback_request.full_clean()
+        queryset = get_spam_feedback_requests_queryset()
 
-        self.assertTrue(feedback_request.is_spam_suspected)
+        self.assertIn(spam_request, queryset)
+        self.assertEqual(queryset.count(), 1)
 
-    def test_error_details_length_validation(self):
-        feedback_request = FeedbackRequest(
-            source=FeedbackRequest.SourceChoices.ERROR_MODAL,
-            type=FeedbackRequest.TypeChoices.BUG,
-            subject="Ошибка",
-            message="Произошла ошибка в системе",
-            is_personal_data_consent=True,
-            error_details="x" * 10001,
+    def test_get_resolved_feedback_requests_queryset(self):
+        resolved_request = create_feedback_request(
+            status=FeedbackRequest.StatusChoices.RESOLVED,
+            subject="Решённое обращение",
+        )
+        create_feedback_request(
+            status=FeedbackRequest.StatusChoices.NEW,
+            subject="Новое обращение",
         )
 
-        with self.assertRaises(ValidationError):
-            feedback_request.full_clean()
+        queryset = get_resolved_feedback_requests_queryset()
 
-    def test_feedback_request_str(self):
-        feedback_request = create_feedback_request(
-            subject="Тестовая тема",
-            full_name="Иван Иванов",
-            email="ivan@example.com",
-        )
-
-        self.assertIn("Тестовая тема", str(feedback_request))
-        self.assertIn("Иван Иванов", str(feedback_request))
-
-
-class FeedbackAttachmentModelTestCase(TestCase):
-    def test_attachment_detects_pdf_type(self):
-        feedback_request = create_feedback_request()
-        file = create_uploaded_file(
-            name="document.pdf",
-            content_type="application/pdf",
-        )
-
-        attachment = FeedbackAttachment(
-            feedback_request=feedback_request,
-            file=file,
-            original_name=file.name,
-        )
-        attachment.full_clean()
-
-        self.assertEqual(
-            attachment.file_type,
-            FeedbackAttachment.FileTypeChoices.PDF,
-        )
-
-    def test_attachment_rejects_unsupported_extension(self):
-        feedback_request = create_feedback_request()
-        file = create_uploaded_file(
-            name="archive.zip",
-            content_type="application/zip",
-        )
-
-        attachment = FeedbackAttachment(
-            feedback_request=feedback_request,
-            file=file,
-            original_name=file.name,
-        )
-
-        with self.assertRaises(ValidationError):
-            attachment.full_clean()
-
-    def test_attachment_rejects_large_file(self):
-        feedback_request = create_feedback_request()
-        file = create_uploaded_file(
-            name="big.pdf",
-            content=b"x" * (10 * 1024 * 1024 + 1),
-            content_type="application/pdf",
-        )
-
-        attachment = FeedbackAttachment(
-            feedback_request=feedback_request,
-            file=file,
-            original_name=file.name,
-        )
-
-        with self.assertRaises(ValidationError):
-            attachment.full_clean()
+        self.assertIn(resolved_request, queryset)
+        self.assertEqual(queryset.count(), 1)

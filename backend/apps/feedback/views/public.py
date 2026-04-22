@@ -21,7 +21,7 @@ from apps.feedback.selectors import (
     get_feedback_request_by_id,
     get_my_feedback_requests_queryset,
 )
-from apps.feedback.services import (
+from apps.feedback.services.feedback_services import (
     create_contact_feedback_request,
     create_error_feedback_request,
 )

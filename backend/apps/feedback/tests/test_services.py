@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import tempfile
-from pathlib import Path
 
 from django.test import TestCase, override_settings
 
 from apps.feedback.models import FeedbackRequest
-from apps.feedback.services import (
+from apps.feedback.services.feedback_services import (
     archive_feedback_request,
     create_contact_feedback_request,
     create_error_feedback_request,
@@ -41,9 +40,12 @@ class FeedbackServicesTestCase(TestCase):
             files=[file],
         )
 
-        self.assertEqual(feedback_request.source, FeedbackRequest.SourceChoices.CONTACTS_PAGE)
+        self.assertEqual(
+            feedback_request.source,
+            FeedbackRequest.SourceChoices.CONTACTS_PAGE,
+        )
         self.assertEqual(feedback_request.attachments.count(), 1)
-        self.assertEqual(feedback_request.email, "ivan@example.com")
+        self.assertEqual(feedback_request.contact.email, "ivan@example.com")
 
     def test_create_error_feedback_request_autofills_authenticated_user_data(self):
         user = create_feedback_user(email="auth_user@example.com")
@@ -58,17 +60,21 @@ class FeedbackServicesTestCase(TestCase):
             error_details="TypeError: Cannot read properties of undefined",
         )
 
-        self.assertEqual(feedback_request.source, FeedbackRequest.SourceChoices.ERROR_MODAL)
+        self.assertEqual(
+            feedback_request.source,
+            FeedbackRequest.SourceChoices.ERROR_MODAL,
+        )
         self.assertEqual(feedback_request.type, FeedbackRequest.TypeChoices.BUG)
         self.assertEqual(feedback_request.subject, "Ошибка загрузки урока")
         self.assertEqual(feedback_request.user, user)
-        self.assertEqual(feedback_request.email, user.email)
+        self.assertEqual(feedback_request.contact.email, user.email)
+        self.assertEqual(feedback_request.technical.error_code, "LESSON_LOAD_FAILED")
 
     def test_mark_feedback_in_progress(self):
         admin_user = create_feedback_admin_user()
         feedback_request = create_feedback_request(
             status=FeedbackRequest.StatusChoices.NEW,
-            email="progress_service@example.com",
+            subject="Обращение в работе",
         )
 
         updated = mark_feedback_in_progress(
@@ -78,13 +84,14 @@ class FeedbackServicesTestCase(TestCase):
         )
 
         self.assertEqual(updated.status, FeedbackRequest.StatusChoices.IN_PROGRESS)
-        self.assertEqual(updated.internal_note, "Взято в работу")
+        self.assertEqual(updated.processing.assigned_to, admin_user)
+        self.assertEqual(updated.processing.internal_note, "Взято в работу")
 
     def test_resolve_feedback_request(self):
         admin_user = create_feedback_admin_user()
         feedback_request = create_feedback_request(
             status=FeedbackRequest.StatusChoices.IN_PROGRESS,
-            email="resolve_service@example.com",
+            subject="Решаемое обращение",
         )
 
         updated = resolve_feedback_request(
@@ -95,14 +102,14 @@ class FeedbackServicesTestCase(TestCase):
         )
 
         self.assertEqual(updated.status, FeedbackRequest.StatusChoices.RESOLVED)
-        self.assertTrue(updated.is_processed)
-        self.assertEqual(updated.processed_by, admin_user)
-        self.assertEqual(updated.reply_message, "Проблема решена")
+        self.assertIsNotNone(updated.processing.processed_at)
+        self.assertEqual(updated.processing.processed_by, admin_user)
+        self.assertEqual(updated.processing.reply_message, "Проблема решена")
 
     def test_reject_feedback_request(self):
         admin_user = create_feedback_admin_user()
         feedback_request = create_feedback_request(
-            email="reject_service@example.com",
+            subject="Запрос на отклонение",
         )
 
         updated = reject_feedback_request(
@@ -112,13 +119,13 @@ class FeedbackServicesTestCase(TestCase):
         )
 
         self.assertEqual(updated.status, FeedbackRequest.StatusChoices.REJECTED)
-        self.assertTrue(updated.is_processed)
-        self.assertEqual(updated.processed_by, admin_user)
+        self.assertIsNotNone(updated.processing.processed_at)
+        self.assertEqual(updated.processing.processed_by, admin_user)
 
     def test_mark_feedback_as_spam(self):
         admin_user = create_feedback_admin_user()
         feedback_request = create_feedback_request(
-            email="spam_service@example.com",
+            subject="Подозрительное обращение",
         )
 
         updated = mark_feedback_as_spam(
@@ -128,15 +135,14 @@ class FeedbackServicesTestCase(TestCase):
         )
 
         self.assertEqual(updated.status, FeedbackRequest.StatusChoices.SPAM)
-        self.assertTrue(updated.is_spam_suspected)
-        self.assertTrue(updated.is_processed)
+        self.assertTrue(updated.processing.is_spam_suspected)
+        self.assertIsNotNone(updated.processing.processed_at)
 
     def test_archive_feedback_request(self):
         admin_user = create_feedback_admin_user()
         feedback_request = create_feedback_request(
             status=FeedbackRequest.StatusChoices.RESOLVED,
-            is_processed=True,
-            email="archive_service@example.com",
+            subject="Архивируемое обращение",
         )
 
         updated = archive_feedback_request(
@@ -146,4 +152,4 @@ class FeedbackServicesTestCase(TestCase):
         )
 
         self.assertEqual(updated.status, FeedbackRequest.StatusChoices.ARCHIVED)
-        self.assertEqual(updated.internal_note, "Переведено в архив")
+        self.assertEqual(updated.processing.internal_note, "Переведено в архив")

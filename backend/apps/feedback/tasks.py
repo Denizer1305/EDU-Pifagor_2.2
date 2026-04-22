@@ -51,8 +51,8 @@ def archive_old_resolved_feedback_requests(days: int = 90) -> dict:
     with transaction.atomic():
         updated_count = FeedbackRequest.objects.filter(
             status=FeedbackRequest.StatusChoices.RESOLVED,
-            processed_at__isnull=False,
-            processed_at__lt=threshold,
+            processing__processed_at__isnull=False,
+            processing__processed_at__lt=threshold,
         ).exclude(
             status=FeedbackRequest.StatusChoices.ARCHIVED,
         ).update(
@@ -103,10 +103,10 @@ def log_feedback_requests_summary() -> dict:
             source=FeedbackRequest.SourceChoices.ERROR_MODAL
         ).count(),
         "processed": FeedbackRequest.objects.filter(
-            is_processed=True
+            processing__processed_at__isnull=False
         ).count(),
         "spam_suspected": FeedbackRequest.objects.filter(
-            is_spam_suspected=True
+            processing__is_spam_suspected=True
         ).count(),
         "generated_at": timezone.now().isoformat(),
     }
@@ -128,7 +128,7 @@ def mark_stale_feedback_requests_in_progress(days: int = 3) -> dict:
         updated_count = FeedbackRequest.objects.filter(
             status=FeedbackRequest.StatusChoices.NEW,
             created_at__lt=threshold,
-            is_processed=False,
+            processing__processed_at__isnull=True,
         ).update(
             status=FeedbackRequest.StatusChoices.IN_PROGRESS,
         )

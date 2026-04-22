@@ -14,10 +14,13 @@ class FeedbackRequestFilter(django_filters.FilterSet):
     source = django_filters.CharFilter(field_name="source")
 
     user_id = django_filters.NumberFilter(field_name="user_id")
-    processed_by_id = django_filters.NumberFilter(field_name="processed_by_id")
+    assigned_to_id = django_filters.NumberFilter(field_name="processing__assigned_to_id")
+    processed_by_id = django_filters.NumberFilter(field_name="processing__processed_by_id")
 
-    is_processed = django_filters.BooleanFilter(field_name="is_processed")
-    is_spam_suspected = django_filters.BooleanFilter(field_name="is_spam_suspected")
+    is_processed = django_filters.BooleanFilter(method="filter_is_processed")
+    is_spam_suspected = django_filters.BooleanFilter(
+        field_name="processing__is_spam_suspected"
+    )
     is_personal_data_consent = django_filters.BooleanFilter(
         field_name="is_personal_data_consent"
     )
@@ -32,11 +35,11 @@ class FeedbackRequestFilter(django_filters.FilterSet):
     )
 
     processed_at_from = django_filters.DateTimeFilter(
-        field_name="processed_at",
+        field_name="processing__processed_at",
         lookup_expr="gte",
     )
     processed_at_to = django_filters.DateTimeFilter(
-        field_name="processed_at",
+        field_name="processing__processed_at",
         lookup_expr="lte",
     )
 
@@ -52,6 +55,7 @@ class FeedbackRequestFilter(django_filters.FilterSet):
             "status",
             "source",
             "user_id",
+            "assigned_to_id",
             "processed_by_id",
             "is_processed",
             "is_spam_suspected",
@@ -70,26 +74,41 @@ class FeedbackRequestFilter(django_filters.FilterSet):
             return queryset
 
         return queryset.filter(
-            Q(subject__icontains=value)
+            Q(uid__icontains=value)
+            | Q(subject__icontains=value)
             | Q(message__icontains=value)
-            | Q(full_name__icontains=value)
-            | Q(email__icontains=value)
-            | Q(phone__icontains=value)
-            | Q(organization_name__icontains=value)
-            | Q(error_code__icontains=value)
-            | Q(error_title__icontains=value)
-            | Q(error_details__icontains=value)
-            | Q(page_url__icontains=value)
-            | Q(frontend_route__icontains=value)
-            | Q(ip_address__icontains=value)
+            | Q(contact__full_name__icontains=value)
+            | Q(contact__email__icontains=value)
+            | Q(contact__phone__icontains=value)
+            | Q(contact__organization_name__icontains=value)
+            | Q(technical__error_code__icontains=value)
+            | Q(technical__error_title__icontains=value)
+            | Q(technical__error_details__icontains=value)
+            | Q(technical__page_url__icontains=value)
+            | Q(technical__frontend_route__icontains=value)
+            | Q(technical__ip_address__icontains=value)
             | Q(user__email__icontains=value)
             | Q(user__profile__last_name__icontains=value)
             | Q(user__profile__first_name__icontains=value)
             | Q(user__profile__patronymic__icontains=value)
-            | Q(processed_by__email__icontains=value)
-            | Q(processed_by__profile__last_name__icontains=value)
-            | Q(processed_by__profile__first_name__icontains=value)
+            | Q(processing__assigned_to__email__icontains=value)
+            | Q(processing__assigned_to__profile__last_name__icontains=value)
+            | Q(processing__assigned_to__profile__first_name__icontains=value)
+            | Q(processing__processed_by__email__icontains=value)
+            | Q(processing__processed_by__profile__last_name__icontains=value)
+            | Q(processing__processed_by__profile__first_name__icontains=value)
+            | Q(processing__reply_message__icontains=value)
+            | Q(processing__internal_note__icontains=value)
         ).distinct()
+
+    def filter_is_processed(self, queryset, name, value):
+        if value is True:
+            return queryset.filter(processing__processed_at__isnull=False)
+
+        if value is False:
+            return queryset.filter(processing__processed_at__isnull=True)
+
+        return queryset
 
     def filter_has_attachments(self, queryset, name, value):
         if value is True:
