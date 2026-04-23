@@ -1,0 +1,4 @@
+-r base.txt
+
+ipython==8.27.0
+Werkzeug==3.0.4

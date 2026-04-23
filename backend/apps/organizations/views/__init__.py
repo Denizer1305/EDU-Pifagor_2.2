@@ -1,1 +1,53 @@
-"""Views package for apps.organizations."""
+from .group import (
+    GroupCuratorDetailView,
+    GroupCuratorListView,
+    GroupDetailView,
+    GroupJoinCodeView,
+    GroupListView,
+    TeacherOrganizationDetailView,
+    TeacherOrganizationListView,
+    TeacherOrganizationSetPrimaryView,
+    TeacherSubjectDetailView,
+    TeacherSubjectListView,
+)
+from .organization import (
+    DepartmentDetailView,
+    DepartmentListView,
+    OrganizationDetailView,
+    OrganizationListView,
+    OrganizationTeacherRegistrationCodeDisableView,
+    OrganizationTeacherRegistrationCodeView,
+    OrganizationTypeDetailView,
+    OrganizationTypeListView,
+)
+from .subject import (
+    SubjectCategoryDetailView,
+    SubjectCategoryListView,
+    SubjectDetailView,
+    SubjectListView,
+)
+
+__all__ = [
+    "OrganizationTypeListView",
+    "OrganizationTypeDetailView",
+    "OrganizationListView",
+    "OrganizationDetailView",
+    "OrganizationTeacherRegistrationCodeView",
+    "OrganizationTeacherRegistrationCodeDisableView",
+    "DepartmentListView",
+    "DepartmentDetailView",
+    "SubjectCategoryListView",
+    "SubjectCategoryDetailView",
+    "SubjectListView",
+    "SubjectDetailView",
+    "GroupListView",
+    "GroupDetailView",
+    "GroupJoinCodeView",
+    "GroupCuratorListView",
+    "GroupCuratorDetailView",
+    "TeacherOrganizationListView",
+    "TeacherOrganizationDetailView",
+    "TeacherOrganizationSetPrimaryView",
+    "TeacherSubjectListView",
+    "TeacherSubjectDetailView",
+]

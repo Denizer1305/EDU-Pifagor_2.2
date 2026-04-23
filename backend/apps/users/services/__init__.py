@@ -1,0 +1,83 @@
+from .auth_services import (
+    authenticate_user,
+    build_password_reset_token,
+    build_verify_email_token,
+    change_user_password,
+    read_password_reset_token,
+    read_verify_email_token,
+    register_user,
+    reset_password_by_token,
+    verify_user_email_by_token,
+)
+from .parent_services import (
+    approve_parent_student_link,
+    create_parent_student_link_request,
+    reject_parent_student_link,
+    revoke_parent_student_link,
+)
+from .profile_services import (
+    ensure_role_profile,
+    get_or_create_base_profile,
+    update_base_profile,
+)
+from .role_services import (
+    assign_role_to_user,
+    get_role_by_code,
+    list_user_role_codes,
+    remove_role_from_user,
+    user_has_role,
+)
+from .student_services import (
+    approve_student_profile,
+    reject_student_profile,
+    submit_student_group_request,
+)
+from .teacher_services import (
+    approve_teacher_profile,
+    reject_teacher_profile,
+    submit_teacher_verification_request,
+)
+from .user_services import (
+    activate_user_onboarding,
+    block_user,
+    deactivate_user,
+    mark_user_email_verified,
+    reject_user_onboarding,
+    set_user_onboarding_status,
+)
+
+__all__ = [
+    "register_user",
+    "authenticate_user",
+    "build_verify_email_token",
+    "read_verify_email_token",
+    "verify_user_email_by_token",
+    "build_password_reset_token",
+    "read_password_reset_token",
+    "reset_password_by_token",
+    "change_user_password",
+    "create_parent_student_link_request",
+    "approve_parent_student_link",
+    "reject_parent_student_link",
+    "revoke_parent_student_link",
+    "get_or_create_base_profile",
+    "update_base_profile",
+    "ensure_role_profile",
+    "get_role_by_code",
+    "assign_role_to_user",
+    "remove_role_from_user",
+    "user_has_role",
+    "list_user_role_codes",
+    "submit_student_group_request",
+    "approve_student_profile",
+    "reject_student_profile",
+    "submit_teacher_verification_request",
+    "approve_teacher_profile",
+    "reject_teacher_profile",
+    "set_user_onboarding_status",
+    "mark_user_email_verified",
+    "activate_user_onboarding",
+    "reject_user_onboarding",
+    "block_user",
+    "deactivate_user",
+]
