@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     "apps.education.apps.EducationConfig",
     "apps.course.apps.CoursesConfig",
     # "apps.content",
-    # "apps.assignments",
+    "apps.assignments.apps.AssignmentsConfig",
     # "apps.testing",
     # "apps.schedule",
     # "apps.notifications",
