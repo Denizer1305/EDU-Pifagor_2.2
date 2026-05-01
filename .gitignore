@@ -6,16 +6,18 @@ Thumbs.db
 *.swp
 *.swo
 
-# Python
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-.python-version
+*.so
+
+# Python tooling
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
+coverage.xml
 htmlcov/
 
 # Virtual environments
@@ -25,9 +27,14 @@ env/
 ENV/
 
 # Django
-*.log
 db.sqlite3
-local_settings.py
+*.sqlite3
+logs/
+*.log
+
+# Созданный миграции Django apps
+**/migrations/__pycache__/
+**/migrations/*.pyc
 
 # Static / media
 backend/staticfiles/
@@ -67,3 +74,8 @@ deploy/backups/*
 *.pdf
 *.docx
 *.xlsx
+
+# Local reports
+reports/
+tmp/
+temp/
