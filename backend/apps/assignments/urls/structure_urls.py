@@ -1,0 +1,89 @@
+from __future__ import annotations
+
+from django.urls import URLPattern, URLResolver, path
+
+from apps.assignments.views import (
+    AssignmentAttachmentDetailAPIView,
+    AssignmentAttachmentListCreateAPIView,
+    AssignmentQuestionDetailAPIView,
+    AssignmentQuestionListCreateAPIView,
+    AssignmentQuestionReorderAPIView,
+    AssignmentSectionDetailAPIView,
+    AssignmentSectionListCreateAPIView,
+    AssignmentSectionReorderAPIView,
+    AssignmentVariantDetailAPIView,
+    AssignmentVariantListCreateAPIView,
+    AssignmentVariantReorderAPIView,
+)
+
+urlpatterns: list[URLPattern | URLResolver] = [
+    path(
+        "assignments/<int:assignment_id>/variants/",
+        AssignmentVariantListCreateAPIView.as_view(),
+        name="assignment-variant-list-create",
+    ),
+    path(
+        "variants/<int:pk>/",
+        AssignmentVariantDetailAPIView.as_view(),
+        name="assignment-variant-detail",
+    ),
+    path(
+        "assignments/<int:assignment_id>/variants/reorder/",
+        AssignmentVariantReorderAPIView.as_view(),
+        name="assignment-variant-reorder",
+    ),
+
+    path(
+        "assignments/<int:assignment_id>/sections/",
+        AssignmentSectionListCreateAPIView.as_view(),
+        name="assignment-section-list-create",
+    ),
+    path(
+        "sections/<int:pk>/",
+        AssignmentSectionDetailAPIView.as_view(),
+        name="assignment-section-detail",
+    ),
+    path(
+        "assignments/<int:assignment_id>/sections/reorder/",
+        AssignmentSectionReorderAPIView.as_view(),
+        name="assignment-section-reorder",
+    ),
+
+    path(
+        "assignments/<int:assignment_id>/questions/",
+        AssignmentQuestionListCreateAPIView.as_view(),
+        name="assignment-question-list-create",
+    ),
+    path(
+        "questions/<int:pk>/",
+        AssignmentQuestionDetailAPIView.as_view(),
+        name="assignment-question-detail",
+    ),
+    path(
+        "assignments/<int:assignment_id>/questions/reorder/",
+        AssignmentQuestionReorderAPIView.as_view(),
+        name="assignment-question-reorder",
+    ),
+
+    path(
+        "sections/<int:section_id>/questions/",
+        AssignmentQuestionListCreateAPIView.as_view(),
+        name="section-question-list-create",
+    ),
+    path(
+        "sections/<int:section_id>/questions/reorder/",
+        AssignmentQuestionReorderAPIView.as_view(),
+        name="section-question-reorder",
+    ),
+
+    path(
+        "assignments/<int:assignment_id>/attachments/",
+        AssignmentAttachmentListCreateAPIView.as_view(),
+        name="assignment-attachment-list-create",
+    ),
+    path(
+        "attachments/<int:pk>/",
+        AssignmentAttachmentDetailAPIView.as_view(),
+        name="assignment-attachment-detail",
+    ),
+]

@@ -1,4 +1,5 @@
 from .course import (
+    AcademicYearShortSerializer,
     CourseCreateSerializer,
     CourseDetailSerializer,
     CourseDuplicateSerializer,
@@ -9,6 +10,11 @@ from .course import (
     CourseTeacherSerializer,
     CourseTeacherUpdateSerializer,
     CourseUpdateSerializer,
+    EducationPeriodShortSerializer,
+    GroupSubjectShortSerializer,
+    OrganizationShortSerializer,
+    SubjectShortSerializer,
+    UserShortSerializer,
 )
 from .enrollment import (
     CourseAssignmentCreateSerializer,

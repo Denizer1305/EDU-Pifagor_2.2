@@ -1,0 +1,29 @@
+from __future__ import annotations
+
+from .lessons import (
+    CourseLessonDetailAPIView,
+    CourseLessonListCreateAPIView,
+    CourseLessonMoveAPIView,
+    CourseLessonReorderAPIView,
+)
+from .materials import (
+    CourseMaterialDetailAPIView,
+    CourseMaterialListCreateAPIView,
+)
+from .modules import (
+    CourseModuleDetailAPIView,
+    CourseModuleListCreateAPIView,
+    CourseModuleReorderAPIView,
+)
+
+__all__ = [
+    "CourseModuleListCreateAPIView",
+    "CourseModuleDetailAPIView",
+    "CourseModuleReorderAPIView",
+    "CourseLessonListCreateAPIView",
+    "CourseLessonDetailAPIView",
+    "CourseLessonMoveAPIView",
+    "CourseLessonReorderAPIView",
+    "CourseMaterialListCreateAPIView",
+    "CourseMaterialDetailAPIView",
+]
