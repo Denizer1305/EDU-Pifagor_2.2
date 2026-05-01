@@ -1,12 +1,4 @@
-
----
-
-# 2. `.gitignore`
-
-```gitignore
-# --------------------------------------
 # OS / Editor
-# --------------------------------------
 .DS_Store
 Thumbs.db
 .idea/
@@ -14,9 +6,7 @@ Thumbs.db
 *.swp
 *.swo
 
-# --------------------------------------
 # Python
-# --------------------------------------
 __pycache__/
 *.py[cod]
 *.pyo
@@ -43,9 +33,7 @@ local_settings.py
 backend/staticfiles/
 backend/media/
 
-# --------------------------------------
 # Node / Frontend
-# --------------------------------------
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
@@ -54,9 +42,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# --------------------------------------
 # Environment files
-# --------------------------------------
 .env
 .env.local
 .env.production
@@ -66,24 +52,18 @@ frontend/.env
 deploy/*.env
 deploy/docker.env
 
-# --------------------------------------
 # Docker
-# --------------------------------------
 *.pid
 *.seed
 
-# --------------------------------------
 # Backups / generated files
-# --------------------------------------
 *.bak
 *.tmp
 *.temp
 deploy/backups/*
 !deploy/backups/.gitkeep
 
-# --------------------------------------
 # Docs / generated exports
-# --------------------------------------
 *.pdf
 *.docx
 *.xlsx
