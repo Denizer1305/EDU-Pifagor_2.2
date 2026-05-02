@@ -1,214 +1,313 @@
 # Backend — EDU-Pifagor
 
-Backend-часть образовательной платформы **«Пифагор»** реализована на **Django + Django REST Framework** и отвечает за бизнес-логику, API, авторизацию, управление учебным процессом, расписанием, уведомлениями и аналитикой.
+Backend-часть платформы **«Пифагор»** реализована на **Django + Django REST Framework** и отвечает за API, авторизацию, пользователей, организации, учебные сущности, курсы, задания, электронный журнал, обратную связь и аналитику.
 
-## Назначение
+---
 
-Backend обеспечивает:
-- авторизацию и управление пользователями;
-- разграничение ролей и прав доступа;
-- работу с образовательными организациями, группами и предметами;
-- создание и ведение курсов;
-- управление уроками, материалами, заданиями и тестами;
-- формирование расписания;
-- отправку уведомлений и писем;
-- выдачу данных для аналитики и выявления академических задолженностей.
+## Основные возможности
 
-## Основной стек
+- регистрация и авторизация пользователей;
+- роли и права доступа;
+- профили ученика, преподавателя и родителя;
+- организации, отделения, группы и предметы;
+- учебные годы, периоды, учебные планы и нагрузки;
+- курсы, модули, уроки, материалы и прогресс;
+- задания, публикации, аудитории, ответы, проверки и оценки;
+- журнал занятий, посещаемость, оценки и сводки;
+- обратная связь пользователей и административная обработка обращений;
+- инфраструктура тестирования, линтинга, форматирования и CI.
+
+---
+
+## Стек
 
 - Python 3.12
-- Django
+- Django 5
 - Django REST Framework
 - PostgreSQL
 - Redis
 - Celery
 - django-filter
 - drf-spectacular
-- Pillow
 - django-cors-headers
+- Pillow
+- WhiteNoise
+- Ruff
+- pre-commit
+- coverage
 
-## Предлагаемая структура backend
+---
+
+## Структура backend
 
 ```text
 backend/
-├── manage.py
-├── README.md
-├── pyproject.toml
-├── .env.example
-├── requirements/
-│   ├── base.txt
-│   ├── dev.txt
-│   └── prod.txt
-├── config/
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── wsgi.py
-│   ├── urls.py
-│   ├── celery_app.py
-│   └── settings/
-│       ├── __init__.py
-│       ├── base.py
-│       ├── dev.py
-│       ├── prod.py
-│       └── test.py
+├── api/
 ├── apps/
 │   ├── common/
 │   ├── users/
 │   ├── organizations/
 │   ├── education/
-│   ├── courses/
-│   ├── content/
+│   ├── course/
 │   ├── assignments/
-│   ├── testing/
-│   ├── schedule/
-│   ├── notifications/
-│   ├── feedback/
-│   └── analytics/
-├── api/
+│   ├── journal/
+│   └── feedback/
+├── config/
+│   ├── settings/
+│   │   ├── base.py
+│   │   ├── dev.py
+│   │   ├── prod.py
+│   │   └── testing.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+├── requirements/
+│   ├── base.txt
+│   └── dev.txt
 ├── templates/
-│   └── emails/
-├── static/
-├── media/
-├── locale/
-├── scripts/
-└── tests/
+├── Makefile
+├── manage.py
+├── pyproject.toml
+├── .env.example
+└── README.md
 ```
 
-## Ключевые доменные модули
+---
 
-### users
-- `User`
-- `Role`
-- `UserRole`
-- `Profile`
-- `TeacherProfile`
-- `StudentProfile`
-- `ParentProfile`
-- `ParentStudent`
+## Django settings
 
-### organizations
-- `EducationOrganization`
-- `EducationOrganizationType`
-- `EducationForm`
-- `SubjectCategory`
-- `Subject`
+Используются отдельные настройки окружений:
 
-### education
-- `Group`
-- `GroupStudent`
-- `AcademicYear`
-- `AcademicPeriod`
-- `TeachingAssignment`
+| Settings module | Назначение |
+|---|---|
+| `config.settings.dev` | локальная разработка |
+| `config.settings.testing` | тесты и CI |
+| `config.settings.prod` | production |
 
-### courses
-- `Course`
-- `CourseModule`
-- `Lesson`
-- `LessonImage`
+По умолчанию команды `Makefile` используют:
 
-### content
-- `Material`
-- `CourseMaterial`
-- `LessonMaterial`
+```makefile
+DJANGO_SETTINGS ?= config.settings.dev
+TEST_SETTINGS ?= config.settings.testing
+```
 
-### assignments
-- `Assignment`
-- `AssignmentSubmission`
-- `SubmissionFile`
-- `AssignmentReview`
-- `GradebookEntry`
+---
 
-### testing
-- `Test`
-- `TestQuestion`
-- `TestOption`
-- `TestAttempt`
-- `TestAnswer`
+## Быстрый старт
 
-### schedule
-- `ScheduleEvent`
+### Windows PowerShell
 
-### notifications
-- `Notification`
-- `EmailLog`
-- фоновые email-задачи
-- напоминания
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements/dev.txt
+Copy-Item .env.example .env
+python manage.py migrate --settings=config.settings.dev
+python manage.py createsuperuser --settings=config.settings.dev
+python manage.py runserver --settings=config.settings.dev
+```
 
-### feedback
-- `Feedback`
-- `FeedbackAttachment`
-
-### analytics
-- запросы и сервисы аналитики;
-- должники;
-- успеваемость;
-- посещаемость;
-- отчёты по группам и курсам.
-
-## Архитектурные принципы
-
-- один курс принадлежит одному преподавателю;
-- академическая логика строится через `TeachingAssignment`;
-- аналитика рассчитывается запросами к БД, без хранения агрегатных таблиц на старте;
-- расписание строится вокруг универсальной сущности `ScheduleEvent`;
-- бизнес-логика выносится в `services/`, логика чтения — в `selectors/`.
-
-## Локальный запуск
-
-### 1. Создание окружения
+### Linux / macOS / WSL
 
 ```bash
-python -m venv ../.venv
-../.venv/Scripts/python -m pip install -r requirements/dev.txt
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements/dev.txt
+cp .env.example .env
+python3 manage.py migrate --settings=config.settings.dev
+python3 manage.py createsuperuser --settings=config.settings.dev
+python3 manage.py runserver --settings=config.settings.dev
 ```
 
-### 2. Применение миграций
-
-```bash
-python manage.py migrate
-```
-
-### 3. Запуск сервера
-
-```bash
-python manage.py runserver
-```
-
+---
 
 ## Переменные окружения
 
-Основные настройки:
-- `DJANGO_DEBUG`
-- `DJANGO_SECRET_KEY`
-- `DJANGO_ALLOWED_HOSTS`
-- `POSTGRES_DB`
-- `POSTGRES_USER`
-- `POSTGRES_PASSWORD`
-- `DB_HOST`
-- `DB_PORT`
-- `REDIS_HOST`
-- `REDIS_PORT`
-- `CELERY_BROKER_URL`
-- `CELERY_RESULT_BACKEND`
+Django загружает переменные из файла:
 
-Подробный шаблон смотри в:
-- `.env.example` в корне проекта
-- `backend/.env.example`
-
-## Тестирование и проверки
-
-```bash
-python manage.py check
-python manage.py test
+```text
+backend/.env
 ```
 
-## Следующий этап разработки
+Создайте его из шаблона:
 
-Рекомендуемый порядок реализации:
-1. users / auth
-2. organizations / education
-3. courses / content
-4. assignments / testing
-5. schedule
-6. notifications / feedback
-7. analytics
+```bash
+cp .env.example .env
+```
+
+Минимально обязательные переменные для PostgreSQL-режима:
+
+```env
+DJANGO_SECRET_KEY=change-me
+POSTGRES_DB=edu_pifagor
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=127.0.0.1
+DB_PORT=5432
+```
+
+Для реальной разработки используйте полный `backend/.env.example`.
+
+---
+
+## Makefile
+
+Посмотреть все команды:
+
+```bash
+make help
+```
+
+Основные команды:
+
+```bash
+make install-dev
+make run
+make shell
+make createsuperuser
+make makemigrations
+make migrations-check
+make migrate
+make showmigrations
+make collectstatic
+make lint
+make lint-fix
+make format
+make precommit
+make check
+make test
+make test-keepdb
+make test-app APP=apps.users
+make coverage
+make coverage-html
+make clean
+make ci
+```
+
+В WSL при необходимости указывайте Python явно:
+
+```bash
+make ci PYTHON=python3
+```
+
+---
+
+## Проверки качества
+
+Локальный полный набор проверок:
+
+```bash
+make ci
+```
+
+Он выполняет:
+
+```bash
+python -m ruff check .
+python -m ruff format . --check
+python manage.py makemigrations --check --dry-run --settings=config.settings.testing
+python manage.py check --settings=config.settings.testing
+python manage.py test --settings=config.settings.testing
+```
+
+---
+
+## Тесты
+
+Полный запуск:
+
+```bash
+make test
+```
+
+Тесты отдельных приложений:
+
+```bash
+make test-users
+make test-assignments
+make test-course
+make test-education
+make test-app APP=apps.feedback
+```
+
+Запуск напрямую без Makefile:
+
+```bash
+python manage.py test --settings=config.settings.testing
+```
+
+---
+
+## Миграции
+
+Миграции должны храниться в Git.
+
+После изменения моделей:
+
+```bash
+make makemigrations
+make migrate
+make migrations-check
+```
+
+Проверка отсутствия незакоммиченных миграций:
+
+```bash
+python manage.py makemigrations --check --dry-run --settings=config.settings.testing
+```
+
+---
+
+## Pre-commit
+
+Установка:
+
+```bash
+python -m pre_commit install
+```
+
+Запуск:
+
+```bash
+python -m pre_commit run --all-files
+```
+
+Если хуки изменили файлы, повторите запуск и добавьте изменения:
+
+```bash
+git add .
+python -m pre_commit run --all-files
+```
+
+---
+
+## Архитектурные правила
+
+- модели описывают структуру данных и ограничения;
+- `services/` содержит бизнес-операции и изменения состояния;
+- `selectors/` содержит чтение и подготовку queryset;
+- `serializers/` отвечают за API-представление и валидацию входа;
+- `views/` должны быть тонкими и не содержать сложную бизнес-логику;
+- миграции коммитятся;
+- `.env` не коммитится;
+- перед pull request запускается `make ci`.
+
+---
+
+## Полезные URL при локальном запуске
+
+```text
+http://127.0.0.1:8000/admin/
+http://127.0.0.1:8000/api/
+```
+
+Если в проекте включены маршруты drf-spectacular, документация API обычно доступна по адресам вида:
+
+```text
+http://127.0.0.1:8000/api/schema/
+http://127.0.0.1:8000/api/docs/
+```
