@@ -1,117 +1,164 @@
-PYTHON := python
+.DEFAULT_GOAL := help
+
+PYTHON ?= python3
 MANAGE := $(PYTHON) manage.py
 
-.PHONY: help install install-dev check migrate migrations makemigrations test test-users test-organizations test-education test-course test-assignments test-feedback test-journal lint format format-check precommit precommit-install coverage clean clean-pyc clean-cache clean-logs clean-media superuser shell runserver celery-worker celery-beat
+DJANGO_SETTINGS ?= config.settings.dev
+TEST_SETTINGS ?= config.settings.testing
 
-help:
-	@echo "Available commands:"
-	@echo "  make install              Install base requirements"
-	@echo "  make install-dev          Install dev requirements"
-	@echo "  make check                Run Django system checks"
-	@echo "  make migrate              Apply migrations"
-	@echo "  make migrations           Check that migrations are committed"
+APP ?=
+
+.PHONY: help \
+	install install-dev precommit-install \
+	run shell createsuperuser makemigrations migrations-check migrate showmigrations collectstatic \
+	lint lint-fix format precommit check \
+	test test-keepdb test-app test-users test-assignments test-course test-education \
+	coverage coverage-html \
+	clean clean-pyc clean-cache \
+	ci
+
+help: ## Show this help message
+	@echo "Pifagor backend commands"
+	@echo ""
+	@echo "Setup:"
+	@echo "  make install              Install production dependencies"
+	@echo "  make install-dev          Install development dependencies"
+	@echo "  make precommit-install    Install pre-commit git hooks"
+	@echo ""
+	@echo "Django:"
+	@echo "  make run                  Run development server"
+	@echo "  make shell                Open Django shell"
+	@echo "  make createsuperuser      Create Django superuser"
 	@echo "  make makemigrations       Create migrations"
+	@echo "  make migrations-check     Check that migrations are up to date"
+	@echo "  make migrate              Apply migrations"
+	@echo "  make showmigrations       Show migration status"
+	@echo "  make collectstatic        Collect static files"
+	@echo ""
+	@echo "Quality:"
+	@echo "  make lint                 Run Ruff lint"
+	@echo "  make lint-fix             Run Ruff lint with fixes"
+	@echo "  make format               Run Ruff formatter"
+	@echo "  make precommit            Run all pre-commit hooks"
+	@echo "  make check                Run Django system check"
+	@echo ""
+	@echo "Tests:"
 	@echo "  make test                 Run all tests"
-	@echo "  make lint                 Run Ruff linter"
-	@echo "  make format               Format code with Ruff"
-	@echo "  make format-check         Check formatting without changes"
-	@echo "  make precommit-install    Install pre-commit hooks"
-	@echo "  make precommit            Run pre-commit for all files"
+	@echo "  make test-keepdb          Run all tests with reused test DB"
+	@echo "  make test-app APP=apps.users"
+	@echo "  make test-users"
+	@echo "  make test-assignments"
+	@echo "  make test-course"
+	@echo "  make test-education"
+	@echo ""
+	@echo "Coverage:"
 	@echo "  make coverage             Run tests with coverage"
-	@echo "  make clean                Remove local generated files"
+	@echo "  make coverage-html        Generate HTML coverage report"
+	@echo ""
+	@echo "Cleanup:"
+	@echo "  make clean                Remove Python cache files and tool caches"
+	@echo ""
+	@echo "CI:"
+	@echo "  make ci                   Run checks used in CI"
 
-install:
+install: ## Install production dependencies
 	$(PYTHON) -m pip install --upgrade pip
 	$(PYTHON) -m pip install -r requirements/base.txt
 
-install-dev:
+install-dev: ## Install development dependencies
 	$(PYTHON) -m pip install --upgrade pip
 	$(PYTHON) -m pip install -r requirements/dev.txt
 
-check:
-	$(MANAGE) check
+precommit-install: ## Install pre-commit git hooks
+	$(PYTHON) -m pre_commit install
 
-migrate:
-	$(MANAGE) migrate
+run: ## Run development server
+	$(MANAGE) runserver --settings=$(DJANGO_SETTINGS)
 
-migrations:
-	$(MANAGE) makemigrations --check --dry-run
+shell: ## Open Django shell
+	$(MANAGE) shell --settings=$(DJANGO_SETTINGS)
 
-makemigrations:
-	$(MANAGE) makemigrations
+createsuperuser: ## Create Django superuser
+	$(MANAGE) createsuperuser --settings=$(DJANGO_SETTINGS)
 
-test:
-	$(MANAGE) test
+makemigrations: ## Create migrations
+	$(MANAGE) makemigrations --settings=$(DJANGO_SETTINGS)
 
-test-users:
-	$(MANAGE) test apps.users
+migrations-check: ## Check that migrations are up to date
+	$(MANAGE) makemigrations --check --dry-run --settings=$(TEST_SETTINGS)
 
-test-organizations:
-	$(MANAGE) test apps.organizations
+migrate: ## Apply migrations
+	$(MANAGE) migrate --settings=$(DJANGO_SETTINGS)
 
-test-education:
-	$(MANAGE) test apps.education
+showmigrations: ## Show migration status
+	$(MANAGE) showmigrations --settings=$(DJANGO_SETTINGS)
 
-test-course:
-	$(MANAGE) test apps.course
+collectstatic: ## Collect static files
+	$(MANAGE) collectstatic --noinput --settings=$(DJANGO_SETTINGS)
 
-test-assignments:
-	$(MANAGE) test apps.assignments
+lint: ## Run Ruff lint
+	$(PYTHON) -m ruff check .
 
-test-feedback:
-	$(MANAGE) test apps.feedback
+lint-fix: ## Run Ruff lint with fixes
+	$(PYTHON) -m ruff check . --fix
 
-test-journal:
-	$(MANAGE) test apps.journal
+format: ## Run Ruff formatter
+	$(PYTHON) -m ruff format .
 
-lint:
-	ruff check .
+precommit: ## Run all pre-commit hooks
+	$(PYTHON) -m pre_commit run --all-files
 
-format:
-	ruff format .
-	ruff check . --fix
+check: ## Run Django system check
+	$(MANAGE) check --settings=$(TEST_SETTINGS)
 
-format-check:
-	ruff format . --check
-	ruff check .
+test: ## Run all tests
+	$(MANAGE) test --settings=$(TEST_SETTINGS)
 
-precommit-install:
-	pre-commit install
+test-keepdb: ## Run all tests with reused test DB
+	$(MANAGE) test --keepdb --settings=$(TEST_SETTINGS)
 
-precommit:
-	pre-commit run --all-files
+test-app: ## Run tests for one app: make test-app APP=apps.users
+ifndef APP
+	$(error APP is not set. Example: make test-app APP=apps.users)
+endif
+	$(MANAGE) test $(APP) --settings=$(TEST_SETTINGS)
 
-coverage:
-	coverage run manage.py test
-	coverage report -m
+test-users: ## Run users tests
+	$(MANAGE) test apps.users --settings=$(TEST_SETTINGS)
 
-shell:
-	$(MANAGE) shell
+test-assignments: ## Run assignments tests
+	$(MANAGE) test apps.assignments --settings=$(TEST_SETTINGS)
 
-runserver:
-	$(MANAGE) runserver
+test-course: ## Run course tests
+	$(MANAGE) test apps.course --settings=$(TEST_SETTINGS)
 
-superuser:
-	$(MANAGE) createsuperuser
+test-education: ## Run education tests
+	$(MANAGE) test apps.education --settings=$(TEST_SETTINGS)
 
-celery-worker:
-	celery -A config worker -l info
+coverage: ## Run tests with coverage
+	$(PYTHON) -m coverage run manage.py test --settings=$(TEST_SETTINGS)
+	$(PYTHON) -m coverage report
 
-celery-beat:
-	celery -A config beat -l info
+coverage-html: ## Generate HTML coverage report
+	$(PYTHON) -m coverage html
 
-clean: clean-pyc clean-cache clean-logs
+clean: clean-pyc clean-cache ## Remove Python cache files and tool caches
 
-clean-pyc:
-	find . -name "*.pyc" -delete
-	find . -name "*.pyo" -delete
-	find . -name "__pycache__" -type d -prune -exec rm -rf {} +
+clean-pyc: ## Remove Python cache files
+	find . -type d -name "__pycache__" -prune -exec rm -rf {} +
+	find . -type f -name "*.pyc" -delete
+	find . -type f -name "*.pyo" -delete
 
-clean-cache:
-	rm -rf .pytest_cache .ruff_cache .mypy_cache htmlcov .coverage coverage.xml
+clean-cache: ## Remove tool caches
+	rm -rf .pytest_cache
+	rm -rf .ruff_cache
+	rm -rf .coverage
+	rm -rf htmlcov
+	rm -rf coverage.xml
 
-clean-logs:
-	rm -f logs/*.log
-
-clean-media:
-	rm -rf media/*
+ci: ## Run checks used in CI
+	$(PYTHON) -m ruff check .
+	$(PYTHON) -m ruff format . --check
+	$(MANAGE) makemigrations --check --dry-run --settings=$(TEST_SETTINGS)
+	$(MANAGE) check --settings=$(TEST_SETTINGS)
+	$(MANAGE) test --settings=$(TEST_SETTINGS)
