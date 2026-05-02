@@ -1,20 +1,16 @@
-from __future__ import annotations
-
-from .attendance import AttendanceRecord, AttendanceStatus
-from .grade import GradeScale, GradeType, JournalGrade
-from .journal_lesson import JournalLesson, LessonStatus
-from .summary import JournalSummary
-from .topic_progress import TopicProgress, TopicProgressStatus
+from apps.journal.models.attendance import AttendanceRecord
+from apps.journal.models.choices import GradeScale, GradeType
+from apps.journal.models.grade import JournalGrade
+from apps.journal.models.journal_lesson import JournalLesson
+from apps.journal.models.summary import JournalSummary
+from apps.journal.models.topic_progress import TopicProgress
 
 __all__ = [
-    "JournalLesson",
-    "LessonStatus",
     "AttendanceRecord",
-    "AttendanceStatus",
-    "JournalGrade",
-    "GradeType",
     "GradeScale",
-    "TopicProgress",
-    "TopicProgressStatus",
+    "GradeType",
+    "JournalGrade",
+    "JournalLesson",
     "JournalSummary",
+    "TopicProgress",
 ]

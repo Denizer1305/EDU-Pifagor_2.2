@@ -1,20 +1,19 @@
 from __future__ import annotations
 
+from decimal import Decimal
+
+from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
 class JournalSummary(models.Model):
-    """
-    Денормализованный агрегат-кэш по журналу.
+    """Кэш сводной аналитики журнала.
 
-    Пересчитывается через Celery-задачи или сигналы при изменении
-    оценок, посещаемости, прогресса тем. Позволяет отдавать
-    сводную статистику без тяжёлых агрегатных запросов в реальном времени.
-
-    Гранулярность: курс + группа + (опционально) студент.
-    Если student=None — это срез по всей группе.
-    Если student задан — индивидуальный срез.
+    Не является источником истины.
+    Пересчитывается через Celery после изменений в журнале.
     """
 
     course = models.ForeignKey(
@@ -27,19 +26,17 @@ class JournalSummary(models.Model):
         "organizations.Group",
         on_delete=models.CASCADE,
         related_name="journal_summaries",
-        verbose_name=_("Учебная группа"),
+        verbose_name=_("Группа"),
     )
     student = models.ForeignKey(
-        "users.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="journal_summaries",
         verbose_name=_("Студент"),
-        help_text=_("Если не задан — это агрегат по группе"),
     )
 
-    # --- Посещаемость ---
     total_lessons = models.PositiveSmallIntegerField(
         default=0,
         verbose_name=_("Всего занятий"),
@@ -55,16 +52,23 @@ class JournalSummary(models.Model):
     attendance_percent = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        default=0,
-        verbose_name=_("Посещаемость (%)"),
+        default=Decimal("0.00"),
+        validators=[
+            MinValueValidator(Decimal("0.00")),
+            MaxValueValidator(Decimal("100.00")),
+        ],
+        verbose_name=_("Процент посещаемости"),
     )
 
-    # --- Успеваемость ---
     avg_score = models.DecimalField(
-        max_digits=5,
+        max_digits=4,
         decimal_places=2,
         null=True,
         blank=True,
+        validators=[
+            MinValueValidator(Decimal("1.00")),
+            MaxValueValidator(Decimal("5.00")),
+        ],
         verbose_name=_("Средний балл"),
     )
     debt_count = models.PositiveSmallIntegerField(
@@ -72,7 +76,6 @@ class JournalSummary(models.Model):
         verbose_name=_("Количество задолженностей"),
     )
 
-    # --- Прогресс по КТП ---
     total_topics = models.PositiveSmallIntegerField(
         default=0,
         verbose_name=_("Всего тем"),
@@ -83,42 +86,62 @@ class JournalSummary(models.Model):
     )
     topics_behind = models.PositiveSmallIntegerField(
         default=0,
-        verbose_name=_("Тем в отставании"),
+        verbose_name=_("Тем с отставанием"),
     )
     progress_percent = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        default=0,
-        verbose_name=_("Прогресс по курсу (%)"),
+        default=Decimal("0.00"),
+        validators=[
+            MinValueValidator(Decimal("0.00")),
+            MaxValueValidator(Decimal("100.00")),
+        ],
+        verbose_name=_("Процент прохождения программы"),
     )
 
-    # --- Служебные поля ---
     calculated_at = models.DateTimeField(
+        default=timezone.now,
+        verbose_name=_("Дата пересчёта"),
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Дата создания"),
+    )
+    updated_at = models.DateTimeField(
         auto_now=True,
-        verbose_name=_("Последний пересчёт"),
+        verbose_name=_("Дата обновления"),
     )
 
     class Meta:
+        db_table = "journal_summary"
         verbose_name = _("Сводка журнала")
         verbose_name_plural = _("Сводки журнала")
-        db_table = "journal_summary"
+        ordering = ["course", "group", "student_id"]
         indexes = [
-            models.Index(fields=["course", "group"], name="idx_jsummary_course_group"),
-            models.Index(fields=["student"], name="idx_jsummary_student"),
+            models.Index(
+                fields=["course", "group"],
+                name="idx_jsummary_course_group",
+            ),
+            models.Index(
+                fields=["student"],
+                name="idx_jsummary_student",
+            ),
         ]
         constraints = [
             models.UniqueConstraint(
                 fields=["course", "group", "student"],
-                name="uniq_jsummary_course_group_student",
                 condition=models.Q(student__isnull=False),
+                name="uniq_jsummary_course_group_student",
             ),
             models.UniqueConstraint(
                 fields=["course", "group"],
-                name="uniq_jsummary_course_group_no_student",
                 condition=models.Q(student__isnull=True),
+                name="uniq_jsummary_course_group_no_student",
             ),
         ]
 
     def __str__(self) -> str:
-        subject = str(self.student) if self.student_id else "группа"
-        return str(f"{self.group} | {self.course} | {subject}")
+        if self.student_id:
+            return f"{self.course} — {self.group} — {self.student}"
+
+        return f"{self.course} — {self.group} — общая сводка"
