@@ -1,238 +1,201 @@
-# EDU-Pifagor
+# EDU-Pifagor Educational Platform
 
-**EDU-Pifagor** is a digital educational platform that combines the learning process, user management, organizational structure, academic entities, courses, assignments, testing, analytics, and an intelligent assistant in a single environment.
+[![Backend CI](https://github.com/Denizer1305/EDU-Pifagor_2.2/actions/workflows/backend-ci.yml/badge.svg?branch=dev-backend)](https://github.com/Denizer1305/EDU-Pifagor_2.2/actions/workflows/backend-ci.yml)
 
-The project is being developed as a **unified digital educational environment**, not as a set of disconnected services. At the current stage, the following core domain modules have already been implemented and covered with tests:
+**EDU-Pifagor** is a diploma educational platform that combines users, roles, organizations, academic groups, academic periods, courses, assignments, gradebook functionality, feedback, and analytics into a unified digital learning environment.
 
-- `users` — users, roles, profiles, access permissions;
-- `organizations` — organizations, departments, groups, subjects, teacher links;
-- `education` — academic years, periods, enrollments, group subjects, teacher assignments, curricula.
+The project focuses on maintainable backend architecture: domain logic is split into Django apps, write operations live in `services/`, read operations live in `selectors/`, and quality checks are automated with `pre-commit`, `Makefile`, and GitHub Actions.
 
 ---
 
-# Contents
+## Contents
 
-- [1. Technology Stack](#1-technology-stack)
-- [2. Project Structure](#2-project-structure)
-- [3. Local Run Requirements](#3-local-run-requirements)
-- [4. Quick Start](#4-quick-start)
-- [5. Running Backend Locally Without Docker](#5-running-backend-locally-without-docker)
-- [6. Running Frontend Locally](#6-running-frontend-locally)
-- [7. Running with Docker Compose](#7-running-with-docker-compose)
-- [8. Running Celery](#8-running-celery)
-- [9. Applying Migrations](#9-applying-migrations)
-- [10. Creating an Administrator](#10-creating-an-administrator)
-- [11. Running Tests](#11-running-tests)
-- [12. Logging](#12-logging)
+- [Stack](#stack)
+- [Current Status](#current-status)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [Backend Quick Start](#backend-quick-start)
+- [Frontend](#frontend)
+- [Environment Variables](#environment-variables)
+- [Makefile and Quality Checks](#makefile-and-quality-checks)
+- [Tests](#tests)
+- [Migrations](#migrations)
+- [GitHub Actions](#github-actions)
+- [Pre-commit](#pre-commit)
+- [Security](#security)
 
 ---
 
-# 1. Technology Stack
+## Stack
 
-## Backend
-- Python 3.12+
-- Django
+### Backend
+
+- Python 3.12
+- Django 5
 - Django REST Framework
+- PostgreSQL
+- Redis
+- Celery
 - django-filter
 - drf-spectacular
-- PostgreSQL
-- Celery
-- Redis
-- Gunicorn
+- django-cors-headers
 - WhiteNoise
+- Ruff
+- pre-commit
+- coverage
 
-## Frontend
+### Frontend
+
 - Vue.js
 - Vite
 - JavaScript / TypeScript
 - HTML / CSS
 
-## Infrastructure
-- Docker
-- Docker Compose
-- Nginx
+### Infrastructure
+
+- Git / GitHub
+- GitHub Actions
+- Makefile
+- Docker / Docker Compose, if containerized local deployment is used
 
 ---
 
-# 2. Project Structure
+## Current Status
 
-Below is a simplified project structure:
+The backend currently has a working quality-control infrastructure:
+
+- separate Django settings: `base.py`, `dev.py`, `prod.py`, `testing.py`;
+- `Makefile` for local development commands;
+- `pre-commit` hooks;
+- GitHub Actions backend workflow;
+- migration checks through `makemigrations --check --dry-run`;
+- backend checks with `ruff check`, `ruff format --check`, `manage.py check`, and the full test suite.
+
+Main backend modules:
+
+- `users` — users, roles, profiles, registration, onboarding;
+- `organizations` — organizations, departments, groups, subjects, teacher links;
+- `education` — academic years, periods, curricula, workloads, enrollments;
+- `course` — courses, modules, lessons, materials, teachers, progress;
+- `assignments` — assignments, publications, audiences, answers, reviews, grades;
+- `journal` — journal lessons, attendance, grades, summaries, topic progress;
+- `feedback` — feedback requests, processing, attachments;
+- `common`, `api`, `templates` — shared components, API layer, and templates.
+
+---
+
+## Project Structure
 
 ```text
-EDU-Pifagor/
+EDU-Pifagor_2.2/
+├── .github/
+│   └── workflows/
+│       └── backend-ci.yml
 ├── backend/
+│   ├── api/
 │   ├── apps/
+│   │   ├── common/
 │   │   ├── users/
 │   │   ├── organizations/
 │   │   ├── education/
-│   │   ├── courses/
-│   │   ├── content/
+│   │   ├── course/
 │   │   ├── assignments/
-│   │   ├── testing/
-│   │   ├── schedule/
-│   │   ├── notifications/
-│   │   ├── feedback/
-│   │   └── analytics/
+│   │   ├── journal/
+│   │   └── feedback/
 │   ├── config/
 │   │   ├── settings/
 │   │   │   ├── base.py
-│   │   │   ├── local.py
-│   │   │   ├── test.py
-│   │   │   └── production.py
+│   │   │   ├── dev.py
+│   │   │   ├── prod.py
+│   │   │   └── testing.py
 │   │   ├── urls.py
-│   │   ├── wsgi.py
-│   │   └── asgi.py
-│   ├── api/
+│   │   ├── asgi.py
+│   │   └── wsgi.py
 │   ├── requirements/
+│   │   ├── base.txt
+│   │   └── dev.txt
+│   ├── templates/
+│   ├── Makefile
 │   ├── manage.py
-│   └── .env
+│   ├── pyproject.toml
+│   ├── .env.example
+│   └── README.md
 ├── frontend/
-│   ├── src/
 │   ├── public/
-│   ├── package.json
-│   └── vite.config.js
-├── deploy/
-│   ├── docker.env
-│   └── ...
-├── docker-compose.yml
-└── README.md
+│   └── src/
+├── docs/
+├── .editorconfig
+├── .gitignore
+├── .pre-commit-config.yaml
+├── .env.example
+├── README.md
+└── README.en.md
 ```
 
 ---
 
-# 3. Local Run Requirements
+## Requirements
 
-Before running the project locally, it is recommended to have the following software installed:
+- Python 3.12+
+- PostgreSQL 15+
+- Redis, if Celery tasks are used
+- Node.js 20+ for frontend
+- Git
+- GNU Make for `Makefile` commands
 
-- **Python 3.12 or later**
-- **Node.js 20+**
-- **npm** or **pnpm**
-- **PostgreSQL 15+ / 16+ / 17**
-- **Redis** — if Celery is required
-- **Git**
-- **Docker Desktop** — if running in containers
-
----
-
-# 4. Quick Start
-
-If you need the shortest local startup flow:
-
-## Backend
-```bash
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements/dev.txt
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-```
-
-## Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-If the project is run with Docker:
-```bash
-docker compose up --build
-```
+On Windows, it is often easier to run `make` from WSL. In PowerShell, you can run the underlying `python -m ...` commands directly or install GNU Make separately.
 
 ---
 
-# 5. Running Backend Locally Without Docker
+## Backend Quick Start
 
-## 5.1. Go to the backend directory
+Go to the backend directory:
+
 ```bash
 cd backend
 ```
 
-## 5.2. Create a virtual environment
+Create a virtual environment:
 
-### Windows
-```bash
+### Windows PowerShell
+
+```powershell
 python -m venv .venv
-.venv\Scripts\activate
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements/dev.txt
 ```
 
-### Linux / macOS
+### Linux / macOS / WSL
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements/dev.txt
 ```
 
-## 5.3. Install dependencies
+Create `.env`:
 
-If dependencies are split into files:
 ```bash
-pip install -r requirements/dev.txt
+cp .env.example .env
 ```
 
-If the project uses a single file:
+For Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Apply migrations and start the development server:
+
 ```bash
-pip install -r requirements.txt
+python manage.py migrate --settings=config.settings.dev
+python manage.py createsuperuser --settings=config.settings.dev
+python manage.py runserver --settings=config.settings.dev
 ```
 
-## 5.4. Create `.env`
-
-A `.env` file should be placed in the root of the `backend/` directory.
-
-A minimal example for local run:
-
-```env
-DJANGO_SECRET_KEY=dev-secret-key
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
-
-DJANGO_TIME_ZONE=Europe/Moscow
-
-DB_ENGINE=django.db.backends.postgresql
-POSTGRES_DB=edu_pifagor
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-DB_HOST=127.0.0.1
-DB_PORT=5432
-
-CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-CSRF_TRUSTED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-CORS_ALLOW_CREDENTIALS=True
-
-EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-
-CELERY_BROKER_URL=redis://127.0.0.1:6379/0
-CELERY_RESULT_BACKEND=redis://127.0.0.1:6379/1
-```
-
-## 5.5. Check configuration
-```bash
-python manage.py check
-```
-
-If the configuration is correct, Django will output:
-
-```text
-System check identified no issues (0 silenced).
-```
-
-## 5.6. Apply migrations
-```bash
-python manage.py migrate
-```
-
-## 5.7. Create an administrator
-```bash
-python manage.py createsuperuser
-```
-
-## 5.8. Run the development server
-```bash
-python manage.py runserver
-```
-
-After startup, the backend will be available at:
+The backend will be available at:
 
 ```text
 http://127.0.0.1:8000/
@@ -240,28 +203,11 @@ http://127.0.0.1:8000/
 
 ---
 
-# 6. Running Frontend Locally
+## Frontend
 
-## 6.1. Go to the frontend directory
 ```bash
 cd frontend
-```
-
-## 6.2. Install dependencies
-```bash
 npm install
-```
-
-## 6.3. Create `.env.local`
-
-Example:
-
-```env
-VITE_API_BASE_URL=http://127.0.0.1:8000/api
-```
-
-## 6.4. Run the development server
-```bash
 npm run dev
 ```
 
@@ -271,166 +217,200 @@ The frontend is usually available at:
 http://127.0.0.1:5173/
 ```
 
----
+A frontend `.env.local` example:
 
-# 7. Running with Docker Compose
-
-If the project is containerized, `docker-compose.yml` is used.
-
-## 7.1. Start command
-```bash
-docker compose up --build
-```
-
-## 7.2. Start in background
-```bash
-docker compose up -d --build
-```
-
-## 7.3. Stop containers
-```bash
-docker compose down
-```
-
-## 7.4. Full rebuild
-```bash
-docker compose down -v
-docker compose up --build
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000/api
 ```
 
 ---
 
-# 8. Running Celery
+## Environment Variables
 
-If background tasks are used:
+Django loads environment variables from `backend/.env`.
 
-## 8.1. Start worker
+For local development, use the template:
+
 ```bash
-celery -A config worker -l info
+cd backend
+cp .env.example .env
 ```
 
-## 8.2. Start beat
-```bash
-celery -A config beat -l info
-```
+Important variables:
 
-If the project is run with Docker, worker and beat are usually started as separate services.
+- `DJANGO_SECRET_KEY`
+- `DJANGO_DEBUG`
+- `DJANGO_ALLOWED_HOSTS`
+- `DJANGO_TIME_ZONE`
+- `POSTGRES_DB`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `DB_HOST`
+- `DB_PORT`
+- `CORS_ALLOWED_ORIGINS`
+- `CSRF_TRUSTED_ORIGINS`
+- `CELERY_BROKER_URL`
+- `CELERY_RESULT_BACKEND`
+- `EMAIL_BACKEND`
+- `DEFAULT_FROM_EMAIL`
+- `FEEDBACK_EMAIL`
+
+Never commit a real `.env` file.
 
 ---
 
-# 9. Applying Migrations
+## Makefile and Quality Checks
 
-After changing models, run:
+Main backend commands are collected in `backend/Makefile`.
 
 ```bash
-python manage.py makemigrations
-python manage.py migrate
+cd backend
+make help
+```
+
+Common commands:
+
+```bash
+make install-dev
+make run
+make migrate
+make makemigrations
+make migrations-check
+make lint
+make lint-fix
+make format
+make precommit
+make check
+make test
+make test-app APP=apps.users
+make test-users
+make test-assignments
+make test-course
+make test-education
+make coverage
+make coverage-html
+make ci
+```
+
+If `python` is not available in WSL, run:
+
+```bash
+make ci PYTHON=python3
 ```
 
 ---
 
-# 10. Creating an Administrator
+## Tests
 
-Command:
+Run the full test suite:
 
 ```bash
-python manage.py createsuperuser
+cd backend
+make test
 ```
 
-After that, Django admin is available at:
+Or directly:
+
+```bash
+python manage.py test --settings=config.settings.testing
+```
+
+App-specific tests:
+
+```bash
+make test-users
+make test-assignments
+make test-course
+make test-education
+make test-app APP=apps.feedback
+```
+
+---
+
+## Migrations
+
+Django migrations should be committed to Git. They describe the database schema history and make deployments reproducible for other developers and CI.
+
+After changing models:
+
+```bash
+cd backend
+make makemigrations
+make migrate
+make migrations-check
+```
+
+Before committing, run:
+
+```bash
+make ci
+```
+
+---
+
+## GitHub Actions
+
+The backend workflow is located at:
 
 ```text
-http://127.0.0.1:8000/admin/
+.github/workflows/backend-ci.yml
+```
+
+CI runs:
+
+- dependency installation;
+- Ruff lint;
+- Ruff format check;
+- migration check;
+- Django system check;
+- backend tests.
+
+Before opening a pull request, run locally:
+
+```bash
+cd backend
+make ci
 ```
 
 ---
 
-# 11. Running Tests
+## Pre-commit
 
-The project uses separate test settings.
+Install hooks:
 
-## 11.1. Run tests for a specific app
-
-### Users
 ```bash
-python manage.py test apps.users.tests --settings=config.settings.test
+cd backend
+python -m pre_commit install
 ```
 
-### Organizations
+Run all hooks manually:
+
 ```bash
-python manage.py test apps.organizations.tests --settings=config.settings.test
+python -m pre_commit run --all-files
 ```
 
-### Education
-```bash
-python manage.py test apps.education.tests --settings=config.settings.test
-```
+If hooks modify files, run them again and then add the changes:
 
-## 11.2. Why `config.settings.test` is used
-The test configuration allows you to:
-- run tests in an isolated database;
-- avoid using production settings;
-- keep local working data safe.
+```bash
+git add .
+python -m pre_commit run --all-files
+git commit -m "chore(backend): update documentation and env examples"
+```
 
 ---
 
+## Security
 
-# 12. Logging
+Do not commit:
 
-Logging is enabled in the project.
-
-It is used for:
-
-- error diagnostics;
-- monitoring task execution;
-- tracking background processes;
-- technical audit;
-- analyzing system state in local and production environments.
-
-The logs should contain:
-
-- system errors;
-- validation errors;
-- exceptions in background tasks;
-- diagnostic reports;
-- critical administrative actions.
-
-The logs must **not** contain:
-
-- passwords;
+- `.env`;
+- real passwords;
+- real SMTP passwords;
 - tokens;
 - secret keys;
-- sensitive personal data in plain form.
+- local databases;
+- `.venv`;
+- `media/`, if it contains user files;
+- `staticfiles/`, if it is generated by `collectstatic`.
 
----
-
-
-# Recommended Local Startup Sequence
-
-## Option 1 — without Docker
-1. Install PostgreSQL.
-2. Install Python dependencies.
-3. Create `.env`.
-4. Apply migrations.
-5. Create a superuser.
-6. Start backend.
-7. Install frontend dependencies.
-8. Start frontend.
-9. Start Redis and Celery if needed.
-
-## Option 2 — with Docker
-1. Check `docker-compose.yml`.
-2. Check `deploy/docker.env` or a local env file.
-3. Run:
-```bash
-docker compose up --build
-```
-4. Apply migrations inside the container.
-5. Create an administrator.
-6. Open backend / frontend / Swagger.
-
----
-
-# Project Author
-
-EDU-Pifagor is being developed as a diploma educational platform with an architecture focused on scalability, maintainability, security, and дальнейшее развитие.
+For public repositories, keep only `.env.example` with safe placeholder values.
