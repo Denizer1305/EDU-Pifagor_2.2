@@ -13,6 +13,7 @@ on:
       - ".pre-commit-config.yaml"
       - ".editorconfig"
       - ".gitignore"
+
   pull_request:
     branches:
       - main
@@ -25,6 +26,7 @@ on:
       - ".pre-commit-config.yaml"
       - ".editorconfig"
       - ".gitignore"
+
   workflow_dispatch:
 
 permissions:
@@ -57,14 +59,18 @@ jobs:
 
     env:
       DJANGO_SETTINGS_MODULE: config.settings.testing
-      USE_POSTGRES_FOR_TESTS: "1"
+      DJANGO_SECRET_KEY: github-actions-test-secret-key
       SECRET_KEY: github-actions-test-secret-key
+
       DEBUG: "False"
+      USE_POSTGRES_FOR_TESTS: "1"
+
       POSTGRES_DB: pifagor_test
       POSTGRES_USER: pifagor
       POSTGRES_PASSWORD: pifagor
-      DB_HOST: localhost
+      DB_HOST: 127.0.0.1
       DB_PORT: "5432"
+
       PYTHONUNBUFFERED: "1"
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
 
