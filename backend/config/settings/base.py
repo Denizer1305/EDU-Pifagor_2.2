@@ -5,39 +5,63 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# Путь к основному каталогу проекта
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Загружаем переменные окружения из .env
 load_dotenv(BASE_DIR / ".env")
 
 
 def env(name: str, default: str | None = None, *, required: bool = False) -> str:
-    """Функция для извлечения переменных окружения с поддержкой обязательных значений."""
     value = os.getenv(name, default)
+
     if required and not value:
         raise RuntimeError(
             f"Переменная окружения {name} обязательна для работы приложения."
         )
-    return value
+
+    return value or ""
 
 
-# SECRET_KEY теперь обязательно должен быть задан в переменных окружения
-SECRET_KEY = env("DJANGO_SECRET_KEY", required=True)
+def env_bool(name: str, default: bool = False) -> bool:
+    value = os.getenv(name)
 
-# Включаем или отключаем debug-режим в зависимости от переменной окружения
-DEBUG = env("DJANGO_DEBUG", "False") == "True"
+    if value is None:
+        return default
 
-# Список разрешённых хостов
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in env("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
-    if host.strip()
-]
+    return value.strip().lower() in {"1", "true", "yes", "on"}
 
-# Локализация
+
+def env_int(name: str, default: int) -> int:
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    return int(value)
+
+
+def env_list(name: str, default: str = "") -> list[str]:
+    value = os.getenv(name, default)
+
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+SECRET_KEY = env(
+    "DJANGO_SECRET_KEY",
+    env("SECRET_KEY", "unsafe-dev-only-secret-key"),
+)
+
+DEBUG = env_bool("DJANGO_DEBUG", False)
+
+ALLOWED_HOSTS = env_list(
+    "DJANGO_ALLOWED_HOSTS",
+    "127.0.0.1,localhost",
+)
+
 LANGUAGE_CODE = "ru"
 TIME_ZONE = env("DJANGO_TIME_ZONE", "Europe/Moscow")
+
+USE_I18N = True
+USE_TZ = True
 
 LANGUAGES = [
     ("ru", "Русский"),
@@ -48,41 +72,6 @@ LOCALE_PATHS = [
     BASE_DIR / "locale",
 ]
 
-USE_I18N = True
-USE_TZ = True
-
-# Настройки для шаблонов
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            BASE_DIR / "templates",  # Папка для шаблонов
-        ],
-        "APP_DIRS": True,  # Для автоматического поиска шаблонов в приложениях
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-            ],
-        },
-    },
-]
-
-# Основная конфигурация базы данных PostgreSQL
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB", required=True),
-        "USER": env("POSTGRES_USER", required=True),
-        "PASSWORD": env("POSTGRES_PASSWORD", required=True),
-        "HOST": env("DB_HOST", "localhost"),
-        "PORT": env("DB_PORT", "5432"),
-    }
-}
-
-# Установленные приложения
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -104,64 +93,160 @@ INSTALLED_APPS = [
     "apps.journal.apps.JournalConfig",
 ]
 
-# Мидлвары
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
 ]
 
-# Конфигурация статических файлов
+ROOT_URLCONF = "config.urls"
+WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+
+AUTH_USER_MODEL = "users.User"
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            BASE_DIR / "templates",
+        ],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Конфигурация медиа-файлов
+STATICFILES_DIRS = [BASE_DIR / "static"] if (BASE_DIR / "static").exists() else []
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Основные настройки безопасности
-SECURE_BROWSER_XSS_FILTER = True
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Pifagor API",
+    "DESCRIPTION": "API образовательной платформы Пифагор",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS")
+CORS_ALLOW_CREDENTIALS = env_bool("CORS_ALLOW_CREDENTIALS", True)
+
+CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
+
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = env("DJANGO_SECURE_SSL_REDIRECT", "False") == "True"
-CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", "https://example.com").split(",")
-
-# Прочие настройки безопасности
-SECURE_HSTS_SECONDS = 60 * 60 * 24 * 365  # 1 год
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
 SECURE_REFERRER_POLICY = "same-origin"
 
+SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", False)
+CSRF_COOKIE_SECURE = env_bool("DJANGO_CSRF_COOKIE_SECURE", False)
+SESSION_COOKIE_SECURE = env_bool("DJANGO_SESSION_COOKIE_SECURE", False)
 
-log_dir = BASE_DIR / "logs"
-if not os.path.exists(log_dir):
-    os.makedirs(log_dir)
+SECURE_HSTS_SECONDS = env_int("DJANGO_SECURE_HSTS_SECONDS", 0)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool(
+    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS",
+    False,
+)
+SECURE_HSTS_PRELOAD = env_bool("DJANGO_SECURE_HSTS_PRELOAD", False)
 
-# Логирование
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend",
+)
+
+DEFAULT_FROM_EMAIL = env(
+    "DEFAULT_FROM_EMAIL",
+    "Pifagor <noreply@example.com>",
+)
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{levelname}] {asctime} {name}: {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "[{levelname}] {message}",
+            "style": "{",
+        },
+    },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
+            "formatter": "simple",
         },
     },
     "root": {
         "handlers": ["console"],
-        "level": "WARNING",
+        "level": env("DJANGO_LOG_LEVEL", "WARNING"),
     },
     "loggers": {
-        "django.db.backends": {
+        "django": {
             "handlers": ["console"],
-            "level": "WARNING",
+            "level": env("DJANGO_LOG_LEVEL", "INFO"),
             "propagate": False,
         },
         "django.request": {
@@ -169,28 +254,15 @@ LOGGING = {
             "level": "ERROR",
             "propagate": False,
         },
-        "apps.assignments": {
+        "django.db.backends": {
             "handlers": ["console"],
-            "level": "ERROR",
+            "level": env("DJANGO_DB_LOG_LEVEL", "WARNING"),
+            "propagate": False,
+        },
+        "apps": {
+            "handlers": ["console"],
+            "level": env("APP_LOG_LEVEL", "INFO"),
             "propagate": False,
         },
     },
 }
-
-# Настройки кеширования
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-    }
-}
-
-# Конфигурация CORS (если API доступно из других доменов)
-CORS_ALLOWED_ORIGINS = [
-    "https://example.com",
-]
-
-ROOT_URLCONF = "config.urls"  # Это путь до файла urls.py в папке config
-
-# Прочее
-AUTH_USER_MODEL = "users.User"
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

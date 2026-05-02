@@ -1,48 +1,102 @@
+from __future__ import annotations
+
+# ruff: noqa: F403, F405
 from .base import *
 
-# Включаем режим отладки для разработки
 DEBUG = True
 
-# Используем SQLite для разработки
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+SECRET_KEY = env(
+    "DJANGO_SECRET_KEY",
+    env("SECRET_KEY", "unsafe-local-dev-secret-key"),
+)
+
+ALLOWED_HOSTS = env_list(
+    "DJANGO_ALLOWED_HOSTS",
+    "127.0.0.1,localhost,0.0.0.0",
+)
+
+USE_POSTGRES_FOR_DEV = env_bool("USE_POSTGRES_FOR_DEV", False)
+
+if USE_POSTGRES_FOR_DEV:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": env("POSTGRES_DB", "pifagor_dev"),
+            "USER": env("POSTGRES_USER", "pifagor"),
+            "PASSWORD": env("POSTGRES_PASSWORD", "pifagor"),
+            "HOST": env("DB_HOST", "localhost"),
+            "PORT": env("DB_PORT", "5432"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
-# Для разработки включаем шаблонные директории
-TEMPLATES[0]["DIRS"] = [BASE_DIR / "templates"]
+CORS_ALLOWED_ORIGINS = env_list(
+    "CORS_ALLOWED_ORIGINS",
+    ",".join(
+        [
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:8080",
+            "http://127.0.0.1:8080",
+        ]
+    ),
+)
 
-# Логирование для разработки (выводим все логи в консоль)
-LOGGING["loggers"]["django"] = {
-    "handlers": ["console"],
-    "level": "INFO",
-    "propagate": False,
-}
+CSRF_TRUSTED_ORIGINS = env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    ",".join(
+        [
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:8080",
+            "http://127.0.0.1:8080",
+        ]
+    ),
+)
 
-# Включаем CORS для разработки (если фронтенд работает на другом порту)
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Пример для Vue.js или React на локальном хосте
-]
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# Кэширование для разработки (локальное хранилище)
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
 
-# Можно включить почту для разработки
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+SECURE_SSL_REDIRECT = False
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+SECURE_HSTS_SECONDS = 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
 
-# Настройки для статики и медиа-файлов
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+LOGGING["root"]["level"] = "INFO"
+LOGGING["loggers"]["django"]["level"] = "INFO"
+LOGGING["loggers"]["django.db.backends"]["level"] = "WARNING"
+LOGGING["loggers"]["apps"]["level"] = "DEBUG"
 
-# Включаем автоматическую перезагрузку сервера при изменении кода
-INSTALLED_APPS += ["debug_toolbar"]
-MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
-INTERNAL_IPS = ["127.0.0.1"]
+ENABLE_DEBUG_TOOLBAR = env_bool("ENABLE_DEBUG_TOOLBAR", True)
+
+if ENABLE_DEBUG_TOOLBAR:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]
+
+    MIDDLEWARE.insert(
+        1,
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    )
+
+    INTERNAL_IPS = [
+        "127.0.0.1",
+        "localhost",
+    ]
