@@ -30,7 +30,10 @@ def _recalculate_course_minutes(course: Course) -> None:
         course.lessons.filter(
             is_published=True,
             module__is_published=True,
-        ).aggregate(total=Sum("estimated_minutes")).get("total") or 0
+        )
+        .aggregate(total=Sum("estimated_minutes"))
+        .get("total")
+        or 0
     )
 
     if course.estimated_minutes != total_minutes:
@@ -38,7 +41,11 @@ def _recalculate_course_minutes(course: Course) -> None:
         course.save(update_fields=["estimated_minutes", "updated_at"])
 
 
-@receiver(post_save, sender=CourseLesson, dispatch_uid="course_lesson_post_save_recalculate_minutes")
+@receiver(
+    post_save,
+    sender=CourseLesson,
+    dispatch_uid="course_lesson_post_save_recalculate_minutes",
+)
 def course_lesson_post_save_recalculate_minutes(sender, instance, created, **kwargs):
     if kwargs.get("raw"):
         return
@@ -47,7 +54,11 @@ def course_lesson_post_save_recalculate_minutes(sender, instance, created, **kwa
     _recalculate_course_minutes(instance.course)
 
 
-@receiver(post_delete, sender=CourseLesson, dispatch_uid="course_lesson_post_delete_recalculate_minutes")
+@receiver(
+    post_delete,
+    sender=CourseLesson,
+    dispatch_uid="course_lesson_post_delete_recalculate_minutes",
+)
 def course_lesson_post_delete_recalculate_minutes(sender, instance, **kwargs):
     module = instance.module
     course = instance.course
@@ -59,22 +70,36 @@ def course_lesson_post_delete_recalculate_minutes(sender, instance, **kwargs):
         _recalculate_course_minutes(course)
 
 
-@receiver(post_save, sender=CourseModule, dispatch_uid="course_module_post_save_recalculate_course_minutes")
-def course_module_post_save_recalculate_course_minutes(sender, instance, created, **kwargs):
+@receiver(
+    post_save,
+    sender=CourseModule,
+    dispatch_uid="course_module_post_save_recalculate_course_minutes",
+)
+def course_module_post_save_recalculate_course_minutes(
+    sender, instance, created, **kwargs
+):
     if kwargs.get("raw"):
         return
 
     _recalculate_course_minutes(instance.course)
 
 
-@receiver(post_delete, sender=CourseModule, dispatch_uid="course_module_post_delete_recalculate_course_minutes")
+@receiver(
+    post_delete,
+    sender=CourseModule,
+    dispatch_uid="course_module_post_delete_recalculate_course_minutes",
+)
 def course_module_post_delete_recalculate_course_minutes(sender, instance, **kwargs):
     course = instance.course
     if course and Course.objects.filter(pk=course.pk).exists():
         _recalculate_course_minutes(course)
 
 
-@receiver(post_save, sender=CourseEnrollment, dispatch_uid="course_enrollment_post_save_ensure_progress")
+@receiver(
+    post_save,
+    sender=CourseEnrollment,
+    dispatch_uid="course_enrollment_post_save_ensure_progress",
+)
 def course_enrollment_post_save_ensure_progress(sender, instance, created, **kwargs):
     if kwargs.get("raw"):
         return
@@ -83,12 +108,20 @@ def course_enrollment_post_save_ensure_progress(sender, instance, created, **kwa
         CourseProgress.objects.get_or_create(enrollment=instance)
 
 
-@receiver(post_save, sender=LessonProgress, dispatch_uid="lesson_progress_post_save_recalculate_course_progress")
-def lesson_progress_post_save_recalculate_course_progress(sender, instance, created, **kwargs):
+@receiver(
+    post_save,
+    sender=LessonProgress,
+    dispatch_uid="lesson_progress_post_save_recalculate_course_progress",
+)
+def lesson_progress_post_save_recalculate_course_progress(
+    sender, instance, created, **kwargs
+):
     if kwargs.get("raw"):
         return
 
-    from apps.course.services.course_progress_services import recalculate_course_progress
+    from apps.course.services.course_progress_services import (
+        recalculate_course_progress,
+    )
 
     recalculate_course_progress(
         enrollment=instance.enrollment,
@@ -96,12 +129,18 @@ def lesson_progress_post_save_recalculate_course_progress(sender, instance, crea
     )
 
 
-@receiver(post_delete, sender=LessonProgress, dispatch_uid="lesson_progress_post_delete_recalculate_course_progress")
+@receiver(
+    post_delete,
+    sender=LessonProgress,
+    dispatch_uid="lesson_progress_post_delete_recalculate_course_progress",
+)
 def lesson_progress_post_delete_recalculate_course_progress(sender, instance, **kwargs):
     if not instance.enrollment_id:
         return
 
-    from apps.course.services.course_progress_services import recalculate_course_progress
+    from apps.course.services.course_progress_services import (
+        recalculate_course_progress,
+    )
 
     recalculate_course_progress(
         enrollment=instance.enrollment,
@@ -109,7 +148,9 @@ def lesson_progress_post_delete_recalculate_course_progress(sender, instance, **
     )
 
 
-@receiver(post_save, sender=Course, dispatch_uid="course_post_save_sync_publish_archive_dates")
+@receiver(
+    post_save, sender=Course, dispatch_uid="course_post_save_sync_publish_archive_dates"
+)
 def course_post_save_sync_publish_archive_dates(sender, instance, created, **kwargs):
     if kwargs.get("raw"):
         return

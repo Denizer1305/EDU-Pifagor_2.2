@@ -43,7 +43,10 @@ def is_teacher_user(user) -> bool:
         return True
 
     role_codes = _get_user_role_codes(user)
-    return ROLE_TEACHER in role_codes or getattr(user, "registration_type", "") == "teacher"
+    return (
+        ROLE_TEACHER in role_codes
+        or getattr(user, "registration_type", "") == "teacher"
+    )
 
 
 def is_student_user(user) -> bool:
@@ -51,7 +54,10 @@ def is_student_user(user) -> bool:
         return False
 
     role_codes = _get_user_role_codes(user)
-    return ROLE_STUDENT in role_codes or getattr(user, "registration_type", "") == "student"
+    return (
+        ROLE_STUDENT in role_codes
+        or getattr(user, "registration_type", "") == "student"
+    )
 
 
 def _get_course_from_obj(obj):
@@ -150,7 +156,11 @@ class IsTeacherOrAdmin(BasePermission):
 
     def has_permission(self, request, view) -> bool:
         user = request.user
-        return bool(user and user.is_authenticated and (is_teacher_user(user) or is_admin_user(user)))
+        return bool(
+            user
+            and user.is_authenticated
+            and (is_teacher_user(user) or is_admin_user(user))
+        )
 
 
 class IsTeacherOrAdminReadOnly(BasePermission):
@@ -264,17 +274,27 @@ class IsPublishedCourseVisible(BasePermission):
                 return True
 
             teacher_profile = getattr(user, "teacher_profile", None)
-            if teacher_profile and getattr(teacher_profile, "requested_organization_id", None) == course.organization_id:
+            if (
+                teacher_profile
+                and getattr(teacher_profile, "requested_organization_id", None)
+                == course.organization_id
+            ):
                 return True
 
             student_profile = getattr(user, "student_profile", None)
-            if student_profile and getattr(student_profile, "requested_organization_id", None) == course.organization_id:
+            if (
+                student_profile
+                and getattr(student_profile, "requested_organization_id", None)
+                == course.organization_id
+            ):
                 return True
 
         if course.visibility == Course.VisibilityChoices.ASSIGNED_ONLY:
             return course.enrollments.filter(student=user).exists()
 
         if course.visibility == Course.VisibilityChoices.PRIVATE:
-            return course.author_id == user.id or _is_active_course_teacher(user, course)
+            return course.author_id == user.id or _is_active_course_teacher(
+                user, course
+            )
 
         return False

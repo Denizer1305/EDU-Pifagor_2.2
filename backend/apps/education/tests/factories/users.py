@@ -9,6 +9,8 @@ from apps.education.tests.factories.common import (
 )
 from apps.users.tests.factories import (
     create_student_user as base_create_student_user,
+)
+from apps.users.tests.factories import (
     create_teacher_user as base_create_teacher_user,
 )
 

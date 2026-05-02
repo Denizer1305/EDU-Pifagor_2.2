@@ -24,7 +24,6 @@ urlpatterns: list[URLPattern | URLResolver] = [
         GradeRecordCreateFromSubmissionAPIView.as_view(),
         name="grade-create-from-submission",
     ),
-
     # Совместимость со старыми именами.
     path(
         "grade-records/",

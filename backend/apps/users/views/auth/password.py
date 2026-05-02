@@ -51,9 +51,7 @@ class PasswordResetRequestAPIView(APIView):
         ).first()
 
         if user:
-            max_age = int(
-                getattr(settings, "RESET_PASSWORD_TOKEN_TTL", 60 * 60 * 3)
-            )
+            max_age = int(getattr(settings, "RESET_PASSWORD_TOKEN_TTL", 60 * 60 * 3))
             reset_token = build_password_reset_token(user)
             reset_url = get_frontend_url(
                 getattr(
@@ -63,9 +61,9 @@ class PasswordResetRequestAPIView(APIView):
                 ),
                 reset_token,
             )
-            expires_at = (
-                timezone.now() + timedelta(seconds=max_age)
-            ).strftime("%d.%m.%Y %H:%M")
+            expires_at = (timezone.now() + timedelta(seconds=max_age)).strftime(
+                "%d.%m.%Y %H:%M"
+            )
 
             safe_delay(
                 send_reset_password_email_task,
@@ -92,17 +90,11 @@ class PasswordResetConfirmAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         token = (
-            request.data.get("token")
-            or request.query_params.get("token")
-            or ""
+            request.data.get("token") or request.query_params.get("token") or ""
         ).strip()
 
         if not token:
-            raise ValidationError(
-                {
-                    "token": _("Не передан токен восстановления.")
-                }
-            )
+            raise ValidationError({"token": _("Не передан токен восстановления.")})
 
         serializer = PasswordResetConfirmSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -116,9 +108,7 @@ class PasswordResetConfirmAPIView(APIView):
         safe_delay(send_password_changed_email_task, user.id)
 
         return Response(
-            {
-                "detail": _("Пароль успешно обновлён.")
-            },
+            {"detail": _("Пароль успешно обновлён.")},
             status=status.HTTP_200_OK,
         )
 
@@ -146,8 +136,6 @@ class ChangePasswordAPIView(APIView):
         safe_delay(send_password_changed_email_task, user.id)
 
         return Response(
-            {
-                "detail": _("Пароль успешно изменён.")
-            },
+            {"detail": _("Пароль успешно изменён.")},
             status=status.HTTP_200_OK,
         )

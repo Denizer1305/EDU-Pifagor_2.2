@@ -3,8 +3,18 @@ from __future__ import annotations
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
-from apps.education.models import AcademicYear, EducationPeriod, GroupSubject, TeacherGroupSubject
-from apps.organizations.models import Group, Subject, TeacherOrganization, TeacherSubject
+from apps.education.models import (
+    AcademicYear,
+    EducationPeriod,
+    GroupSubject,
+    TeacherGroupSubject,
+)
+from apps.organizations.models import (
+    Group,
+    Subject,
+    TeacherOrganization,
+    TeacherSubject,
+)
 
 
 def _normalize_str(value):
@@ -106,7 +116,9 @@ def assign_teacher_group_subject(
 ) -> TeacherGroupSubject:
     if not _user_has_teacher_role(teacher):
         raise ValidationError(
-            {"teacher": "Закрепление за предметом группы можно создать только для преподавателя."}
+            {
+                "teacher": "Закрепление за предметом группы можно создать только для преподавателя."
+            }
         )
 
     group = group_subject.group

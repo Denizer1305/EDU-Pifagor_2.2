@@ -106,7 +106,9 @@ def get_course_by_id(*, course_id: int):
     return get_course_detail_queryset().filter(id=course_id).first()
 
 
-def get_teacher_courses_queryset(*, teacher_id: int, status: str = "", search: str = ""):
+def get_teacher_courses_queryset(
+    *, teacher_id: int, status: str = "", search: str = ""
+):
     return get_courses_queryset(
         teacher_id=teacher_id,
         status=status,
@@ -115,7 +117,9 @@ def get_teacher_courses_queryset(*, teacher_id: int, status: str = "", search: s
     )
 
 
-def get_public_courses_queryset(*, search: str = "", organization_id: int | None = None):
+def get_public_courses_queryset(
+    *, search: str = "", organization_id: int | None = None
+):
     queryset = get_courses_queryset(
         search=search,
         organization_id=organization_id,

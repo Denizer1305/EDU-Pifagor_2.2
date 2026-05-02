@@ -44,7 +44,9 @@ def create_assignment_section(
 
 
 @transaction.atomic
-def update_assignment_section(section: AssignmentSection, **fields) -> AssignmentSection:
+def update_assignment_section(
+    section: AssignmentSection, **fields
+) -> AssignmentSection:
     """Обновляет секцию работы."""
 
     old_variant = section.variant

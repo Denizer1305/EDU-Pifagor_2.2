@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from rest_framework import serializers
 
-from apps.education.models import AcademicYear, Curriculum, CurriculumItem, EducationPeriod
+from apps.education.models import (
+    AcademicYear,
+    Curriculum,
+    CurriculumItem,
+    EducationPeriod,
+)
 from apps.organizations.models import Department, Organization, Subject
 
 
@@ -32,16 +37,24 @@ class CurriculumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Curriculum
         fields = (
-            "id", "organization",
-            "organization_id", "department",
-            "department_id", "academic_year",
-            "academic_year_id", "code",
-            "name", "description",
-            "total_hours", "is_active",
-            "created_at", "updated_at",
+            "id",
+            "organization",
+            "organization_id",
+            "department",
+            "department_id",
+            "academic_year",
+            "academic_year_id",
+            "code",
+            "name",
+            "description",
+            "total_hours",
+            "is_active",
+            "created_at",
+            "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )
 
@@ -70,17 +83,26 @@ class CurriculumItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CurriculumItem
         fields = (
-            "id", "curriculum",
-            "curriculum_id", "period",
-            "period_id", "subject",
-            "subject_id", "sequence",
-            "planned_hours", "contact_hours",
-            "independent_hours", "assessment_type",
-            "is_required", "is_active",
-            "notes", "created_at",
+            "id",
+            "curriculum",
+            "curriculum_id",
+            "period",
+            "period_id",
+            "subject",
+            "subject_id",
+            "sequence",
+            "planned_hours",
+            "contact_hours",
+            "independent_hours",
+            "assessment_type",
+            "is_required",
+            "is_active",
+            "notes",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )

@@ -13,13 +13,16 @@ class Profile(models.Model):
 
     class GenderChoices(models.TextChoices):
         MALE = (
-            "male", _("Мужской"),
+            "male",
+            _("Мужской"),
         )
         FEMALE = (
-            "female", _("Женский"),
+            "female",
+            _("Женский"),
         )
         NOT_SPECIFIED = (
-            "not_specified", _("Не указан"),
+            "not_specified",
+            _("Не указан"),
         )
 
     user = models.OneToOneField(
@@ -75,7 +78,8 @@ class Profile(models.Model):
         verbose_name = _("Профиль")
         verbose_name_plural = _("Профили")
         ordering = (
-            "last_name", "first_name",
+            "last_name",
+            "first_name",
             "patronymic",
         )
 

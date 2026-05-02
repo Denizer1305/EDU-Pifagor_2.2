@@ -21,7 +21,6 @@ from apps.feedback.tests.factories import (
     create_uploaded_file,
 )
 
-
 TEST_MEDIA_ROOT = tempfile.mkdtemp()
 
 

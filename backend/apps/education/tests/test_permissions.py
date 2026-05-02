@@ -9,7 +9,10 @@ from apps.education.permissions import (
     IsTeacherAssignmentOwnerOrAdmin,
     IsTeacherOrAdminReadOnly,
 )
-from apps.education.tests.factories import create_teacher_group_subject, create_teacher_user
+from apps.education.tests.factories import (
+    create_teacher_group_subject,
+    create_teacher_user,
+)
 from apps.users.tests.factories import create_admin_user, create_user
 
 
@@ -65,7 +68,9 @@ class EducationPermissionsTestCase(TestCase):
         request.user = teacher
 
         permission = IsTeacherAssignmentOwnerOrAdmin()
-        self.assertTrue(permission.has_object_permission(request, view=None, obj=assignment))
+        self.assertTrue(
+            permission.has_object_permission(request, view=None, obj=assignment)
+        )
 
     def test_is_teacher_assignment_owner_or_admin_allows_admin(self):
         teacher = create_teacher_user(email="teacher_for_edu_admin@example.com")
@@ -76,4 +81,6 @@ class EducationPermissionsTestCase(TestCase):
         request.user = admin_user
 
         permission = IsTeacherAssignmentOwnerOrAdmin()
-        self.assertTrue(permission.has_object_permission(request, view=None, obj=assignment))
+        self.assertTrue(
+            permission.has_object_permission(request, view=None, obj=assignment)
+        )

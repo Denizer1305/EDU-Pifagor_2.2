@@ -67,35 +67,47 @@ class AssignmentPublicationAdmin(admin.ModelAdmin):
     inlines = [AssignmentAudienceInline]
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "assignment",
-                "course",
-                "lesson",
-                "published_by",
-                "title_override",
-            )
-        }),
-        (_("Сроки"), {
-            "fields": (
-                "starts_at",
-                "due_at",
-                "available_until",
-            )
-        }),
-        (_("Статус"), {
-            "fields": (
-                "status",
-                "is_active",
-                "notes",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "assignment",
+                    "course",
+                    "lesson",
+                    "published_by",
+                    "title_override",
+                )
+            },
+        ),
+        (
+            _("Сроки"),
+            {
+                "fields": (
+                    "starts_at",
+                    "due_at",
+                    "available_until",
+                )
+            },
+        ),
+        (
+            _("Статус"),
+            {
+                "fields": (
+                    "status",
+                    "is_active",
+                    "notes",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
 

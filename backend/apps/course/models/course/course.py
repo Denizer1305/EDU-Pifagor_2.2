@@ -16,8 +16,7 @@ from apps.course.models.base import (
 
 
 def course_cover_upload_to(instance, filename: str) -> str:
-    """Формирует путь загрузки обложки курса.
-    """
+    """Формирует путь загрузки обложки курса."""
 
     ext = filename.split(".")[-1].lower() if "." in filename else "jpg"
     return f"course/covers/{uuid4().hex}.{ext}"
@@ -261,13 +260,17 @@ class Course(TimeStampedModel):
 
         if self.group_subject:
             if self.subject_id and self.subject_id != self.group_subject.subject_id:
-                errors["subject"] = "Предмет курса не совпадает с предметом group_subject."
+                errors["subject"] = (
+                    "Предмет курса не совпадает с предметом group_subject."
+                )
 
             if (
                 self.academic_year_id
                 and self.academic_year_id != self.group_subject.academic_year_id
             ):
-                errors["academic_year"] = "Учебный год курса не совпадает с group_subject."
+                errors["academic_year"] = (
+                    "Учебный год курса не совпадает с group_subject."
+                )
 
             group = getattr(self.group_subject, "group", None)
             if (
@@ -275,7 +278,9 @@ class Course(TimeStampedModel):
                 and self.organization_id
                 and self.organization_id != group.organization_id
             ):
-                errors["organization"] = "Организация курса не совпадает с организацией группы."
+                errors["organization"] = (
+                    "Организация курса не совпадает с организацией группы."
+                )
 
         if self.status == self.StatusChoices.PUBLISHED and not self.title:
             errors["title"] = "Нельзя публиковать курс без названия."

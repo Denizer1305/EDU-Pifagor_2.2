@@ -27,13 +27,23 @@ class CourseFilter(django_filters.FilterSet):
 
     is_template = django_filters.BooleanFilter(field_name="is_template")
     is_active = django_filters.BooleanFilter(field_name="is_active")
-    allow_self_enrollment = django_filters.BooleanFilter(field_name="allow_self_enrollment")
+    allow_self_enrollment = django_filters.BooleanFilter(
+        field_name="allow_self_enrollment"
+    )
     has_cover = django_filters.BooleanFilter(method="filter_has_cover")
 
-    created_at_from = django_filters.DateTimeFilter(field_name="created_at", lookup_expr="gte")
-    created_at_to = django_filters.DateTimeFilter(field_name="created_at", lookup_expr="lte")
-    published_at_from = django_filters.DateTimeFilter(field_name="published_at", lookup_expr="gte")
-    published_at_to = django_filters.DateTimeFilter(field_name="published_at", lookup_expr="lte")
+    created_at_from = django_filters.DateTimeFilter(
+        field_name="created_at", lookup_expr="gte"
+    )
+    created_at_to = django_filters.DateTimeFilter(
+        field_name="created_at", lookup_expr="lte"
+    )
+    published_at_from = django_filters.DateTimeFilter(
+        field_name="published_at", lookup_expr="gte"
+    )
+    published_at_to = django_filters.DateTimeFilter(
+        field_name="published_at", lookup_expr="lte"
+    )
 
     class Meta:
         model = Course

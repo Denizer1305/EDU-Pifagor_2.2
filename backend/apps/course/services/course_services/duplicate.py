@@ -204,7 +204,9 @@ def duplicate_course(
         academic_year=source_course.academic_year,
         period=source_course.period,
         group_subject=source_course.group_subject,
-        cover_image=source_course.cover_image.name if source_course.cover_image else None,
+        cover_image=source_course.cover_image.name
+        if source_course.cover_image
+        else None,
         is_template=False,
         is_active=True,
         allow_self_enrollment=False,

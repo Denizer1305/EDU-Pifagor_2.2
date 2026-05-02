@@ -38,7 +38,6 @@ urlpatterns = [
         OrganizationTypeDetailView.as_view(),
         name="organization-type-detail",
     ),
-
     path(
         "organizations/",
         OrganizationListView.as_view(),
@@ -59,7 +58,6 @@ urlpatterns = [
         OrganizationTeacherRegistrationCodeDisableView.as_view(),
         name="organization-teacher-registration-code-disable",
     ),
-
     path(
         "departments/",
         DepartmentListView.as_view(),
@@ -70,7 +68,6 @@ urlpatterns = [
         DepartmentDetailView.as_view(),
         name="department-detail",
     ),
-
     path(
         "subject-categories/",
         SubjectCategoryListView.as_view(),
@@ -81,7 +78,6 @@ urlpatterns = [
         SubjectCategoryDetailView.as_view(),
         name="subject-category-detail",
     ),
-
     path(
         "subjects/",
         SubjectListView.as_view(),
@@ -92,7 +88,6 @@ urlpatterns = [
         SubjectDetailView.as_view(),
         name="subject-detail",
     ),
-
     path(
         "groups/",
         GroupListView.as_view(),
@@ -108,7 +103,6 @@ urlpatterns = [
         GroupJoinCodeView.as_view(),
         name="group-join-code",
     ),
-
     path(
         "group-curators/",
         GroupCuratorListView.as_view(),
@@ -119,7 +113,6 @@ urlpatterns = [
         GroupCuratorDetailView.as_view(),
         name="group-curator-detail",
     ),
-
     path(
         "teacher-organizations/",
         TeacherOrganizationListView.as_view(),
@@ -135,7 +128,6 @@ urlpatterns = [
         TeacherOrganizationSetPrimaryView.as_view(),
         name="teacher-organization-set-primary",
     ),
-
     path(
         "teacher-subjects/",
         TeacherSubjectListView.as_view(),

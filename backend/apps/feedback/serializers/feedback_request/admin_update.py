@@ -30,11 +30,7 @@ class FeedbackRequestAdminUpdateSerializer(serializers.Serializer):
             and is_processed is False
         ):
             raise serializers.ValidationError(
-                {
-                    "is_processed": (
-                        "Решённое обращение не может быть не обработанным."
-                    )
-                }
+                {"is_processed": ("Решённое обращение не может быть не обработанным.")}
             )
 
         if (

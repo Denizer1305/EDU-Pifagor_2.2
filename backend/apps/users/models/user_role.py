@@ -34,15 +34,14 @@ class UserRole(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=(
-                    "user", "role",
+                    "user",
+                    "role",
                 ),
                 name="unique_user_role",
             )
         ]
-        ordering = ['-assigned_at']
+        ordering = ["-assigned_at"]
 
     def __str__(self):
         """Возвращает строковое представление объекта."""
         return str(f"{self.user} - {self.role}")
-
-

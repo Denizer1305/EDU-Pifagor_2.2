@@ -71,14 +71,18 @@ class RubricListCreateAPIView(APIView):
         if not request.user.is_superuser:
             queryset = queryset.filter(author=request.user)
 
-        serializer = RubricListSerializer(queryset, many=True, context={"request": request})
+        serializer = RubricListSerializer(
+            queryset, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         serializer = RubricCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        organization = _resolve_organization(serializer.validated_data.get("organization_id"))
+        organization = _resolve_organization(
+            serializer.validated_data.get("organization_id")
+        )
 
         try:
             rubric = create_rubric(
@@ -110,7 +114,9 @@ class RubricDetailAPIView(APIView):
     def get(self, request, pk: int, *args, **kwargs):
         rubric = self.get_object(request, pk)
         if rubric is None:
-            return Response({"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = RubricDetailSerializer(rubric, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -118,14 +124,18 @@ class RubricDetailAPIView(APIView):
     def patch(self, request, pk: int, *args, **kwargs):
         rubric = self.get_object(request, pk)
         if rubric is None:
-            return Response({"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = RubricUpdateSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
         validated = serializer.validated_data
         if "organization_id" in validated:
-            validated["organization"] = _resolve_organization(validated.pop("organization_id"))
+            validated["organization"] = _resolve_organization(
+                validated.pop("organization_id")
+            )
 
         try:
             rubric = update_rubric(rubric, **validated)
@@ -149,16 +159,22 @@ class RubricCriterionListCreateAPIView(APIView):
     def get(self, request, rubric_id: int, *args, **kwargs):
         rubric = self.get_object(request, rubric_id)
         if rubric is None:
-            return Response({"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         queryset = get_rubric_criteria_queryset(rubric_id=rubric.id)
-        serializer = RubricCriterionSerializer(queryset, many=True, context={"request": request})
+        serializer = RubricCriterionSerializer(
+            queryset, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, rubric_id: int, *args, **kwargs):
         rubric = self.get_object(request, rubric_id)
         if rubric is None:
-            return Response({"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = RubricCriterionWriteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -184,7 +200,9 @@ class RubricCriterionDetailAPIView(APIView):
     def get(self, request, pk: int, *args, **kwargs):
         criterion = self._get_criterion(pk)
         if criterion is None:
-            return Response({"detail": "Критерий не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Критерий не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         checker = CanManageAssignmentObject()
         if not checker.has_object_permission(request, self, criterion.rubric):
@@ -196,7 +214,9 @@ class RubricCriterionDetailAPIView(APIView):
     def patch(self, request, pk: int, *args, **kwargs):
         criterion = self._get_criterion(pk)
         if criterion is None:
-            return Response({"detail": "Критерий не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Критерий не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         checker = CanManageAssignmentObject()
         if not checker.has_object_permission(request, self, criterion.rubric):
@@ -216,7 +236,9 @@ class RubricCriterionDetailAPIView(APIView):
     def delete(self, request, pk: int, *args, **kwargs):
         criterion = self._get_criterion(pk)
         if criterion is None:
-            return Response({"detail": "Критерий не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Критерий не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         checker = CanManageAssignmentObject()
         if not checker.has_object_permission(request, self, criterion.rubric):
@@ -232,7 +254,9 @@ class RubricCriteriaReorderAPIView(APIView):
     def post(self, request, rubric_id: int, *args, **kwargs):
         rubric = get_rubric_by_id(rubric_id=rubric_id)
         if rubric is None:
-            return Response({"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Рубрика не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         self.check_object_permissions(request, rubric)
 
@@ -244,5 +268,7 @@ class RubricCriteriaReorderAPIView(APIView):
             )
 
         criteria = reorder_rubric_criteria(rubric=rubric, criterion_ids_in_order=ids)
-        serializer = RubricCriterionSerializer(criteria, many=True, context={"request": request})
+        serializer = RubricCriterionSerializer(
+            criteria, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)

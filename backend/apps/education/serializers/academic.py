@@ -9,14 +9,19 @@ class AcademicYearSerializer(serializers.ModelSerializer):
     class Meta:
         model = AcademicYear
         fields = (
-            "id", "name",
-            "start_date", "end_date",
-            "description", "is_current",
-            "is_active", "created_at",
+            "id",
+            "name",
+            "start_date",
+            "end_date",
+            "description",
+            "is_current",
+            "is_active",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )
 
@@ -32,15 +37,23 @@ class EducationPeriodSerializer(serializers.ModelSerializer):
     class Meta:
         model = EducationPeriod
         fields = (
-            "id", "academic_year",
-            "academic_year_id", "name",
-            "code", "period_type",
-            "sequence", "start_date",
-            "end_date", "description",
-            "is_current", "is_active",
-            "created_at", "updated_at",
+            "id",
+            "academic_year",
+            "academic_year_id",
+            "name",
+            "code",
+            "period_type",
+            "sequence",
+            "start_date",
+            "end_date",
+            "description",
+            "is_current",
+            "is_active",
+            "created_at",
+            "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )

@@ -6,7 +6,11 @@ from apps.assignments.tests.factories.users import (
 )
 from apps.course.tests.factories import (
     create_course as base_create_course,
+)
+from apps.course.tests.factories import (
     create_course_enrollment as base_create_course_enrollment,
+)
+from apps.course.tests.factories import (
     create_course_lesson as base_create_course_lesson,
 )
 from apps.education.tests.factories import (

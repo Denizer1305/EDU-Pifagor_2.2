@@ -35,9 +35,7 @@ class FeedbackStatusHistoryAdmin(admin.ModelAdmin):
         "feedback_request",
         "changed_by",
     )
-    readonly_fields = (
-        "created_at",
-    )
+    readonly_fields = ("created_at",)
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)

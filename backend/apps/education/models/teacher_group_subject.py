@@ -143,7 +143,9 @@ class TeacherGroupSubject(models.Model):
 
             teacher_profile = getattr(self.teacher, "teacher_profile", None)
             if teacher_profile is not None:
-                verification_status = getattr(teacher_profile, "verification_status", "")
+                verification_status = getattr(
+                    teacher_profile, "verification_status", ""
+                )
                 if verification_status and verification_status != "approved":
                     errors["teacher"] = _(
                         "Нельзя назначить преподавателя без подтвержденного профиля преподавателя."

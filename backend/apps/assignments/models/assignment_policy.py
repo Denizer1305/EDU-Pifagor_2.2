@@ -124,13 +124,20 @@ class AssignmentPolicy(TimeStampedModel):
             errors["passing_score"] = "Проходной балл не может быть отрицательным."
 
         if self.passing_score > self.max_score:
-            errors["passing_score"] = "Проходной балл не может быть больше максимального."
+            errors["passing_score"] = (
+                "Проходной балл не может быть больше максимального."
+            )
 
         if self.late_penalty_percent > 100:
             errors["late_penalty_percent"] = "Штраф не может быть больше 100%."
 
-        if self.check_mode == self.CheckModeChoices.AUTO and self.requires_manual_review:
-            errors["requires_manual_review"] = "Для автопроверки ручная проверка должна быть отключена."
+        if (
+            self.check_mode == self.CheckModeChoices.AUTO
+            and self.requires_manual_review
+        ):
+            errors["requires_manual_review"] = (
+                "Для автопроверки ручная проверка должна быть отключена."
+            )
 
         if errors:
             raise ValidationError(errors)

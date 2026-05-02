@@ -3,12 +3,12 @@ from __future__ import annotations
 from django.urls import reverse
 from rest_framework import status
 
-from apps.organizations.tests.test_api.api_base import OrganizationApiBaseTestCase
 from apps.organizations.tests.factories import (
     create_department,
     create_organization,
     create_organization_type,
 )
+from apps.organizations.tests.test_api.api_base import OrganizationApiBaseTestCase
 
 
 class OrganizationDirectoryApiTestCase(OrganizationApiBaseTestCase):

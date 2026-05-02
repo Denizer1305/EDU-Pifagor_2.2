@@ -161,7 +161,9 @@ class Submission(TimeStampedModel):
         if self.final_score is not None and self.final_score < Decimal("0"):
             errors["final_score"] = "Итоговый балл не может быть отрицательным."
 
-        if self.percentage is not None and (self.percentage < 0 or self.percentage > 100):
+        if self.percentage is not None and (
+            self.percentage < 0 or self.percentage > 100
+        ):
             errors["percentage"] = "Процент должен быть в диапазоне от 0 до 100."
 
         if errors:
@@ -174,20 +176,28 @@ class Submission(TimeStampedModel):
                 delta = self.submitted_at - self.publication.due_at
                 self.late_minutes = max(int(delta.total_seconds() // 60), 0)
 
-        if self.status in {
-            self.StatusChoices.SUBMITTED,
-            self.StatusChoices.UNDER_REVIEW,
-            self.StatusChoices.REVIEWED,
-            self.StatusChoices.ACCEPTED,
-            self.StatusChoices.REJECTED,
-        } and self.submitted_at is None:
+        if (
+            self.status
+            in {
+                self.StatusChoices.SUBMITTED,
+                self.StatusChoices.UNDER_REVIEW,
+                self.StatusChoices.REVIEWED,
+                self.StatusChoices.ACCEPTED,
+                self.StatusChoices.REJECTED,
+            }
+            and self.submitted_at is None
+        ):
             self.submitted_at = timezone.now()
 
-        if self.status in {
-            self.StatusChoices.REVIEWED,
-            self.StatusChoices.ACCEPTED,
-            self.StatusChoices.REJECTED,
-        } and self.completed_at is None:
+        if (
+            self.status
+            in {
+                self.StatusChoices.REVIEWED,
+                self.StatusChoices.ACCEPTED,
+                self.StatusChoices.REJECTED,
+            }
+            and self.completed_at is None
+        ):
             self.completed_at = timezone.now()
 
         super().save(*args, **kwargs)

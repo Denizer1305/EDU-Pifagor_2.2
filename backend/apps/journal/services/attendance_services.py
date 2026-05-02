@@ -1,12 +1,16 @@
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
-from apps.journal.models import AttendanceRecord, AttendanceStatus, JournalLesson, LessonStatus
+from apps.journal.models import (
+    AttendanceRecord,
+    AttendanceStatus,
+    JournalLesson,
+)
 
 
 def create_attendance_record(
@@ -22,7 +26,9 @@ def create_attendance_record(
     """
     if AttendanceRecord.objects.filter(lesson=lesson, student_id=student_id).exists():
         raise ValidationError(
-            _("Запись посещаемости для этого студента на данном занятии уже существует.")
+            _(
+                "Запись посещаемости для этого студента на данном занятии уже существует."
+            )
         )
 
     record = AttendanceRecord(
@@ -95,7 +101,9 @@ def bulk_set_attendance(
         if to_create:
             AttendanceRecord.objects.bulk_create(to_create)
         if to_update:
-            AttendanceRecord.objects.bulk_update(to_update, fields=["status", "comment", "updated_at"])
+            AttendanceRecord.objects.bulk_update(
+                to_update, fields=["status", "comment", "updated_at"]
+            )
 
     return to_create + to_update
 

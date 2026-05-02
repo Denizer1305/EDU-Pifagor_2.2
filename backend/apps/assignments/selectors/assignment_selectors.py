@@ -34,19 +34,27 @@ def get_assignment_detail_queryset() -> QuerySet[Assignment]:
     return get_assignment_base_queryset().prefetch_related(
         Prefetch(
             "variants",
-            queryset=AssignmentVariant.objects.order_by("order", "variant_number", "id"),
+            queryset=AssignmentVariant.objects.order_by(
+                "order", "variant_number", "id"
+            ),
         ),
         Prefetch(
             "sections",
-            queryset=AssignmentSection.objects.select_related("variant").order_by("order", "id"),
+            queryset=AssignmentSection.objects.select_related("variant").order_by(
+                "order", "id"
+            ),
         ),
         Prefetch(
             "questions",
-            queryset=AssignmentQuestion.objects.select_related("variant", "section").order_by("order", "id"),
+            queryset=AssignmentQuestion.objects.select_related(
+                "variant", "section"
+            ).order_by("order", "id"),
         ),
         Prefetch(
             "attachments",
-            queryset=AssignmentAttachment.objects.select_related("variant").order_by("order", "id"),
+            queryset=AssignmentAttachment.objects.select_related("variant").order_by(
+                "order", "id"
+            ),
         ),
         "policy",
         "official_format",
@@ -145,10 +153,11 @@ def get_assignment_by_id(*, assignment_id: int) -> Assignment | None:
     return get_assignment_detail_queryset().filter(id=assignment_id).first()
 
 
-def get_assignment_variants_queryset(*, assignment_id: int | None = None) -> QuerySet[AssignmentVariant]:
-    queryset = (
-        AssignmentVariant.objects.select_related("assignment")
-        .order_by("order", "variant_number", "id")
+def get_assignment_variants_queryset(
+    *, assignment_id: int | None = None
+) -> QuerySet[AssignmentVariant]:
+    queryset = AssignmentVariant.objects.select_related("assignment").order_by(
+        "order", "variant_number", "id"
     )
     if assignment_id:
         queryset = queryset.filter(assignment_id=assignment_id)
@@ -160,10 +169,9 @@ def get_assignment_sections_queryset(
     assignment_id: int | None = None,
     variant_id: int | None = None,
 ) -> QuerySet[AssignmentSection]:
-    queryset = (
-        AssignmentSection.objects.select_related("assignment", "variant")
-        .order_by("order", "id")
-    )
+    queryset = AssignmentSection.objects.select_related(
+        "assignment", "variant"
+    ).order_by("order", "id")
     if assignment_id:
         queryset = queryset.filter(assignment_id=assignment_id)
     if variant_id:
@@ -178,10 +186,9 @@ def get_assignment_questions_queryset(
     section_id: int | None = None,
     question_type: str = "",
 ) -> QuerySet[AssignmentQuestion]:
-    queryset = (
-        AssignmentQuestion.objects.select_related("assignment", "variant", "section")
-        .order_by("order", "id")
-    )
+    queryset = AssignmentQuestion.objects.select_related(
+        "assignment", "variant", "section"
+    ).order_by("order", "id")
 
     if assignment_id:
         queryset = queryset.filter(assignment_id=assignment_id)

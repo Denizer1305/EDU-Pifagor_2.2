@@ -12,7 +12,8 @@ class GroupOrganizationShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = (
-            "id", "name",
+            "id",
+            "name",
             "short_name",
         )
         read_only_fields = fields
@@ -22,7 +23,8 @@ class GroupDepartmentShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = (
-            "id", "name",
+            "id",
+            "name",
             "short_name",
         )
         read_only_fields = fields
@@ -50,17 +52,25 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = (
-            "id", "organization",
-            "organization_id", "department",
-            "department_id", "name",
-            "code", "study_form",
-            "course_number", "admission_year",
-            "graduation_year", "academic_year",
-            "status", "description",
+            "id",
+            "organization",
+            "organization_id",
+            "department",
+            "department_id",
+            "name",
+            "code",
+            "study_form",
+            "course_number",
+            "admission_year",
+            "graduation_year",
+            "academic_year",
+            "status",
+            "description",
             "join_code_is_active",
             "join_code_expires_at",
             "has_active_join_code",
-            "is_active", "created_at",
+            "is_active",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
@@ -102,7 +112,9 @@ class GroupJoinCodeSerializer(serializers.Serializer):
 class GroupCuratorSerializer(serializers.ModelSerializer):
     group = serializers.StringRelatedField(read_only=True)
     teacher_email = serializers.EmailField(source="teacher.email", read_only=True)
-    teacher_full_name = serializers.CharField(source="teacher.full_name", read_only=True)
+    teacher_full_name = serializers.CharField(
+        source="teacher.full_name", read_only=True
+    )
     is_current = serializers.BooleanField(read_only=True)
 
     group_id = serializers.PrimaryKeyRelatedField(
@@ -119,17 +131,26 @@ class GroupCuratorSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupCurator
         fields = (
-            "id", "group",
-            "group_id", "teacher_id",
-            "teacher_email", "teacher_full_name",
-            "is_primary", "is_active",
-            "starts_at", "ends_at",
-            "notes", "is_current",
-            "created_at", "updated_at",
+            "id",
+            "group",
+            "group_id",
+            "teacher_id",
+            "teacher_email",
+            "teacher_full_name",
+            "is_primary",
+            "is_active",
+            "starts_at",
+            "ends_at",
+            "notes",
+            "is_current",
+            "created_at",
+            "updated_at",
         )
         read_only_fields = (
-            "id", "is_current",
-            "created_at", "updated_at",
+            "id",
+            "is_current",
+            "created_at",
+            "updated_at",
         )
 
     def validate_notes(self, value):

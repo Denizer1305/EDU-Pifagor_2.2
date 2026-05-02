@@ -25,12 +25,16 @@ def get_course_progress_queryset(
 
 
 def get_course_progress_by_enrollment_id(*, enrollment_id: int):
-    return CourseProgress.objects.select_related(
-        "enrollment",
-        "enrollment__course",
-        "enrollment__student",
-        "last_lesson",
-    ).filter(enrollment_id=enrollment_id).first()
+    return (
+        CourseProgress.objects.select_related(
+            "enrollment",
+            "enrollment__course",
+            "enrollment__student",
+            "last_lesson",
+        )
+        .filter(enrollment_id=enrollment_id)
+        .first()
+    )
 
 
 def get_lesson_progress_queryset(

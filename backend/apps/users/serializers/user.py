@@ -22,11 +22,15 @@ class TeacherProfileShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherProfile
         fields = (
-            "id", "public_title",
-            "short_bio", "is_public",
+            "id",
+            "public_title",
+            "short_bio",
+            "is_public",
             "show_on_teachers_page",
-            "requested_organization", "requested_department",
-            "verification_status", "code_verified_at",
+            "requested_organization",
+            "requested_department",
+            "verification_status",
+            "code_verified_at",
             "verified_at",
         )
         read_only_fields = fields
@@ -36,10 +40,13 @@ class StudentProfileShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
         fields = (
-            "id", "student_code",
+            "id",
+            "student_code",
             "requested_organization",
-            "requested_department", "requested_group",
-            "verification_status", "verified_at",
+            "requested_department",
+            "requested_group",
+            "verification_status",
+            "verified_at",
         )
         read_only_fields = fields
 
@@ -48,8 +55,10 @@ class ParentProfileShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = ParentProfile
         fields = (
-            "id", "occupation",
-            "work_place", "created_at",
+            "id",
+            "occupation",
+            "work_place",
+            "created_at",
         )
         read_only_fields = fields
 
@@ -71,15 +80,24 @@ class CurrentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "id", "email",
-            "registration_type", "onboarding_status",
-            "onboarding_completed_at", "is_email_verified",
-            "is_active", "reviewed_by_id",
-            "reviewed_by_email", "reviewed_at",
-            "review_comment", "profile",
-            "roles", "teacher_profile",
-            "student_profile", "parent_profile",
-            "created_at", "updated_at",
+            "id",
+            "email",
+            "registration_type",
+            "onboarding_status",
+            "onboarding_completed_at",
+            "is_email_verified",
+            "is_active",
+            "reviewed_by_id",
+            "reviewed_by_email",
+            "reviewed_at",
+            "review_comment",
+            "profile",
+            "roles",
+            "teacher_profile",
+            "student_profile",
+            "parent_profile",
+            "created_at",
+            "updated_at",
         )
         read_only_fields = fields
 

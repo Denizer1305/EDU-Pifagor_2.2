@@ -15,15 +15,31 @@ class CourseEnrollmentFilter(django_filters.FilterSet):
     assignment_id = django_filters.NumberFilter(field_name="assignment_id")
     status = django_filters.CharFilter(field_name="status")
 
-    progress_from = django_filters.NumberFilter(field_name="progress_percent", lookup_expr="gte")
-    progress_to = django_filters.NumberFilter(field_name="progress_percent", lookup_expr="lte")
+    progress_from = django_filters.NumberFilter(
+        field_name="progress_percent", lookup_expr="gte"
+    )
+    progress_to = django_filters.NumberFilter(
+        field_name="progress_percent", lookup_expr="lte"
+    )
 
-    enrolled_at_from = django_filters.DateTimeFilter(field_name="enrolled_at", lookup_expr="gte")
-    enrolled_at_to = django_filters.DateTimeFilter(field_name="enrolled_at", lookup_expr="lte")
-    started_at_from = django_filters.DateTimeFilter(field_name="started_at", lookup_expr="gte")
-    started_at_to = django_filters.DateTimeFilter(field_name="started_at", lookup_expr="lte")
-    completed_at_from = django_filters.DateTimeFilter(field_name="completed_at", lookup_expr="gte")
-    completed_at_to = django_filters.DateTimeFilter(field_name="completed_at", lookup_expr="lte")
+    enrolled_at_from = django_filters.DateTimeFilter(
+        field_name="enrolled_at", lookup_expr="gte"
+    )
+    enrolled_at_to = django_filters.DateTimeFilter(
+        field_name="enrolled_at", lookup_expr="lte"
+    )
+    started_at_from = django_filters.DateTimeFilter(
+        field_name="started_at", lookup_expr="gte"
+    )
+    started_at_to = django_filters.DateTimeFilter(
+        field_name="started_at", lookup_expr="lte"
+    )
+    completed_at_from = django_filters.DateTimeFilter(
+        field_name="completed_at", lookup_expr="gte"
+    )
+    completed_at_to = django_filters.DateTimeFilter(
+        field_name="completed_at", lookup_expr="lte"
+    )
 
     class Meta:
         model = CourseEnrollment

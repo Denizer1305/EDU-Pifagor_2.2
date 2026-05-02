@@ -25,12 +25,12 @@ class AcademicYearListView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = AcademicYearSerializer
     filterset_class = AcademicYearFilter
-    search_fields = (
-        "name",
-    )
+    search_fields = ("name",)
     ordering_fields = (
-        "name", "start_date",
-        "end_date", "created_at",
+        "name",
+        "start_date",
+        "end_date",
+        "created_at",
     )
 
     def get_queryset(self):
@@ -85,12 +85,15 @@ class EducationPeriodListView(generics.ListCreateAPIView):
     serializer_class = EducationPeriodSerializer
     filterset_class = EducationPeriodFilter
     search_fields = (
-        "name", "code",
+        "name",
+        "code",
         "academic_year__name",
     )
     ordering_fields = (
-        "sequence", "start_date",
-        "end_date", "created_at",
+        "sequence",
+        "start_date",
+        "end_date",
+        "created_at",
     )
 
     def get_queryset(self):

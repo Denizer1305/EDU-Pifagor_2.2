@@ -94,7 +94,9 @@ class EducationApiTestCase(APITestCase):
         self.assertEqual(response.data["name"], "2035/2036")
 
     def test_create_group_subject(self):
-        academic_year = create_academic_year(name="2036/2037", start_date="2036-09-01", end_date="2037-06-30")
+        academic_year = create_academic_year(
+            name="2036/2037", start_date="2036-09-01", end_date="2037-06-30"
+        )
         period = create_education_period(
             academic_year=academic_year,
             start_date="2036-09-01",

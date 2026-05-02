@@ -26,8 +26,10 @@ class StudentGroupEnrollmentListView(generics.ListCreateAPIView):
         "academic_year__name",
     )
     ordering_fields = (
-        "enrollment_date", "completion_date",
-        "journal_number", "created_at",
+        "enrollment_date",
+        "completion_date",
+        "journal_number",
+        "created_at",
     )
 
     def get_queryset(self):

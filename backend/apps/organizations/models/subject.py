@@ -50,9 +50,7 @@ class Subject(models.Model):
         db_table = "organizations_subject"
         verbose_name = _("Учебный предмет")
         verbose_name_plural = _("Учебные предметы")
-        ordering = (
-            "name",
-        )
+        ordering = ("name",)
 
     def __str__(self) -> str:
         return self.short_name or self.name

@@ -32,7 +32,6 @@ urlpatterns: list[URLPattern | URLResolver] = [
         AssignmentVariantReorderAPIView.as_view(),
         name="assignment-variant-reorder",
     ),
-
     path(
         "assignments/<int:assignment_id>/sections/",
         AssignmentSectionListCreateAPIView.as_view(),
@@ -48,7 +47,6 @@ urlpatterns: list[URLPattern | URLResolver] = [
         AssignmentSectionReorderAPIView.as_view(),
         name="assignment-section-reorder",
     ),
-
     path(
         "assignments/<int:assignment_id>/questions/",
         AssignmentQuestionListCreateAPIView.as_view(),
@@ -64,7 +62,6 @@ urlpatterns: list[URLPattern | URLResolver] = [
         AssignmentQuestionReorderAPIView.as_view(),
         name="assignment-question-reorder",
     ),
-
     path(
         "sections/<int:section_id>/questions/",
         AssignmentQuestionListCreateAPIView.as_view(),
@@ -75,7 +72,6 @@ urlpatterns: list[URLPattern | URLResolver] = [
         AssignmentQuestionReorderAPIView.as_view(),
         name="section-question-reorder",
     ),
-
     path(
         "assignments/<int:assignment_id>/attachments/",
         AssignmentAttachmentListCreateAPIView.as_view(),

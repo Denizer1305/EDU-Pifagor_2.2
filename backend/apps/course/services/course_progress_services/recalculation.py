@@ -60,9 +60,7 @@ def recalculate_course_progress(
 
     progress_percent = 0
     if total_lessons_count > 0:
-        progress_percent = round(
-            (completed_lessons_count / total_lessons_count) * 100
-        )
+        progress_percent = round((completed_lessons_count / total_lessons_count) * 100)
 
     course_progress.total_lessons_count = total_lessons_count
     course_progress.completed_lessons_count = completed_lessons_count

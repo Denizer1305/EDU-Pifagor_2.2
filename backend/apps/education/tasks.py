@@ -4,7 +4,7 @@ import logging
 
 from celery import shared_task
 from django.db import models, transaction
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.utils import timezone
 
 from apps.education.models import (
@@ -129,7 +129,9 @@ def deactivate_expired_teacher_group_subject_assignments() -> dict:
         "updated_count": updated_count,
     }
 
-    logger.info("Деактивация завершённых закреплений преподавателей завершена: %s", result)
+    logger.info(
+        "Деактивация завершённых закреплений преподавателей завершена: %s", result
+    )
     return result
 
 
@@ -141,9 +143,7 @@ def log_education_integrity_report() -> dict:
     Эта задача ничего не исправляет автоматически.
     Она только помогает находить потенциально проблемные места.
     """
-    groups_without_subjects = (
-        GroupSubject.objects.values("group_id").distinct().count()
-    )
+    groups_without_subjects = GroupSubject.objects.values("group_id").distinct().count()
 
     active_enrollments_without_journal_number = StudentGroupEnrollment.objects.filter(
         status=StudentGroupEnrollment.StatusChoices.ACTIVE,
@@ -153,19 +153,25 @@ def log_education_integrity_report() -> dict:
     periods_without_group_subjects = (
         EducationPeriod.objects.annotate(
             group_subjects_count=Count("group_subjects"),
-        ).filter(group_subjects_count=0).count()
+        )
+        .filter(group_subjects_count=0)
+        .count()
     )
 
     group_subjects_without_teacher = (
         GroupSubject.objects.annotate(
             assignments_count=Count("teacher_assignments"),
-        ).filter(assignments_count=0).count()
+        )
+        .filter(assignments_count=0)
+        .count()
     )
 
     active_teacher_assignments_without_org_link = (
         TeacherGroupSubject.objects.filter(is_active=True)
         .exclude(
-            teacher__teacher_organizations__organization_id=models.F("group_subject__group__organization_id"),
+            teacher__teacher_organizations__organization_id=models.F(
+                "group_subject__group__organization_id"
+            ),
             teacher__teacher_organizations__is_active=True,
         )
         .count()

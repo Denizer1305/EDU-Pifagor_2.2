@@ -3,12 +3,20 @@ from __future__ import annotations
 from apps.course.tests.factories.common import _unwrap_factory_result
 from apps.education.tests.factories import (
     create_academic_year as base_create_academic_year,
+)
+from apps.education.tests.factories import (
     create_education_period as base_create_education_period,
+)
+from apps.education.tests.factories import (
     create_group_subject as base_create_group_subject,
 )
 from apps.organizations.tests.factories import (
     create_group as base_create_group,
+)
+from apps.organizations.tests.factories import (
     create_organization as base_create_organization,
+)
+from apps.organizations.tests.factories import (
     create_subject as base_create_subject,
 )
 

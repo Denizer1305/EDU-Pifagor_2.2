@@ -75,10 +75,15 @@ def create_assignment(
         "attempts_limit": 1,
         "allow_text_answer": True,
     }
+
     if policy_data:
         policy_payload.update(policy_data)
 
-    policy = AssignmentPolicy(assignment=assignment, **policy_payload)
+    policy = get_or_create_assignment_policy(assignment)
+
+    for field_name, value in policy_payload.items():
+        setattr(policy, field_name, value)
+
     policy.full_clean()
     policy.save()
 
@@ -111,8 +116,10 @@ def update_assignment(assignment: Assignment, **fields) -> Assignment:
 
     if policy_data is not None:
         policy = get_or_create_assignment_policy(assignment)
+
         for field_name, value in policy_data.items():
             setattr(policy, field_name, value)
+
         policy.full_clean()
         policy.save()
 
@@ -123,8 +130,10 @@ def update_assignment(assignment: Assignment, **fields) -> Assignment:
                 "official_family": AssignmentOfficialFormat.OfficialFamilyChoices.NONE,
             },
         )
+
         for field_name, value in official_format_data.items():
             setattr(official_format, field_name, value)
+
         official_format.full_clean()
         official_format.save()
 

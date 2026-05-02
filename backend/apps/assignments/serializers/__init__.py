@@ -68,8 +68,8 @@ from .rubric_serializers import (
 from .submission_serializers import (
     SubmissionAnswerSaveSerializer,
     SubmissionAnswerSerializer,
-    SubmissionAttachmentSerializer,
     SubmissionAttachFileSerializer,
+    SubmissionAttachmentSerializer,
     SubmissionAttemptSerializer,
     SubmissionDetailSerializer,
     SubmissionListSerializer,

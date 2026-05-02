@@ -25,14 +25,17 @@ class OrganizationTypeFilter(django_filters.FilterSet):
     class Meta:
         model = OrganizationType
         fields = (
-            "code", "name",
+            "code",
+            "name",
             "is_active",
         )
 
 
 class OrganizationFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
-    short_name = django_filters.CharFilter(field_name="short_name", lookup_expr="icontains")
+    short_name = django_filters.CharFilter(
+        field_name="short_name", lookup_expr="icontains"
+    )
     city = django_filters.CharFilter(field_name="city", lookup_expr="icontains")
     is_active = django_filters.BooleanFilter(field_name="is_active")
     type = django_filters.NumberFilter(field_name="type_id")
@@ -45,9 +48,12 @@ class OrganizationFilter(django_filters.FilterSet):
     class Meta:
         model = Organization
         fields = (
-            "name", "short_name",
-            "city", "is_active",
-            "type", "created_at",
+            "name",
+            "short_name",
+            "city",
+            "is_active",
+            "type",
+            "created_at",
             "teacher_registration_code_is_active",
         )
 
@@ -71,15 +77,19 @@ class OrganizationFilter(django_filters.FilterSet):
 
 class DepartmentFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
-    short_name = django_filters.CharFilter(field_name="short_name", lookup_expr="icontains")
+    short_name = django_filters.CharFilter(
+        field_name="short_name", lookup_expr="icontains"
+    )
     organization = django_filters.NumberFilter(field_name="organization_id")
     is_active = django_filters.BooleanFilter(field_name="is_active")
 
     class Meta:
         model = Department
         fields = (
-            "name", "short_name",
-            "organization", "is_active",
+            "name",
+            "short_name",
+            "organization",
+            "is_active",
         )
 
 
@@ -91,22 +101,27 @@ class SubjectCategoryFilter(django_filters.FilterSet):
     class Meta:
         model = SubjectCategory
         fields = (
-            "code", "name",
+            "code",
+            "name",
             "is_active",
         )
 
 
 class SubjectFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
-    short_name = django_filters.CharFilter(field_name="short_name", lookup_expr="icontains")
+    short_name = django_filters.CharFilter(
+        field_name="short_name", lookup_expr="icontains"
+    )
     category = django_filters.NumberFilter(field_name="category_id")
     is_active = django_filters.BooleanFilter(field_name="is_active")
 
     class Meta:
         model = Subject
         fields = (
-            "name", "short_name",
-            "category", "is_active",
+            "name",
+            "short_name",
+            "category",
+            "is_active",
         )
 
 
@@ -121,7 +136,9 @@ class GroupFilter(django_filters.FilterSet):
     course_number = django_filters.RangeFilter(field_name="course_number")
     admission_year = django_filters.RangeFilter(field_name="admission_year")
     graduation_year = django_filters.RangeFilter(field_name="graduation_year")
-    academic_year = django_filters.CharFilter(field_name="academic_year", lookup_expr="icontains")
+    academic_year = django_filters.CharFilter(
+        field_name="academic_year", lookup_expr="icontains"
+    )
     created_at = django_filters.DateFromToRangeFilter(field_name="created_at")
 
     join_code_is_active = django_filters.BooleanFilter(
@@ -131,12 +148,18 @@ class GroupFilter(django_filters.FilterSet):
     class Meta:
         model = Group
         fields = (
-            "name", "code",
-            "organization", "department",
-            "study_form", "status",
-            "is_active", "course_number",
-            "admission_year", "graduation_year",
-            "academic_year", "created_at",
+            "name",
+            "code",
+            "organization",
+            "department",
+            "study_form",
+            "status",
+            "is_active",
+            "course_number",
+            "admission_year",
+            "graduation_year",
+            "academic_year",
+            "created_at",
             "join_code_is_active",
         )
 
@@ -170,9 +193,12 @@ class GroupCuratorFilter(django_filters.FilterSet):
     class Meta:
         model = GroupCurator
         fields = (
-            "group", "teacher",
-            "is_primary", "is_active",
-            "starts_at", "ends_at",
+            "group",
+            "teacher",
+            "is_primary",
+            "is_active",
+            "starts_at",
+            "ends_at",
             "current_only",
         )
 
@@ -203,10 +229,14 @@ class TeacherOrganizationFilter(django_filters.FilterSet):
     class Meta:
         model = TeacherOrganization
         fields = (
-            "teacher", "organization",
-            "position", "employment_type",
-            "is_primary", "is_active",
-            "starts_at", "ends_at",
+            "teacher",
+            "organization",
+            "position",
+            "employment_type",
+            "is_primary",
+            "is_active",
+            "starts_at",
+            "ends_at",
             "current_only",
         )
 
@@ -233,7 +263,9 @@ class TeacherSubjectFilter(django_filters.FilterSet):
     class Meta:
         model = TeacherSubject
         fields = (
-            "teacher", "subject",
-            "subject_category", "is_primary",
+            "teacher",
+            "subject",
+            "subject_category",
+            "is_primary",
             "is_active",
         )

@@ -37,7 +37,7 @@ class CoursePublishAPIView(APIView):
         try:
             course = publish_course(course=course)
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         serializer = CourseDetailSerializer(
             get_course_by_id(course_id=course.id),
@@ -56,7 +56,7 @@ class CourseArchiveAPIView(APIView):
         try:
             course = archive_course(course=course)
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         serializer = CourseDetailSerializer(
             get_course_by_id(course_id=course.id),
@@ -88,7 +88,7 @@ class CourseDuplicateAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseDetailSerializer(
             get_course_by_id(course_id=new_course.id),

@@ -103,5 +103,9 @@ class GroupCurator(models.Model):
         if self.teacher_id and hasattr(self.teacher, "registration_type"):
             if self.teacher.registration_type != "teacher":
                 raise ValidationError(
-                    {"teacher": _("Куратором группы может быть только пользователь с типом регистрации teacher.")}
+                    {
+                        "teacher": _(
+                            "Куратором группы может быть только пользователь с типом регистрации teacher."
+                        )
+                    }
                 )

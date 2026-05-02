@@ -4,13 +4,17 @@ from django.test import TestCase
 
 from apps.assignments.services import (
     archive_assignment,
-    create_assignment as create_assignment_service,
     duplicate_assignment,
     publish_assignment,
     update_assignment,
 )
+from apps.assignments.services import (
+    create_assignment as create_assignment_service,
+)
 from apps.assignments.tests.factories import (
     create_assignment as create_assignment_factory,
+)
+from apps.assignments.tests.factories import (
     create_assignment_question,
     create_assignment_section,
     create_assignment_variant,

@@ -128,21 +128,21 @@ class CourseLessonCreateSerializer(serializers.Serializer):
     def validate(self, attrs):
         lesson_type = attrs.get("lesson_type")
 
-        if lesson_type == CourseLesson.LessonTypeChoices.VIDEO and not attrs.get("video_url"):
+        if lesson_type == CourseLesson.LessonTypeChoices.VIDEO and not attrs.get(
+            "video_url"
+        ):
             raise serializers.ValidationError(
                 {"video_url": "Для видеоурока необходимо указать ссылку на видео."}
             )
 
-        if (
-            lesson_type
-            in {
-                CourseLesson.LessonTypeChoices.LINK,
-                CourseLesson.LessonTypeChoices.WEBINAR,
-            }
-            and not attrs.get("external_url")
-        ):
+        if lesson_type in {
+            CourseLesson.LessonTypeChoices.LINK,
+            CourseLesson.LessonTypeChoices.WEBINAR,
+        } and not attrs.get("external_url"):
             raise serializers.ValidationError(
-                {"external_url": "Для этого типа урока необходимо указать внешнюю ссылку."}
+                {
+                    "external_url": "Для этого типа урока необходимо указать внешнюю ссылку."
+                }
             )
 
         return attrs
@@ -220,7 +220,9 @@ class CourseLessonUpdateSerializer(serializers.Serializer):
             and not external_url
         ):
             raise serializers.ValidationError(
-                {"external_url": "Для этого типа урока необходимо указать внешнюю ссылку."}
+                {
+                    "external_url": "Для этого типа урока необходимо указать внешнюю ссылку."
+                }
             )
 
         return attrs

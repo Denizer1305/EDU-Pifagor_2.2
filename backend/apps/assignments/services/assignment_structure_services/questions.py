@@ -56,7 +56,9 @@ def create_assignment_question(
 
 
 @transaction.atomic
-def update_assignment_question(question: AssignmentQuestion, **fields) -> AssignmentQuestion:
+def update_assignment_question(
+    question: AssignmentQuestion, **fields
+) -> AssignmentQuestion:
     """Обновляет вопрос работы."""
 
     old_variant = question.variant

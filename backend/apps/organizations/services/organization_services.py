@@ -122,42 +122,59 @@ def set_teacher_registration_code(
     raw_code: str,
     expires_at=None,
 ) -> Organization:
-    logger.info("set_teacher_registration_code started organization_id=%s", organization.id)
+    logger.info(
+        "set_teacher_registration_code started organization_id=%s", organization.id
+    )
     organization.set_teacher_registration_code(
         raw_code=raw_code,
         expires_at=expires_at,
     )
     organization.full_clean()
     organization.save()
-    logger.info("set_teacher_registration_code completed organization_id=%s", organization.id)
+    logger.info(
+        "set_teacher_registration_code completed organization_id=%s", organization.id
+    )
     return organization
 
 
 @transaction.atomic
 def disable_teacher_registration_code(*, organization: Organization) -> Organization:
-    logger.info("disable_teacher_registration_code started organization_id=%s", organization.id)
+    logger.info(
+        "disable_teacher_registration_code started organization_id=%s", organization.id
+    )
     organization.disable_teacher_registration_code()
     organization.full_clean()
-    organization.save(update_fields=(
-        "teacher_registration_code_is_active",
-        "updated_at",
-    ))
-    logger.info("disable_teacher_registration_code completed organization_id=%s", organization.id)
+    organization.save(
+        update_fields=(
+            "teacher_registration_code_is_active",
+            "updated_at",
+        )
+    )
+    logger.info(
+        "disable_teacher_registration_code completed organization_id=%s",
+        organization.id,
+    )
     return organization
 
 
 @transaction.atomic
 def clear_teacher_registration_code(*, organization: Organization) -> Organization:
-    logger.info("clear_teacher_registration_code started organization_id=%s", organization.id)
+    logger.info(
+        "clear_teacher_registration_code started organization_id=%s", organization.id
+    )
     organization.clear_teacher_registration_code()
     organization.full_clean()
-    organization.save(update_fields=(
-        "teacher_registration_code_hash",
-        "teacher_registration_code_is_active",
-        "teacher_registration_code_expires_at",
-        "updated_at",
-    ))
-    logger.info("clear_teacher_registration_code completed organization_id=%s", organization.id)
+    organization.save(
+        update_fields=(
+            "teacher_registration_code_hash",
+            "teacher_registration_code_is_active",
+            "teacher_registration_code_expires_at",
+            "updated_at",
+        )
+    )
+    logger.info(
+        "clear_teacher_registration_code completed organization_id=%s", organization.id
+    )
     return organization
 
 

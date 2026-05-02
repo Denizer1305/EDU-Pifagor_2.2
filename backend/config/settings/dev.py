@@ -16,9 +16,9 @@ TEMPLATES[0]["DIRS"] = [BASE_DIR / "templates"]
 
 # Логирование для разработки (выводим все логи в консоль)
 LOGGING["loggers"]["django"] = {
-    "handlers": ["console", "debug_file"],
-    "level": "DEBUG",
-    "propagate": True,
+    "handlers": ["console"],
+    "level": "INFO",
+    "propagate": False,
 }
 
 # Включаем CORS для разработки (если фронтенд работает на другом порту)

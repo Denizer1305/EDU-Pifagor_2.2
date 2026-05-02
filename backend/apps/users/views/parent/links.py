@@ -47,7 +47,7 @@ class ParentStudentRequestAPIView(APIView):
                 is_primary=serializer.validated_data.get("is_primary", False),
             )
         except DjangoValidationError as exc:
-            raise django_validation_error_to_drf(exc)
+            raise django_validation_error_to_drf(exc) from exc
 
         return Response(
             ParentStudentSerializer(link).data,
@@ -78,9 +78,7 @@ class ParentStudentViewSet(viewsets.ModelViewSet):
         "updated_at",
         "approved_at",
     )
-    ordering = (
-        "-created_at",
-    )
+    ordering = ("-created_at",)
 
     def get_queryset(self):
         queryset = ParentStudent.objects.select_related(
@@ -131,9 +129,7 @@ class ParentStudentViewSet(viewsets.ModelViewSet):
 
             if not parent_user:
                 raise ValidationError(
-                    {
-                        "parent_user_id": "Пользователь-родитель не найден."
-                    }
+                    {"parent_user_id": "Пользователь-родитель не найден."}
                 )
 
         try:
@@ -146,7 +142,7 @@ class ParentStudentViewSet(viewsets.ModelViewSet):
                 is_primary=serializer.validated_data.get("is_primary", False),
             )
         except DjangoValidationError as exc:
-            raise django_validation_error_to_drf(exc)
+            raise django_validation_error_to_drf(exc) from exc
 
         return Response(
             ParentStudentSerializer(
@@ -181,7 +177,7 @@ class ParentStudentViewSet(viewsets.ModelViewSet):
                 comment=comment,
             )
         except DjangoValidationError as exc:
-            raise django_validation_error_to_drf(exc)
+            raise django_validation_error_to_drf(exc) from exc
 
         return Response(
             ParentStudentSerializer(instance).data,

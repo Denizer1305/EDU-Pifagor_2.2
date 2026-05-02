@@ -5,7 +5,6 @@ from django.db.models import Q
 
 from apps.users.constants import ROLE_ADMIN, ROLE_PARENT, ROLE_STUDENT, ROLE_TEACHER
 
-
 User = get_user_model()
 
 
@@ -76,28 +75,44 @@ def get_users_by_registration_type_queryset(*, registration_type: str):
 
 
 def get_students_queryset():
-    return get_users_queryset().filter(
-        user_roles__role__code=ROLE_STUDENT,
-        user_roles__is_active=True,
-    ).distinct()
+    return (
+        get_users_queryset()
+        .filter(
+            user_roles__role__code=ROLE_STUDENT,
+            user_roles__is_active=True,
+        )
+        .distinct()
+    )
 
 
 def get_teachers_queryset():
-    return get_users_queryset().filter(
-        user_roles__role__code=ROLE_TEACHER,
-        user_roles__is_active=True,
-    ).distinct()
+    return (
+        get_users_queryset()
+        .filter(
+            user_roles__role__code=ROLE_TEACHER,
+            user_roles__is_active=True,
+        )
+        .distinct()
+    )
 
 
 def get_parents_queryset():
-    return get_users_queryset().filter(
-        user_roles__role__code=ROLE_PARENT,
-        user_roles__is_active=True,
-    ).distinct()
+    return (
+        get_users_queryset()
+        .filter(
+            user_roles__role__code=ROLE_PARENT,
+            user_roles__is_active=True,
+        )
+        .distinct()
+    )
 
 
 def get_admins_queryset():
-    return get_users_queryset().filter(
-        user_roles__role__code=ROLE_ADMIN,
-        user_roles__is_active=True,
-    ).distinct()
+    return (
+        get_users_queryset()
+        .filter(
+            user_roles__role__code=ROLE_ADMIN,
+            user_roles__is_active=True,
+        )
+        .distinct()
+    )

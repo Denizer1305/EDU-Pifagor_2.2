@@ -21,9 +21,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            "id", "user",
-            "email", "full_name",
-            "short_name", "city",
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "short_name",
+            "city",
             "avatar",
         )
         read_only_fields = fields
@@ -40,21 +43,33 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            "id", "user",
-            "email", "first_name",
-            "last_name", "patronymic",
-            "full_name", "short_name",
-            "phone", "birth_date",
-            "gender", "about",
-            "city", "avatar",
-            "timezone", "social_link_max",
-            "social_link_vk", "created_at",
+            "id",
+            "user",
+            "email",
+            "first_name",
+            "last_name",
+            "patronymic",
+            "full_name",
+            "short_name",
+            "phone",
+            "birth_date",
+            "gender",
+            "about",
+            "city",
+            "avatar",
+            "timezone",
+            "social_link_max",
+            "social_link_vk",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "user",
-            "email", "full_name",
-            "short_name", "created_at",
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "short_name",
+            "created_at",
             "updated_at",
         )
 
@@ -63,12 +78,18 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            "first_name", "last_name",
-            "patronymic", "phone",
-            "birth_date", "gender",
-            "about", "city",
-            "avatar", "timezone",
-            "social_link_max", "social_link_vk",
+            "first_name",
+            "last_name",
+            "patronymic",
+            "phone",
+            "birth_date",
+            "gender",
+            "about",
+            "city",
+            "avatar",
+            "timezone",
+            "social_link_max",
+            "social_link_vk",
         )
 
     def validate_first_name(self, value):

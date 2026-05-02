@@ -1,3 +1,5 @@
+from importlib import import_module
+
 from django.apps import AppConfig
 from django.utils.translation import gettext_lazy as _
 
@@ -8,5 +10,9 @@ class EducationConfig(AppConfig):
     label = "education"
     verbose_name = _("Образование")
 
-    def ready(self):
-        import apps.education.signals  # noqa: F401
+    def ready(self) -> None:
+        """Инициализирует обработчики приложения при запуске."""
+        try:
+            import_module("apps.education.signals")
+        except ModuleNotFoundError:
+            pass

@@ -34,16 +34,22 @@ class AssignmentSectionListCreateAPIView(APIView):
     def get(self, request, assignment_id: int, *args, **kwargs):
         assignment = self.get_object(request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         queryset = get_assignment_sections_queryset(assignment_id=assignment.id)
-        serializer = AssignmentSectionSerializer(queryset, many=True, context={"request": request})
+        serializer = AssignmentSectionSerializer(
+            queryset, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, assignment_id: int, *args, **kwargs):
         assignment = self.get_object(request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = AssignmentSectionWriteSerializer(
             data=request.data,
@@ -72,7 +78,9 @@ class AssignmentSectionDetailAPIView(APIView):
     def get(self, request, pk: int, *args, **kwargs):
         section = self._get_section(pk)
         if section is None:
-            return Response({"detail": "Секция не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Секция не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, section)
 
@@ -82,7 +90,9 @@ class AssignmentSectionDetailAPIView(APIView):
     def patch(self, request, pk: int, *args, **kwargs):
         section = self._get_section(pk)
         if section is None:
-            return Response({"detail": "Секция не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Секция не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, section)
 
@@ -104,7 +114,9 @@ class AssignmentSectionDetailAPIView(APIView):
     def delete(self, request, pk: int, *args, **kwargs):
         section = self._get_section(pk)
         if section is None:
-            return Response({"detail": "Секция не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Секция не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, section)
 
@@ -118,7 +130,9 @@ class AssignmentSectionReorderAPIView(APIView):
     def post(self, request, assignment_id: int, *args, **kwargs):
         assignment = get_assignment_or_404(self, request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         ids = request.data.get("section_ids", [])
         if not isinstance(ids, list):
@@ -131,5 +145,7 @@ class AssignmentSectionReorderAPIView(APIView):
             assignment=assignment,
             section_ids_in_order=ids,
         )
-        serializer = AssignmentSectionSerializer(sections, many=True, context={"request": request})
+        serializer = AssignmentSectionSerializer(
+            sections, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)

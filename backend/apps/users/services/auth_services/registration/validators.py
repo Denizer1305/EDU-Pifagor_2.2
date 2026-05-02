@@ -27,11 +27,7 @@ def _validate_registration_base(
 
     if User.objects.filter(email=email).exists():
         raise ValidationError(
-            {
-                "email": _(
-                    "Пользователь с такой эл. почтой уже существует."
-                )
-            }
+            {"email": _("Пользователь с такой эл. почтой уже существует.")}
         )
 
     validate_email(email, reset_email)
@@ -40,11 +36,7 @@ def _validate_registration_base(
         validate_phone(phone)
 
     if password != password_repeat:
-        raise ValidationError(
-            {
-                "password_repeat": _("Пароли не совпадают.")
-            }
-        )
+        raise ValidationError({"password_repeat": _("Пароли не совпадают.")})
 
     password_validation.validate_password(password)
 
@@ -61,8 +53,7 @@ def _validate_teacher_registration(
         raise ValidationError(
             {
                 "requested_organization": _(
-                    "Для преподавателя необходимо указать "
-                    "образовательную организацию."
+                    "Для преподавателя необходимо указать образовательную организацию."
                 )
             }
         )

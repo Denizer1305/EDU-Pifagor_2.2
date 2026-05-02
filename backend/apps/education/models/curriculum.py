@@ -87,5 +87,9 @@ class Curriculum(models.Model):
 
         if self.department and self.department.organization_id != self.organization_id:
             raise ValidationError(
-                {"department": _("Подразделение должно принадлежать той же организации, что и учебный план.")}
+                {
+                    "department": _(
+                        "Подразделение должно принадлежать той же организации, что и учебный план."
+                    )
+                }
             )

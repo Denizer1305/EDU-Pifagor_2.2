@@ -52,11 +52,7 @@ def get_register_serializer_class(registration_type: str):
 
     if serializer_class is None:
         raise ValidationError(
-            {
-                "registration_type": _(
-                    "Допустимые значения: student, parent, teacher."
-                )
-            }
+            {"registration_type": _("Допустимые значения: student, parent, teacher.")}
         )
 
     return serializer_class

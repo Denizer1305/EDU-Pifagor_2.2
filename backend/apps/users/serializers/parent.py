@@ -15,16 +15,24 @@ class ParentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ParentProfile
         fields = (
-            "id", "user",
-            "email", "full_name",
-            "occupation", "work_place",
-            "emergency_contact_phone", "notes",
-            "created_at", "updated_at",
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "occupation",
+            "work_place",
+            "emergency_contact_phone",
+            "notes",
+            "created_at",
+            "updated_at",
         )
         read_only_fields = (
-            "id", "user",
-            "email", "full_name",
-            "created_at", "updated_at",
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "created_at",
+            "updated_at",
         )
 
 
@@ -53,27 +61,43 @@ class ParentProfileUpdateSerializer(serializers.ModelSerializer):
 
 class ParentStudentSerializer(serializers.ModelSerializer):
     parent_email = serializers.EmailField(source="parent.email", read_only=True)
-    parent_full_name = serializers.CharField(source="parent.profile.full_name", read_only=True)
+    parent_full_name = serializers.CharField(
+        source="parent.profile.full_name", read_only=True
+    )
     student_email = serializers.EmailField(source="student.email", read_only=True)
-    student_full_name = serializers.CharField(source="student.profile.full_name", read_only=True)
+    student_full_name = serializers.CharField(
+        source="student.profile.full_name", read_only=True
+    )
 
     class Meta:
         model = ParentStudent
         fields = (
-            "id", "parent",
-            "parent_email", "parent_full_name",
-            "student", "student_email",
-            "student_full_name", "relation_type",
-            "status", "requested_by",
-            "approved_by", "approved_at",
-            "comment", "created_at",
+            "id",
+            "parent",
+            "parent_email",
+            "parent_full_name",
+            "student",
+            "student_email",
+            "student_full_name",
+            "relation_type",
+            "status",
+            "requested_by",
+            "approved_by",
+            "approved_at",
+            "comment",
+            "created_at",
         )
         read_only_fields = (
-            "id", "parent",
-            "parent_email", "parent_full_name",
-            "student_email", "student_full_name",
-            "status", "requested_by",
-            "approved_by", "approved_at",
+            "id",
+            "parent",
+            "parent_email",
+            "parent_full_name",
+            "student_email",
+            "student_full_name",
+            "status",
+            "requested_by",
+            "approved_by",
+            "approved_at",
             "created_at",
         )
 

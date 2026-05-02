@@ -14,8 +14,8 @@ from apps.course.selectors import (
     get_course_module_by_id,
     get_course_progress_by_enrollment_id,
     get_course_progress_queryset,
-    get_courses_queryset,
     get_course_structure_queryset,
+    get_courses_queryset,
     get_lesson_progress_queryset,
     get_public_courses_queryset,
     get_student_course_enrollments_queryset,
@@ -129,7 +129,9 @@ class EnrollmentSelectorsTestCase(TestCase):
 
     def test_get_student_course_enrollments_queryset(self):
         enrollment = create_course_enrollment()
-        queryset = get_student_course_enrollments_queryset(student_id=enrollment.student_id)
+        queryset = get_student_course_enrollments_queryset(
+            student_id=enrollment.student_id
+        )
 
         self.assertIn(enrollment, queryset)
 
@@ -150,13 +152,17 @@ class ProgressSelectorsTestCase(TestCase):
 
     def test_get_course_progress_by_enrollment_id(self):
         progress = create_course_progress()
-        result = get_course_progress_by_enrollment_id(enrollment_id=progress.enrollment_id)
+        result = get_course_progress_by_enrollment_id(
+            enrollment_id=progress.enrollment_id
+        )
 
         self.assertIsNotNone(result)
         self.assertEqual(result.id, progress.id)
 
     def test_get_lesson_progress_queryset(self):
         lesson_progress = create_lesson_progress()
-        queryset = get_lesson_progress_queryset(enrollment_id=lesson_progress.enrollment_id)
+        queryset = get_lesson_progress_queryset(
+            enrollment_id=lesson_progress.enrollment_id
+        )
 
         self.assertIn(lesson_progress, queryset)

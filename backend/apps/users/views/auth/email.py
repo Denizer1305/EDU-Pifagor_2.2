@@ -19,24 +19,16 @@ class VerifyEmailAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         token = (
-            request.data.get("token")
-            or request.query_params.get("token")
-            or ""
+            request.data.get("token") or request.query_params.get("token") or ""
         ).strip()
 
         if not token:
-            raise ValidationError(
-                {
-                    "token": _("Не передан токен подтверждения.")
-                }
-            )
+            raise ValidationError({"token": _("Не передан токен подтверждения.")})
 
         user = verify_user_email_by_token(token)
         safe_delay(send_welcome_email_task, user.id)
 
         return Response(
-            {
-                "detail": _("Электронная почта успешно подтверждена.")
-            },
+            {"detail": _("Электронная почта успешно подтверждена.")},
             status=status.HTTP_200_OK,
         )

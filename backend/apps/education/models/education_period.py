@@ -35,9 +35,7 @@ class EducationPeriod(models.Model):
         max_length=255,
     )
     code = models.CharField(
-        _("Код периода"),
-        max_length=64,
-        validators=[validate_period_code]
+        _("Код периода"), max_length=64, validators=[validate_period_code]
     )
     period_type = models.CharField(
         _("Тип периода"),

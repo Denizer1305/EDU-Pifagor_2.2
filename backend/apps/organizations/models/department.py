@@ -50,12 +50,14 @@ class Department(models.Model):
         verbose_name = _("Подразделение")
         verbose_name_plural = _("Подразделения")
         ordering = (
-            "organization", "name",
+            "organization",
+            "name",
         )
         constraints = [
             models.UniqueConstraint(
                 fields=(
-                    "organization", "name",
+                    "organization",
+                    "name",
                 ),
                 name="unique_department_name_per_organization",
             )

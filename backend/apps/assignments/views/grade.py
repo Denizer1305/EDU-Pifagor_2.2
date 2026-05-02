@@ -7,7 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.assignments.models import GradeRecord
-from apps.assignments.permissions import IsSubmissionOwnerOrReviewerOrAdmin, IsTeacherOrAdmin, is_admin, is_teacher
+from apps.assignments.permissions import (
+    IsTeacherOrAdmin,
+    is_admin,
+    is_teacher,
+)
 from apps.assignments.selectors import get_submission_by_id
 from apps.assignments.serializers import (
     GradeRecordDetailSerializer,
@@ -39,15 +43,25 @@ class GradeRecordListAPIView(APIView):
             queryset = queryset.filter(student=request.user)
 
         if request.query_params.get("assignment_id"):
-            queryset = queryset.filter(assignment_id=request.query_params.get("assignment_id"))
+            queryset = queryset.filter(
+                assignment_id=request.query_params.get("assignment_id")
+            )
 
         if request.query_params.get("publication_id"):
-            queryset = queryset.filter(publication_id=request.query_params.get("publication_id"))
+            queryset = queryset.filter(
+                publication_id=request.query_params.get("publication_id")
+            )
 
-        if request.query_params.get("student_id") and (is_teacher(request.user) or is_admin(request.user)):
-            queryset = queryset.filter(student_id=request.query_params.get("student_id"))
+        if request.query_params.get("student_id") and (
+            is_teacher(request.user) or is_admin(request.user)
+        ):
+            queryset = queryset.filter(
+                student_id=request.query_params.get("student_id")
+            )
 
-        serializer = GradeRecordListSerializer(queryset, many=True, context={"request": request})
+        serializer = GradeRecordListSerializer(
+            queryset, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -57,13 +71,22 @@ class GradeRecordDetailAPIView(APIView):
     def get(self, request, pk: int, *args, **kwargs):
         grade = _get_grade_queryset().filter(id=pk).first()
         if grade is None:
-            return Response({"detail": "Оценка не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Оценка не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         if not request.user.is_superuser:
-            if is_teacher(request.user) and grade.assignment.author_id != request.user.id:
-                return Response({"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN)
+            if (
+                is_teacher(request.user)
+                and grade.assignment.author_id != request.user.id
+            ):
+                return Response(
+                    {"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN
+                )
             if not is_teacher(request.user) and grade.student_id != request.user.id:
-                return Response({"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN)
+                return Response(
+                    {"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN
+                )
 
         serializer = GradeRecordDetailSerializer(grade, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -75,10 +98,17 @@ class GradeRecordCreateFromSubmissionAPIView(APIView):
     def post(self, request, submission_id: int, *args, **kwargs):
         submission = get_submission_by_id(submission_id=submission_id)
         if submission is None:
-            return Response({"detail": "Сдача не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Сдача не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
-        if not request.user.is_superuser and submission.assignment.author_id != request.user.id:
-            return Response({"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN)
+        if (
+            not request.user.is_superuser
+            and submission.assignment.author_id != request.user.id
+        ):
+            return Response(
+                {"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN
+            )
 
         grade = create_grade_record_from_submission(
             submission=submission,

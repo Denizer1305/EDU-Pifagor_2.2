@@ -34,9 +34,7 @@ class FeedbackAttachmentAdmin(admin.ModelAdmin):
         "feedback_request__contact__full_name",
     )
     ordering = ("-created_at",)
-    autocomplete_fields = (
-        "feedback_request",
-    )
+    autocomplete_fields = ("feedback_request",)
     readonly_fields = (
         "original_name",
         "kind",
@@ -47,26 +45,35 @@ class FeedbackAttachmentAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "feedback_request",
-                "file",
-                "original_name",
-            )
-        }),
-        (_("Метаданные файла"), {
-            "fields": (
-                "kind",
-                "mime_type",
-                "file_size",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "feedback_request",
+                    "file",
+                    "original_name",
+                )
+            },
+        ),
+        (
+            _("Метаданные файла"),
+            {
+                "fields": (
+                    "kind",
+                    "mime_type",
+                    "file_size",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     def get_queryset(self, request):

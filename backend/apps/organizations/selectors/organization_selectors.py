@@ -96,9 +96,13 @@ def get_organizations_with_active_teacher_registration_code_queryset():
 
 
 def get_organization_with_active_teacher_registration_code(organization_id: int):
-    return get_organizations_queryset(
-        has_active_teacher_registration_code=True,
-    ).filter(id=organization_id).first()
+    return (
+        get_organizations_queryset(
+            has_active_teacher_registration_code=True,
+        )
+        .filter(id=organization_id)
+        .first()
+    )
 
 
 def get_departments_queryset(

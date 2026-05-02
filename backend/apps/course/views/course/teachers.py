@@ -68,7 +68,7 @@ class CourseTeacherListCreateAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseTeacherSerializer(
             teacher_link,
@@ -87,13 +87,17 @@ class CourseTeacherDetailAPIView(APIView):
         course = get_course_or_404(course_id=course_pk)
         self.check_object_permissions(self.request, course)
 
-        teacher_link = CourseTeacher.objects.select_related(
-            "course",
-            "teacher",
-        ).filter(
-            id=teacher_link_pk,
-            course_id=course.id,
-        ).first()
+        teacher_link = (
+            CourseTeacher.objects.select_related(
+                "course",
+                "teacher",
+            )
+            .filter(
+                id=teacher_link_pk,
+                course_id=course.id,
+            )
+            .first()
+        )
 
         if teacher_link is None:
             raise NotFound("Связь преподавателя с курсом не найдена.")
@@ -122,7 +126,7 @@ class CourseTeacherDetailAPIView(APIView):
             teacher_link.full_clean()
             teacher_link.save()
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseTeacherSerializer(
             teacher_link,
@@ -142,6 +146,6 @@ class CourseTeacherDetailAPIView(APIView):
                 teacher=teacher_link.teacher,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         return Response(status=status.HTTP_204_NO_CONTENT)

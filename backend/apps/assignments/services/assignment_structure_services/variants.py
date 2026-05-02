@@ -45,7 +45,9 @@ def create_assignment_variant(
 
 
 @transaction.atomic
-def update_assignment_variant(variant: AssignmentVariant, **fields) -> AssignmentVariant:
+def update_assignment_variant(
+    variant: AssignmentVariant, **fields
+) -> AssignmentVariant:
     """Обновляет вариант работы."""
 
     for field_name, value in fields.items():

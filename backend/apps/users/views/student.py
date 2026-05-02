@@ -51,8 +51,12 @@ class StudentOnboardingAPIView(APIView):
         try:
             profile = submit_student_group_request(
                 student_profile=profile,
-                requested_organization=serializer.validated_data["requested_organization"],
-                requested_department=serializer.validated_data.get("requested_department"),
+                requested_organization=serializer.validated_data[
+                    "requested_organization"
+                ],
+                requested_department=serializer.validated_data.get(
+                    "requested_department"
+                ),
                 requested_group=serializer.validated_data["requested_group"],
                 submitted_group_code=serializer.validated_data["submitted_group_code"],
                 admission_year=serializer.validated_data.get("admission_year"),
@@ -63,7 +67,7 @@ class StudentOnboardingAPIView(APIView):
         except DjangoValidationError as exc:
             raise ValidationError(
                 exc.message_dict if hasattr(exc, "message_dict") else exc.messages
-            )
+            ) from exc
 
         return Response(
             StudentProfileSerializer(profile).data,
@@ -88,9 +92,7 @@ class StudentProfileViewSet(viewsets.ModelViewSet):
         "admission_year",
         "graduation_year",
     )
-    ordering = (
-        "-created_at",
-    )
+    ordering = ("-created_at",)
 
     def get_permissions(self):
         if self.action in {"list", "create", "destroy"}:
@@ -137,6 +139,8 @@ class StudentProfileReviewAPIView(generics.UpdateAPIView):
         except DjangoValidationError as exc:
             raise ValidationError(
                 exc.message_dict if hasattr(exc, "message_dict") else exc.messages
-            )
+            ) from exc
 
-        return Response(StudentProfileSerializer(instance).data, status=status.HTTP_200_OK)
+        return Response(
+            StudentProfileSerializer(instance).data, status=status.HTTP_200_OK
+        )

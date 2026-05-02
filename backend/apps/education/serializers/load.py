@@ -3,7 +3,12 @@ from __future__ import annotations
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from apps.education.models import AcademicYear, EducationPeriod, GroupSubject, TeacherGroupSubject
+from apps.education.models import (
+    AcademicYear,
+    EducationPeriod,
+    GroupSubject,
+    TeacherGroupSubject,
+)
 from apps.organizations.models import Group, Subject
 
 User = get_user_model()
@@ -39,18 +44,28 @@ class GroupSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupSubject
         fields = (
-            "id", "group",
-            "group_id", "subject",
-            "subject_id", "academic_year",
-            "academic_year_id", "period",
-            "period_id", "planned_hours",
-            "contact_hours", "independent_hours",
-            "assessment_type", "is_required",
-            "is_active", "notes",
-            "created_at", "updated_at",
+            "id",
+            "group",
+            "group_id",
+            "subject",
+            "subject_id",
+            "academic_year",
+            "academic_year_id",
+            "period",
+            "period_id",
+            "planned_hours",
+            "contact_hours",
+            "independent_hours",
+            "assessment_type",
+            "is_required",
+            "is_active",
+            "notes",
+            "created_at",
+            "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )
 
@@ -80,16 +95,24 @@ class TeacherGroupSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherGroupSubject
         fields = (
-            "id", "teacher_id",
-            "teacher_email", "teacher_full_name",
-            "group_subject", "group_subject_id",
-            "role", "is_primary",
-            "is_active", "planned_hours",
-            "starts_at", "ends_at",
-            "notes", "created_at",
+            "id",
+            "teacher_id",
+            "teacher_email",
+            "teacher_full_name",
+            "group_subject",
+            "group_subject_id",
+            "role",
+            "is_primary",
+            "is_active",
+            "planned_hours",
+            "starts_at",
+            "ends_at",
+            "notes",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )

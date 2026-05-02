@@ -77,11 +77,17 @@ class IsAssignmentAuthorOrAdmin(BasePermission):
 
         assignment = getattr(obj, "assignment", None)
         if assignment is not None:
-            return request.user.is_authenticated and assignment.author_id == request.user.id
+            return (
+                request.user.is_authenticated
+                and assignment.author_id == request.user.id
+            )
 
         publication = getattr(obj, "publication", None)
         if publication is not None:
-            return request.user.is_authenticated and publication.assignment.author_id == request.user.id
+            return (
+                request.user.is_authenticated
+                and publication.assignment.author_id == request.user.id
+            )
 
         return False
 
@@ -90,8 +96,10 @@ class CanManageAssignmentObject(BasePermission):
     message = "У вас нет прав на управление этим объектом."
 
     def has_permission(self, request, view) -> bool:
-        return request.user and request.user.is_authenticated and (
-            is_teacher(request.user) or is_admin(request.user)
+        return (
+            request.user
+            and request.user.is_authenticated
+            and (is_teacher(request.user) or is_admin(request.user))
         )
 
     def has_object_permission(self, request, view, obj) -> bool:
@@ -128,7 +136,10 @@ class IsSubmissionOwnerOrReviewerOrAdmin(BasePermission):
             return True
 
         assignment = getattr(submission, "assignment", None)
-        if assignment is not None and getattr(assignment, "author_id", None) == request.user.id:
+        if (
+            assignment is not None
+            and getattr(assignment, "author_id", None) == request.user.id
+        ):
             return True
 
         checked_by_id = getattr(submission, "checked_by_id", None)

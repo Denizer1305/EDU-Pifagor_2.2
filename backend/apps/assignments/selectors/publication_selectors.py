@@ -101,8 +101,12 @@ def get_assignment_publications_queryset(
     return queryset
 
 
-def get_assignment_publication_by_id(*, publication_id: int) -> AssignmentPublication | None:
-    return get_assignment_publication_detail_queryset().filter(id=publication_id).first()
+def get_assignment_publication_by_id(
+    *, publication_id: int
+) -> AssignmentPublication | None:
+    return (
+        get_assignment_publication_detail_queryset().filter(id=publication_id).first()
+    )
 
 
 def get_available_publications_for_student_queryset(
@@ -117,38 +121,49 @@ def get_available_publications_for_student_queryset(
     StudentGroupEnrollment = apps.get_model("education", "StudentGroupEnrollment")
 
     course_ids = list(
-        CourseEnrollment.objects.filter(student=student).values_list("course_id", flat=True)
+        CourseEnrollment.objects.filter(student=student).values_list(
+            "course_id", flat=True
+        )
     )
     group_ids = list(
-        StudentGroupEnrollment.objects.filter(student=student).values_list("group_id", flat=True)
+        StudentGroupEnrollment.objects.filter(student=student).values_list(
+            "group_id", flat=True
+        )
     )
 
-    queryset = get_assignment_publication_base_queryset().filter(
-        status=AssignmentPublication.StatusChoices.PUBLISHED,
-        is_active=True,
-    ).filter(
-        Q(starts_at__isnull=True) | Q(starts_at__lte=now),
-    ).filter(
-        Q(available_until__isnull=True) | Q(available_until__gte=now),
-    ).filter(
-        Q(
-            audiences__audience_type=AssignmentAudience.AudienceTypeChoices.ALL_COURSE_STUDENTS,
-            course_id__in=course_ids,
+    queryset = (
+        get_assignment_publication_base_queryset()
+        .filter(
+            status=AssignmentPublication.StatusChoices.PUBLISHED,
+            is_active=True,
         )
-        | Q(
-            audiences__audience_type=AssignmentAudience.AudienceTypeChoices.GROUP,
-            audiences__group_id__in=group_ids,
+        .filter(
+            Q(starts_at__isnull=True) | Q(starts_at__lte=now),
         )
-        | Q(
-            audiences__audience_type=AssignmentAudience.AudienceTypeChoices.STUDENT,
-            audiences__student=student,
+        .filter(
+            Q(available_until__isnull=True) | Q(available_until__gte=now),
         )
-        | Q(
-            audiences__audience_type=AssignmentAudience.AudienceTypeChoices.SELECTED_STUDENTS,
-            audiences__student=student,
+        .filter(
+            Q(
+                audiences__audience_type=AssignmentAudience.AudienceTypeChoices.ALL_COURSE_STUDENTS,
+                course_id__in=course_ids,
+            )
+            | Q(
+                audiences__audience_type=AssignmentAudience.AudienceTypeChoices.GROUP,
+                audiences__group_id__in=group_ids,
+            )
+            | Q(
+                audiences__audience_type=AssignmentAudience.AudienceTypeChoices.STUDENT,
+                audiences__student=student,
+            )
+            | Q(
+                audiences__audience_type=AssignmentAudience.AudienceTypeChoices.SELECTED_STUDENTS,
+                audiences__student=student,
+            )
+            | Q(audiences__course_enrollment__student=student)
         )
-        | Q(audiences__course_enrollment__student=student)
-    ).distinct()
+        .distinct()
+    )
 
     if course_id:
         queryset = queryset.filter(course_id=course_id)

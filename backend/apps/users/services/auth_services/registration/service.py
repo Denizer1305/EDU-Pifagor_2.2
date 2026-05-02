@@ -112,4 +112,5 @@ def register_user(
             work_place=normalized["work_place"],
         )
 
+    user.refresh_from_db()
     return user

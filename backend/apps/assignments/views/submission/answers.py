@@ -54,7 +54,9 @@ class SubmissionAnswerSaveAPIView(APIView):
                 question=question,
                 answer_text=serializer.validated_data.get("answer_text", ""),
                 answer_json=serializer.validated_data.get("answer_json"),
-                selected_options_json=serializer.validated_data.get("selected_options_json"),
+                selected_options_json=serializer.validated_data.get(
+                    "selected_options_json"
+                ),
                 numeric_answer=serializer.validated_data.get("numeric_answer"),
             )
         except (DjangoValidationError, ValueError) as exc:

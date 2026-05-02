@@ -74,39 +74,51 @@ class CourseLessonAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "course",
-                "module",
-                "order",
-                "title",
-                "subtitle",
-                "description",
-                "lesson_type",
-            )
-        }),
-        (_("Контент"), {
-            "fields": (
-                "content",
-                "video_url",
-                "external_url",
-            )
-        }),
-        (_("Доступ"), {
-            "fields": (
-                "estimated_minutes",
-                "is_required",
-                "is_preview",
-                "is_published",
-                "available_from",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "course",
+                    "module",
+                    "order",
+                    "title",
+                    "subtitle",
+                    "description",
+                    "lesson_type",
+                )
+            },
+        ),
+        (
+            _("Контент"),
+            {
+                "fields": (
+                    "content",
+                    "video_url",
+                    "external_url",
+                )
+            },
+        ),
+        (
+            _("Доступ"),
+            {
+                "fields": (
+                    "estimated_minutes",
+                    "is_required",
+                    "is_preview",
+                    "is_published",
+                    "available_from",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
 

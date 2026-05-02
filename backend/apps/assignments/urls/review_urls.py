@@ -35,20 +35,17 @@ urlpatterns: list[URLPattern | URLResolver] = [
         SubmissionAnswerReviewAPIView.as_view(),
         name="submission-answer-review",
     ),
-
     path(
         "reviews/<int:review_id>/comments/",
         ReviewCommentCreateAPIView.as_view(),
         name="review-comment-create",
     ),
-
     # Совместимость со старым endpoint без review_id.
     path(
         "reviews/comments/",
         ReviewCommentCreateAPIView.as_view(),
         name="review-comment-create-flat",
     ),
-
     path(
         "reviews/<int:review_id>/submit/",
         SubmissionReviewSubmitAPIView.as_view(),

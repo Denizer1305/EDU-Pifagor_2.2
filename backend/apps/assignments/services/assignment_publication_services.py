@@ -66,12 +66,16 @@ def update_assignment_publication(
     publication.full_clean()
     publication.save()
 
-    logger.info("update_assignment_publication completed publication_id=%s", publication.id)
+    logger.info(
+        "update_assignment_publication completed publication_id=%s", publication.id
+    )
     return publication
 
 
 @transaction.atomic
-def publish_assignment_publication(publication: AssignmentPublication) -> AssignmentPublication:
+def publish_assignment_publication(
+    publication: AssignmentPublication,
+) -> AssignmentPublication:
     _ensure_publication_editable(publication)
 
     publication.status = AssignmentPublication.StatusChoices.PUBLISHED
@@ -79,28 +83,38 @@ def publish_assignment_publication(publication: AssignmentPublication) -> Assign
     publication.full_clean()
     publication.save()
 
-    logger.info("publish_assignment_publication completed publication_id=%s", publication.id)
+    logger.info(
+        "publish_assignment_publication completed publication_id=%s", publication.id
+    )
     return publication
 
 
 @transaction.atomic
-def close_assignment_publication(publication: AssignmentPublication) -> AssignmentPublication:
+def close_assignment_publication(
+    publication: AssignmentPublication,
+) -> AssignmentPublication:
     _ensure_publication_editable(publication)
 
     publication.status = AssignmentPublication.StatusChoices.CLOSED
     publication.full_clean()
     publication.save()
 
-    logger.info("close_assignment_publication completed publication_id=%s", publication.id)
+    logger.info(
+        "close_assignment_publication completed publication_id=%s", publication.id
+    )
     return publication
 
 
 @transaction.atomic
-def archive_assignment_publication(publication: AssignmentPublication) -> AssignmentPublication:
+def archive_assignment_publication(
+    publication: AssignmentPublication,
+) -> AssignmentPublication:
     publication.status = AssignmentPublication.StatusChoices.ARCHIVED
     publication.is_active = False
     publication.full_clean()
     publication.save()
 
-    logger.info("archive_assignment_publication completed publication_id=%s", publication.id)
+    logger.info(
+        "archive_assignment_publication completed publication_id=%s", publication.id
+    )
     return publication

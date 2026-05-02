@@ -5,7 +5,6 @@ from decimal import Decimal, InvalidOperation
 
 from django.core.exceptions import ValidationError
 
-
 ASSIGNMENT_ALLOWED_FILE_EXTENSIONS = {
     ".pdf",
     ".doc",
@@ -32,8 +31,8 @@ ASSIGNMENT_MAX_FILE_SIZE = 25 * 1024 * 1024
 def validate_non_negative_number(value, field_name: str = "value") -> None:
     try:
         number = Decimal(str(value))
-    except (InvalidOperation, TypeError, ValueError):
-        raise ValidationError({field_name: "Значение должно быть числом."})
+    except (InvalidOperation, TypeError, ValueError) as exc:
+        raise ValidationError({field_name: "Значение должно быть числом."}) from exc
 
     if number < 0:
         raise ValidationError({field_name: "Значение не может быть отрицательным."})
@@ -42,18 +41,22 @@ def validate_non_negative_number(value, field_name: str = "value") -> None:
 def validate_percentage(value, field_name: str = "value") -> None:
     try:
         number = Decimal(str(value))
-    except (InvalidOperation, TypeError, ValueError):
-        raise ValidationError({field_name: "Значение должно быть числом."})
+    except (InvalidOperation, TypeError, ValueError) as exc:
+        raise ValidationError({field_name: "Значение должно быть числом."}) from exc
 
     if number < 0 or number > 100:
-        raise ValidationError({field_name: "Значение должно быть в диапазоне от 0 до 100."})
+        raise ValidationError(
+            {field_name: "Значение должно быть в диапазоне от 0 до 100."}
+        )
 
 
 def validate_positive_order(value, field_name: str = "order") -> None:
     try:
         number = int(value)
-    except (TypeError, ValueError):
-        raise ValidationError({field_name: "Порядок должен быть целым числом."})
+    except (TypeError, ValueError) as exc:
+        raise ValidationError(
+            {field_name: "Порядок должен быть целым числом."}
+        ) from exc
 
     if number <= 0:
         raise ValidationError({field_name: "Порядок должен быть больше 0."})
@@ -86,5 +89,7 @@ def validate_uploaded_file(
 
     if file_size > max_file_size:
         raise ValidationError(
-            {field_name: f"Размер файла не должен превышать {max_file_size // (1024 * 1024)} МБ."}
+            {
+                field_name: f"Размер файла не должен превышать {max_file_size // (1024 * 1024)} МБ."
+            }
         )

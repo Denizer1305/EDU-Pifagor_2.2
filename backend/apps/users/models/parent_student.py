@@ -7,21 +7,27 @@ from django.utils.translation import gettext_lazy as _
 
 class ParentStudent(models.Model):
     """Модель parent student."""
+
     class RelationType(models.TextChoices):
         MOTHER = (
-            "mother", _("Мать"),
+            "mother",
+            _("Мать"),
         )
         FATHER = (
-            "father", _("Отец"),
+            "father",
+            _("Отец"),
         )
         GUARDIAN = (
-            "guardian", _("Опекун"),
+            "guardian",
+            _("Опекун"),
         )
         REPRESENTATIVE = (
-            "representative", _("Законный представитель"),
+            "representative",
+            _("Законный представитель"),
         )
         OTHER = (
-            "other", _("Иное"),
+            "other",
+            _("Иное"),
         )
 
     class LinkStatusChoices(models.TextChoices):
@@ -103,13 +109,15 @@ class ParentStudent(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=(
-                    "parent", "student",
+                    "parent",
+                    "student",
                 ),
                 name="unique_parent_student_link",
             )
         ]
         ordering = (
-            "-is_primary", "-created_at",
+            "-is_primary",
+            "-created_at",
         )
 
     def __str__(self) -> str:

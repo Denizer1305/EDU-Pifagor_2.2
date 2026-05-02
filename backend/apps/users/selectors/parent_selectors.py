@@ -28,7 +28,12 @@ def get_parent_profiles_queryset(
             | Q(user__profile__patronymic__icontains=search)
         )
 
-        for field_name in ("work_place", "occupation", "notes", "emergency_contact_phone"):
+        for field_name in (
+            "work_place",
+            "occupation",
+            "notes",
+            "emergency_contact_phone",
+        ):
             if _parent_profile_has_field(field_name):
                 q_obj |= Q(**{f"{field_name}__icontains": search})
 
@@ -98,6 +103,8 @@ def get_parent_student_links_for_user(user):
     if not user or not user.is_authenticated:
         return ParentStudent.objects.none()
 
-    return get_parent_student_links_queryset().filter(
-        Q(parent=user) | Q(student=user)
-    ).distinct()
+    return (
+        get_parent_student_links_queryset()
+        .filter(Q(parent=user) | Q(student=user))
+        .distinct()
+    )

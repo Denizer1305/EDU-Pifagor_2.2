@@ -3,7 +3,6 @@ from __future__ import annotations
 from django.urls import reverse
 from rest_framework import status
 
-from apps.organizations.tests.test_api.api_base import OrganizationApiBaseTestCase
 from apps.organizations.tests.factories import (
     create_organization,
     create_subject,
@@ -11,6 +10,7 @@ from apps.organizations.tests.factories import (
     create_teacher_subject,
     create_teacher_user,
 )
+from apps.organizations.tests.test_api.api_base import OrganizationApiBaseTestCase
 
 
 class OrganizationTeacherOrganizationApiTestCase(OrganizationApiBaseTestCase):

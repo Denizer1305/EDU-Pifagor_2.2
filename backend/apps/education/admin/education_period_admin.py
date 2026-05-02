@@ -38,9 +38,7 @@ class EducationPeriodAdmin(admin.ModelAdmin):
         "academic_year__name",
         "description",
     )
-    autocomplete_fields = (
-        "academic_year",
-    )
+    autocomplete_fields = ("academic_year",)
     ordering = (
         "academic_year",
         "sequence",
@@ -49,38 +47,48 @@ class EducationPeriodAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
-    list_select_related = (
-        "academic_year",
-    )
+    list_select_related = ("academic_year",)
     date_hierarchy = "start_date"
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "academic_year",
-                "name",
-                "code",
-                "period_type",
-                "sequence",
-            )
-        }),
-        (_("Даты"), {
-            "fields": (
-                "start_date",
-                "end_date",
-            )
-        }),
-        (_("Описание и статус"), {
-            "fields": (
-                "description",
-                "is_current",
-                "is_active",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "academic_year",
+                    "name",
+                    "code",
+                    "period_type",
+                    "sequence",
+                )
+            },
+        ),
+        (
+            _("Даты"),
+            {
+                "fields": (
+                    "start_date",
+                    "end_date",
+                )
+            },
+        ),
+        (
+            _("Описание и статус"),
+            {
+                "fields": (
+                    "description",
+                    "is_current",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )

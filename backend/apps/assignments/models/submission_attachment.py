@@ -10,7 +10,9 @@ from apps.assignments.models.base import TimeStampedModel
 
 def submission_attachment_upload_to(instance, filename: str) -> str:
     submission_id = instance.submission_id or "unknown"
-    return os.path.join("assignments", "submission_attachments", str(submission_id), filename)
+    return os.path.join(
+        "assignments", "submission_attachments", str(submission_id), filename
+    )
 
 
 class SubmissionAttachment(TimeStampedModel):
@@ -76,7 +78,10 @@ class SubmissionAttachment(TimeStampedModel):
         if not self.file:
             errors["file"] = "Файл обязателен."
 
-        if self.question_id and self.question.assignment_id != self.submission.assignment_id:
+        if (
+            self.question_id
+            and self.question.assignment_id != self.submission.assignment_id
+        ):
             errors["question"] = "Вопрос должен относиться к работе в выбранной сдаче."
 
         if errors:

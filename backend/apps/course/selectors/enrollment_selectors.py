@@ -82,11 +82,16 @@ def get_student_course_enrollments_queryset(*, student_id: int, status: str = ""
 
 
 def get_course_enrollment_by_id(*, enrollment_id: int):
-    return CourseEnrollment.objects.select_related(
-        "course",
-        "student",
-        "assignment",
-    ).prefetch_related(
-        "progress",
-        "lesson_progresses",
-    ).filter(id=enrollment_id).first()
+    return (
+        CourseEnrollment.objects.select_related(
+            "course",
+            "student",
+            "assignment",
+        )
+        .prefetch_related(
+            "progress",
+            "lesson_progresses",
+        )
+        .filter(id=enrollment_id)
+        .first()
+    )

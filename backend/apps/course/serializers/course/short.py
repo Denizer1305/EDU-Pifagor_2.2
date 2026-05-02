@@ -56,7 +56,9 @@ class EducationPeriodShortSerializer(serializers.ModelSerializer):
 class GroupSubjectShortSerializer(serializers.ModelSerializer):
     group_name = serializers.CharField(source="group.name", read_only=True)
     subject_name = serializers.CharField(source="subject.name", read_only=True)
-    academic_year_name = serializers.CharField(source="academic_year.name", read_only=True)
+    academic_year_name = serializers.CharField(
+        source="academic_year.name", read_only=True
+    )
 
     class Meta:
         model = GroupSubject

@@ -26,7 +26,11 @@ def validate_variant_belongs_to_assignment(
 ) -> None:
     """Проверяет, что вариант принадлежит выбранной работе."""
 
-    if assignment is not None and variant is not None and variant.assignment_id != assignment.id:
+    if (
+        assignment is not None
+        and variant is not None
+        and variant.assignment_id != assignment.id
+    ):
         raise serializers.ValidationError(
             {field_name: "Вариант должен принадлежать выбранной работе."}
         )
@@ -40,7 +44,11 @@ def validate_section_belongs_to_assignment(
 ) -> None:
     """Проверяет, что секция принадлежит выбранной работе."""
 
-    if assignment is not None and section is not None and section.assignment_id != assignment.id:
+    if (
+        assignment is not None
+        and section is not None
+        and section.assignment_id != assignment.id
+    ):
         raise serializers.ValidationError(
             {field_name: "Секция должна принадлежать выбранной работе."}
         )
@@ -49,7 +57,12 @@ def validate_section_belongs_to_assignment(
 def validate_section_belongs_to_variant(*, section, variant) -> None:
     """Проверяет, что секция относится к выбранному варианту."""
 
-    if variant is not None and section is not None and section.variant_id and section.variant_id != variant.id:
+    if (
+        variant is not None
+        and section is not None
+        and section.variant_id
+        and section.variant_id != variant.id
+    ):
         raise serializers.ValidationError(
             {"section_id": "Секция должна относиться к выбранному варианту."}
         )

@@ -28,12 +28,8 @@ class UserRoleAdmin(admin.ModelAdmin):
         "role__code",
         "role__name",
     )
-    ordering = (
-        "-assigned_at",
-    )
-    readonly_fields = (
-        "assigned_at",
-    )
+    ordering = ("-assigned_at",)
+    readonly_fields = ("assigned_at",)
     autocomplete_fields = (
         "user",
         "role",
@@ -51,11 +47,7 @@ class UserRoleAdmin(admin.ModelAdmin):
         ),
         (
             _("Системная информация"),
-            {
-                "fields": (
-                    "assigned_at",
-                )
-            },
+            {"fields": ("assigned_at",)},
         ),
     )
 

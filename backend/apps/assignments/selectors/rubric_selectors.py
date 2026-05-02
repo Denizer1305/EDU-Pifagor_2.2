@@ -72,10 +72,7 @@ def get_rubric_criteria_queryset(
     rubric_id: int | None = None,
     criterion_type: str = "",
 ) -> QuerySet[RubricCriterion]:
-    queryset = (
-        RubricCriterion.objects.select_related("rubric")
-        .order_by("order", "id")
-    )
+    queryset = RubricCriterion.objects.select_related("rubric").order_by("order", "id")
 
     if rubric_id:
         queryset = queryset.filter(rubric_id=rubric_id)

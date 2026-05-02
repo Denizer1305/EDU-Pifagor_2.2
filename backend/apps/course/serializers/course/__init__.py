@@ -1,13 +1,13 @@
 from __future__ import annotations
 
+from .list_detail import (
+    CourseDetailSerializer,
+    CourseListSerializer,
+)
 from .mutations import (
     CourseCreateSerializer,
     CourseDuplicateSerializer,
     CourseUpdateSerializer,
-)
-from .list_detail import (
-    CourseDetailSerializer,
-    CourseListSerializer,
 )
 from .public import (
     CoursePublicDetailSerializer,

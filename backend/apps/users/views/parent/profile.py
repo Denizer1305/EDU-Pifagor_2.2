@@ -67,9 +67,7 @@ class ParentProfileViewSet(viewsets.ModelViewSet):
         "created_at",
         "updated_at",
     )
-    ordering = (
-        "-created_at",
-    )
+    ordering = ("-created_at",)
 
     def get_permissions(self):
         if self.action in {"list", "create", "destroy"}:

@@ -4,8 +4,14 @@ from django.test import TestCase
 
 from apps.assignments.services import (
     create_assignment_question as create_assignment_question_service,
+)
+from apps.assignments.services import (
     create_assignment_section as create_assignment_section_service,
+)
+from apps.assignments.services import (
     create_assignment_variant as create_assignment_variant_service,
+)
+from apps.assignments.services import (
     reorder_assignment_questions,
     reorder_assignment_sections,
     reorder_assignment_variants,

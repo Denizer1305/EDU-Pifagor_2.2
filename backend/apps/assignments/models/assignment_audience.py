@@ -71,19 +71,29 @@ class AssignmentAudience(TimeStampedModel):
         if self.audience_type == self.AudienceTypeChoices.GROUP and not self.group_id:
             errors["group"] = "Для групповой аудитории нужно указать группу."
 
-        if self.audience_type == self.AudienceTypeChoices.STUDENT and not self.student_id:
+        if (
+            self.audience_type == self.AudienceTypeChoices.STUDENT
+            and not self.student_id
+        ):
             errors["student"] = "Для персональной аудитории нужно указать студента."
 
-        if self.audience_type == self.AudienceTypeChoices.SELECTED_STUDENTS and not self.student_id:
+        if (
+            self.audience_type == self.AudienceTypeChoices.SELECTED_STUDENTS
+            and not self.student_id
+        ):
             errors["student"] = "Для выбранных студентов нужно указать студента."
 
         if self.course_enrollment_id and self.publication.course_id:
             if self.course_enrollment.course_id != self.publication.course_id:
-                errors["course_enrollment"] = "Запись на курс должна относиться к курсу публикации."
+                errors["course_enrollment"] = (
+                    "Запись на курс должна относиться к курсу публикации."
+                )
 
         if self.student_id and self.course_enrollment_id:
             if self.course_enrollment.student_id != self.student_id:
-                errors["course_enrollment"] = "Запись на курс должна принадлежать выбранному студенту."
+                errors["course_enrollment"] = (
+                    "Запись на курс должна принадлежать выбранному студенту."
+                )
 
         if errors:
             raise ValidationError(errors)

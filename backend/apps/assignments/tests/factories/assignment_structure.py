@@ -58,7 +58,11 @@ def create_assignment_question(assignment=None, variant=None, section=None, **kw
     """Создаёт вопрос работы."""
 
     assignment = assignment or (
-        variant.assignment if variant else section.assignment if section else create_assignment()
+        variant.assignment
+        if variant
+        else section.assignment
+        if section
+        else create_assignment()
     )
 
     return AssignmentQuestion.objects.create(

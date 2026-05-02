@@ -48,7 +48,7 @@ class ParentStudentReviewAPIView(generics.UpdateAPIView):
                 comment=comment,
             )
         except DjangoValidationError as exc:
-            raise django_validation_error_to_drf(exc)
+            raise django_validation_error_to_drf(exc) from exc
 
         return Response(
             ParentStudentSerializer(instance).data,

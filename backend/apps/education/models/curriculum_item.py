@@ -112,15 +112,27 @@ class CurriculumItem(models.Model):
 
         if self.period.academic_year_id != self.curriculum.academic_year_id:
             raise ValidationError(
-                {"period": _("Учебный период должен принадлежать тому же учебному году, что и учебный план.")}
+                {
+                    "period": _(
+                        "Учебный период должен принадлежать тому же учебному году, что и учебный план."
+                    )
+                }
             )
 
         if self.contact_hours > self.planned_hours:
             raise ValidationError(
-                {"contact_hours": _("Контактные часы не могут превышать плановые часы.")}
+                {
+                    "contact_hours": _(
+                        "Контактные часы не могут превышать плановые часы."
+                    )
+                }
             )
 
         if self.independent_hours > self.planned_hours:
             raise ValidationError(
-                {"independent_hours": _("Самостоятельные часы не могут превышать плановые часы.")}
+                {
+                    "independent_hours": _(
+                        "Самостоятельные часы не могут превышать плановые часы."
+                    )
+                }
             )

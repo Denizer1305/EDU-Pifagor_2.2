@@ -69,7 +69,7 @@ class CourseLessonListCreateAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseLessonDetailSerializer(
             lesson,
@@ -112,7 +112,7 @@ class CourseLessonDetailAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseLessonDetailSerializer(
             get_course_lesson_by_id(lesson_id=lesson.id),
@@ -126,7 +126,7 @@ class CourseLessonDetailAPIView(APIView):
         try:
             delete_course_lesson(lesson=lesson)
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -153,7 +153,7 @@ class CourseLessonMoveAPIView(APIView):
                 new_order=serializer.validated_data.get("new_order"),
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseLessonDetailSerializer(
             get_course_lesson_by_id(lesson_id=lesson.id),
@@ -181,7 +181,7 @@ class CourseLessonReorderAPIView(APIView):
                 lesson_ids_in_order=serializer.validated_data["lesson_ids_in_order"],
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         queryset = module.lessons.order_by("order", "id")
         output_serializer = CourseLessonListSerializer(

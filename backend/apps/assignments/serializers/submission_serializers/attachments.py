@@ -3,7 +3,9 @@ from __future__ import annotations
 from rest_framework import serializers
 
 from apps.assignments.models import SubmissionAttachment
-from apps.assignments.serializers.assignment_structure import AssignmentQuestionSerializer
+from apps.assignments.serializers.assignment_structure import (
+    AssignmentQuestionSerializer,
+)
 from apps.assignments.serializers.submission_serializers.common import build_file_url
 
 

@@ -35,9 +35,7 @@ class FeedbackRequestTechnicalAdmin(admin.ModelAdmin):
         "feedback_request__message",
     )
     ordering = ("-created_at",)
-    autocomplete_fields = (
-        "feedback_request",
-    )
+    autocomplete_fields = ("feedback_request",)
     readonly_fields = (
         "created_at",
         "updated_at",

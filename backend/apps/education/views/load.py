@@ -34,8 +34,10 @@ class GroupSubjectListView(generics.ListCreateAPIView):
         "period__name",
     )
     ordering_fields = (
-        "planned_hours", "contact_hours",
-        "independent_hours", "created_at",
+        "planned_hours",
+        "contact_hours",
+        "independent_hours",
+        "created_at",
     )
 
     def get_queryset(self):
@@ -103,8 +105,10 @@ class TeacherGroupSubjectListView(generics.ListCreateAPIView):
         "group_subject__academic_year__name",
     )
     ordering_fields = (
-        "planned_hours", "starts_at",
-        "ends_at", "created_at",
+        "planned_hours",
+        "starts_at",
+        "ends_at",
+        "created_at",
     )
 
     def get_queryset(self):
@@ -145,11 +149,15 @@ class TeacherGroupSubjectDetailView(generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
 
         teacher = serializer.validated_data.get("teacher", instance.teacher)
-        group_subject = serializer.validated_data.get("group_subject", instance.group_subject)
+        group_subject = serializer.validated_data.get(
+            "group_subject", instance.group_subject
+        )
         role = serializer.validated_data.get("role", instance.role)
         is_primary = serializer.validated_data.get("is_primary", instance.is_primary)
         is_active = serializer.validated_data.get("is_active", instance.is_active)
-        planned_hours = serializer.validated_data.get("planned_hours", instance.planned_hours)
+        planned_hours = serializer.validated_data.get(
+            "planned_hours", instance.planned_hours
+        )
         starts_at = serializer.validated_data.get("starts_at", instance.starts_at)
         ends_at = serializer.validated_data.get("ends_at", instance.ends_at)
         notes = serializer.validated_data.get("notes", instance.notes)

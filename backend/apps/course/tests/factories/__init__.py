@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from .assignment import create_course_assignment
 from .common import (
-    create_course_file,
     _unwrap_factory_result,
+    create_course_file,
 )
 from .context import (
     create_academic_year,

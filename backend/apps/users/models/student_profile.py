@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
@@ -13,19 +13,24 @@ class StudentProfile(models.Model):
 
     class StudentStatusChoices(models.TextChoices):
         ACTIVE = (
-            'active', _('Активный'),
+            "active",
+            _("Активный"),
         )
         ACADEMIC_LEAD = (
-            'academic_lead', _('Академический отпуск'),
+            "academic_lead",
+            _("Академический отпуск"),
         )
         TRAMSFERRED = (
-            'tramsferred', _('Переведен'),
+            "tramsferred",
+            _("Переведен"),
         )
         GRADUATED = (
-            'graduated', _('Выпустился'),
+            "graduated",
+            _("Выпустился"),
         )
         ARCHIVED = (
-            'archived', _('В архиве'),
+            "archived",
+            _("В архиве"),
         )
 
     class VerificationStatusChoices(models.TextChoices):
@@ -44,8 +49,10 @@ class StudentProfile(models.Model):
         _("Код студента"),
         max_length=64,
         blank=True,
-        help_text=_("Внутренний код студента в обр.организации, зависит от группы. "
-                    "Например: ИП-4-01")
+        help_text=_(
+            "Внутренний код студента в обр.организации, зависит от группы. "
+            "Например: ИП-4-01"
+        ),
     )
     admission_year = models.PositiveSmallIntegerField(
         _("Год постпуления"),
@@ -148,10 +155,15 @@ class StudentProfile(models.Model):
         if (
             self.requested_department
             and self.requested_organization
-            and self.requested_department.organization_id != self.requested_organization_id
+            and self.requested_department.organization_id
+            != self.requested_organization_id
         ):
             raise ValidationError(
-                {"requested_department": _("Отделение должно принадлежать выбранной организации.")}
+                {
+                    "requested_department": _(
+                        "Отделение должно принадлежать выбранной организации."
+                    )
+                }
             )
 
         if (
@@ -160,7 +172,11 @@ class StudentProfile(models.Model):
             and self.requested_group.organization_id != self.requested_organization_id
         ):
             raise ValidationError(
-                {"requested_group": _("Группа должна принадлежать выбранной организации.")}
+                {
+                    "requested_group": _(
+                        "Группа должна принадлежать выбранной организации."
+                    )
+                }
             )
 
         if (
@@ -170,5 +186,9 @@ class StudentProfile(models.Model):
             and self.requested_group.department_id != self.requested_department_id
         ):
             raise ValidationError(
-                {"requested_group": _("Группа должна принадлежать выбранному отделению.")}
+                {
+                    "requested_group": _(
+                        "Группа должна принадлежать выбранному отделению."
+                    )
+                }
             )

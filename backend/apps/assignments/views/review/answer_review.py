@@ -46,7 +46,10 @@ class SubmissionAnswerReviewAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        if not request.user.is_superuser and answer.submission.assignment.author_id != request.user.id:
+        if (
+            not request.user.is_superuser
+            and answer.submission.assignment.author_id != request.user.id
+        ):
             return Response(
                 {"detail": "Нет доступа."},
                 status=status.HTTP_403_FORBIDDEN,

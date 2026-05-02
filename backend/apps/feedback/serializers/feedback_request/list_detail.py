@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from apps.feedback.serializers.feedback_attachment import FeedbackAttachmentSerializer
-from apps.feedback.serializers.feedback_request.base import FeedbackRequestBaseSerializer
+from apps.feedback.serializers.feedback_request.base import (
+    FeedbackRequestBaseSerializer,
+)
 from apps.feedback.serializers.feedback_request.related import (
     FeedbackRequestContactSerializer,
     FeedbackRequestProcessingSerializer,

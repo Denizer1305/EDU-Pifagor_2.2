@@ -130,6 +130,8 @@ class IsPublishedCourseVisible(BasePermission):
             return course.enrollments.filter(student=user).exists()
 
         if course.visibility == Course.VisibilityChoices.PRIVATE:
-            return course.author_id == user.id or _is_active_course_teacher(user, course)
+            return course.author_id == user.id or _is_active_course_teacher(
+                user, course
+            )
 
         return False

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError, transaction
 from django.test import TestCase
 
 from apps.users.models import ParentStudent, Profile, Role, UserRole
@@ -112,8 +113,9 @@ class RoleModelTestCase(TestCase):
 
         UserRole.objects.create(user=user, role=roles["teacher"])
 
-        with self.assertRaises(Exception):
-            UserRole.objects.create(user=user, role=roles["teacher"])
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                UserRole.objects.create(user=user, role=roles["teacher"])
 
 
 class ParentStudentModelTestCase(TestCase):

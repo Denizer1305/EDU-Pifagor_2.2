@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import logging
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 from django.db import transaction
+from django.utils import timezone
 
 from apps.assignments.models import (
     AssignmentPolicy,
@@ -48,8 +49,15 @@ def recalculate_submission_answer_score(
         final_score = Decimal("0.00")
 
     submission_answer.final_score = _quantize(final_score)
+    submission_answer.updated_at = timezone.now()
+
     submission_answer.full_clean()
-    submission_answer.save(update_fields=("final_score", "updated_at"))
+
+    SubmissionAnswer.objects.filter(pk=submission_answer.pk).update(
+        final_score=submission_answer.final_score,
+        updated_at=submission_answer.updated_at,
+    )
+
     return submission_answer
 
 
@@ -66,25 +74,42 @@ def calculate_submission_scores(submission: Submission) -> Submission:
 
     for answer in answers:
         recalculate_submission_answer_score(answer)
+
         total_auto += _quantize(answer.auto_score) or Decimal("0.00")
         total_manual += _quantize(answer.manual_score) or Decimal("0.00")
         total_final += _quantize(answer.final_score) or Decimal("0.00")
 
-    submission.auto_score = _quantize(total_auto)
-    submission.manual_score = _quantize(total_manual) if total_manual > 0 else submission.manual_score
-    submission.final_score = _quantize(total_final)
+    auto_score = _quantize(total_auto)
+    manual_score = (
+        _quantize(total_manual) if total_manual > 0 else submission.manual_score
+    )
+    final_score = _quantize(total_final)
 
     max_score = _quantize(policy.max_score) or Decimal("0.00")
     if max_score > 0:
-        submission.percentage = _quantize((submission.final_score / max_score) * Decimal("100"))
+        percentage = _quantize((final_score / max_score) * Decimal("100"))
     else:
-        submission.percentage = Decimal("0.00")
+        percentage = Decimal("0.00")
 
-    if submission.final_score is not None:
-        submission.passed = submission.final_score >= policy.passing_score
+    passed = None
+    if final_score is not None:
+        passed = final_score >= policy.passing_score
+
+    submission.auto_score = auto_score
+    submission.manual_score = manual_score
+    submission.final_score = final_score
+    submission.percentage = percentage
+    submission.passed = passed
 
     submission.full_clean()
-    submission.save()
+
+    Submission.objects.filter(pk=submission.pk).update(
+        auto_score=auto_score,
+        manual_score=manual_score,
+        final_score=final_score,
+        percentage=percentage,
+        passed=passed,
+    )
 
     logger.info("calculate_submission_scores completed submission_id=%s", submission.id)
     return submission
@@ -148,10 +173,16 @@ def create_grade_record_from_submission(
             grade_numeric = Decimal("2")
         grade_value = str(int(grade_numeric))
     elif policy.grading_mode == AssignmentPolicy.GradingModeChoices.HUNDRED_POINT:
-        grade_numeric = submission.percentage if submission.percentage is not None else final_score
+        grade_numeric = (
+            submission.percentage if submission.percentage is not None else final_score
+        )
         grade_value = str(_quantize(grade_numeric))
     elif policy.grading_mode == AssignmentPolicy.GradingModeChoices.PERCENTAGE:
-        grade_numeric = submission.percentage if submission.percentage is not None else Decimal("0.00")
+        grade_numeric = (
+            submission.percentage
+            if submission.percentage is not None
+            else Decimal("0.00")
+        )
         grade_value = str(_quantize(grade_numeric))
     else:
         grade_numeric = final_score

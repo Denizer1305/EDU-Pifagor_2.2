@@ -26,14 +26,17 @@ class CurriculumListView(generics.ListCreateAPIView):
     serializer_class = CurriculumSerializer
     filterset_class = CurriculumFilter
     search_fields = (
-        "code", "name",
+        "code",
+        "name",
         "organization__name",
         "department__name",
         "academic_year__name",
     )
     ordering_fields = (
-        "name", "code",
-        "total_hours", "created_at",
+        "name",
+        "code",
+        "total_hours",
+        "created_at",
     )
 
     def get_queryset(self):
@@ -96,8 +99,10 @@ class CurriculumItemListView(generics.ListCreateAPIView):
         "period__name",
     )
     ordering_fields = (
-        "sequence", "planned_hours",
-        "contact_hours", "independent_hours",
+        "sequence",
+        "planned_hours",
+        "contact_hours",
+        "independent_hours",
         "created_at",
     )
 

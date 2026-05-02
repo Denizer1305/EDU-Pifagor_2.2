@@ -9,7 +9,6 @@ from apps.course.models import (
     CourseEnrollment,
     CourseLesson,
     CourseMaterial,
-    CourseProgress,
 )
 from apps.course.tests.factories import (
     create_course,

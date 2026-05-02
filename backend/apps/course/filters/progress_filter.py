@@ -9,8 +9,12 @@ class CourseProgressFilter(django_filters.FilterSet):
     course_id = django_filters.NumberFilter(field_name="enrollment__course_id")
     student_id = django_filters.NumberFilter(field_name="enrollment__student_id")
 
-    progress_from = django_filters.NumberFilter(field_name="progress_percent", lookup_expr="gte")
-    progress_to = django_filters.NumberFilter(field_name="progress_percent", lookup_expr="lte")
+    progress_from = django_filters.NumberFilter(
+        field_name="progress_percent", lookup_expr="gte"
+    )
+    progress_to = django_filters.NumberFilter(
+        field_name="progress_percent", lookup_expr="lte"
+    )
 
     has_activity = django_filters.BooleanFilter(method="filter_has_activity")
     is_completed = django_filters.BooleanFilter(method="filter_is_completed")

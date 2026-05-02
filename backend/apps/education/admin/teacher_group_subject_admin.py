@@ -71,38 +71,46 @@ class TeacherGroupSubjectAdmin(admin.ModelAdmin):
     date_hierarchy = "starts_at"
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "teacher",
-                "group_subject",
-                "role",
-            )
-        }),
-        (_("Статус"), {
-            "fields": (
-                "is_primary",
-                "is_active",
-                "planned_hours",
-                "is_current_display",
-            )
-        }),
-        (_("Даты"), {
-            "fields": (
-                "starts_at",
-                "ends_at",
-            )
-        }),
-        (_("Дополнительно"), {
-            "fields": (
-                "notes",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "teacher",
+                    "group_subject",
+                    "role",
+                )
+            },
+        ),
+        (
+            _("Статус"),
+            {
+                "fields": (
+                    "is_primary",
+                    "is_active",
+                    "planned_hours",
+                    "is_current_display",
+                )
+            },
+        ),
+        (
+            _("Даты"),
+            {
+                "fields": (
+                    "starts_at",
+                    "ends_at",
+                )
+            },
+        ),
+        (_("Дополнительно"), {"fields": ("notes",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     @admin.display(description=_("Преподаватель"))

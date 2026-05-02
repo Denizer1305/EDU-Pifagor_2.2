@@ -31,9 +31,7 @@ def create_course_enrollment(
         course = create_course()
 
     if student is None:
-        student = create_course_student(
-            email=f"enrollment_student_{index}@example.com"
-        )
+        student = create_course_student(email=f"enrollment_student_{index}@example.com")
 
     student = _unwrap_factory_result(student)
 

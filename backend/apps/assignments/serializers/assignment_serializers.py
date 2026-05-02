@@ -116,10 +116,14 @@ class AssignmentCreateSerializer(serializers.Serializer):
     subtitle = serializers.CharField(required=False, allow_blank=True, default="")
     description = serializers.CharField(required=False, allow_blank=True, default="")
     instructions = serializers.CharField(required=False, allow_blank=True, default="")
-    assignment_kind = serializers.CharField(required=False, allow_blank=True, default="")
+    assignment_kind = serializers.CharField(
+        required=False, allow_blank=True, default=""
+    )
     control_scope = serializers.CharField(required=False, allow_blank=True, default="")
     visibility = serializers.CharField(required=False, allow_blank=True, default="")
-    education_level = serializers.CharField(required=False, allow_blank=True, default="")
+    education_level = serializers.CharField(
+        required=False, allow_blank=True, default=""
+    )
     is_template = serializers.BooleanField(required=False, default=False)
     is_active = serializers.BooleanField(required=False, default=True)
     course_id = serializers.IntegerField(required=False)

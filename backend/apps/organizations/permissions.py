@@ -42,7 +42,10 @@ def _is_teacher(user) -> bool:
         return True
 
     role_codes = _get_user_role_codes(user)
-    return ROLE_TEACHER in role_codes or getattr(user, "registration_type", "") == "teacher"
+    return (
+        ROLE_TEACHER in role_codes
+        or getattr(user, "registration_type", "") == "teacher"
+    )
 
 
 class IsAdminOrReadOnly(BasePermission):

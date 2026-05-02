@@ -9,13 +9,17 @@ class SubjectCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectCategory
         fields = (
-            "id", "code",
-            "name", "description",
-            "is_active", "created_at",
+            "id",
+            "code",
+            "name",
+            "description",
+            "is_active",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )
 
@@ -33,7 +37,8 @@ class SubjectCategoryShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectCategory
         fields = (
-            "id", "code",
+            "id",
+            "code",
             "name",
         )
         read_only_fields = fields
@@ -50,14 +55,19 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = (
-            "id", "category",
-            "category_id", "name",
-            "short_name", "description",
-            "is_active", "created_at",
+            "id",
+            "category",
+            "category_id",
+            "name",
+            "short_name",
+            "description",
+            "is_active",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )
 

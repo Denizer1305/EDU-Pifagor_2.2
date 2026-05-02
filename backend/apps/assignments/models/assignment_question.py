@@ -117,7 +117,12 @@ class AssignmentQuestion(TimeStampedModel):
         if self.section_id and self.section.assignment_id != self.assignment_id:
             errors["section"] = "Секция должна принадлежать выбранной работе."
 
-        if self.section_id and self.variant_id and self.section.variant_id and self.section.variant_id != self.variant_id:
+        if (
+            self.section_id
+            and self.variant_id
+            and self.section.variant_id
+            and self.section.variant_id != self.variant_id
+        ):
             errors["section"] = "Секция должна принадлежать выбранному варианту."
 
         if self.question_type == self.QuestionTypeChoices.MANUAL_ONLY:

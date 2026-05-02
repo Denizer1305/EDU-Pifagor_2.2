@@ -70,9 +70,5 @@ def _verify_teacher_registration_code(organization, code: str) -> None:
 
     if not check_password(code, code_hash):
         raise ValidationError(
-            {
-                "teacher_registration_code": _(
-                    "Неверный код регистрации преподавателя."
-                )
-            }
+            {"teacher_registration_code": _("Неверный код регистрации преподавателя.")}
         )

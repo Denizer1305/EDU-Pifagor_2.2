@@ -20,21 +20,33 @@ class StudentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
         fields = (
-            "id", "user",
-            "email", "full_name",
-            "student_code", "requested_organization",
-            "requested_department", "requested_group",
-            "submitted_group_code", "verification_status",
-            "verified_by", "verified_at",
-            "verification_comment", "created_at",
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "student_code",
+            "requested_organization",
+            "requested_department",
+            "requested_group",
+            "submitted_group_code",
+            "verification_status",
+            "verified_by",
+            "verified_at",
+            "verification_comment",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "user",
-            "email", "full_name",
-            "verification_status", "verified_by",
-            "verified_at", "verification_comment",
-            "created_at", "updated_at",
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "verification_status",
+            "verified_by",
+            "verified_at",
+            "verification_comment",
+            "created_at",
+            "updated_at",
         )
 
 
@@ -108,7 +120,11 @@ class StudentOnboardingSerializer(serializers.Serializer):
             and requested_department.organization_id != requested_organization.id
         ):
             raise serializers.ValidationError(
-                {"requested_department_id": _("Отделение должно принадлежать выбранной организации.")}
+                {
+                    "requested_department_id": _(
+                        "Отделение должно принадлежать выбранной организации."
+                    )
+                }
             )
 
         if (
@@ -117,7 +133,11 @@ class StudentOnboardingSerializer(serializers.Serializer):
             and requested_group.organization_id != requested_organization.id
         ):
             raise serializers.ValidationError(
-                {"requested_group_id": _("Группа должна принадлежать выбранной организации.")}
+                {
+                    "requested_group_id": _(
+                        "Группа должна принадлежать выбранной организации."
+                    )
+                }
             )
 
         if (
@@ -127,7 +147,11 @@ class StudentOnboardingSerializer(serializers.Serializer):
             and requested_group.department_id != requested_department.id
         ):
             raise serializers.ValidationError(
-                {"requested_group_id": _("Группа должна принадлежать выбранному отделению.")}
+                {
+                    "requested_group_id": _(
+                        "Группа должна принадлежать выбранному отделению."
+                    )
+                }
             )
 
         if (
@@ -136,7 +160,11 @@ class StudentOnboardingSerializer(serializers.Serializer):
             and graduation_year < admission_year
         ):
             raise serializers.ValidationError(
-                {"graduation_year": _("Год выпуска не может быть меньше года поступления.")}
+                {
+                    "graduation_year": _(
+                        "Год выпуска не может быть меньше года поступления."
+                    )
+                }
             )
 
         return attrs

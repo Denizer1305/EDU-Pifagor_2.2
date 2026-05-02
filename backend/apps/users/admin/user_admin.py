@@ -53,9 +53,7 @@ class UserAdmin(BaseUserAdmin):
         "last_login",
         "email_verified_display",
     )
-    autocomplete_fields = (
-        "reviewed_by",
-    )
+    autocomplete_fields = ("reviewed_by",)
     filter_horizontal = (
         "groups",
         "user_permissions",

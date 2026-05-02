@@ -83,7 +83,7 @@ class CourseEnrollmentCancelAPIView(APIView):
         try:
             enrollment = cancel_course_enrollment(enrollment=enrollment)
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         serializer = CourseEnrollmentDetailSerializer(
             get_course_enrollment_by_id(enrollment_id=enrollment.id),

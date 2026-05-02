@@ -61,7 +61,9 @@ class LessonProgressListSerializer(serializers.ModelSerializer):
 class LessonProgressDetailSerializer(serializers.ModelSerializer):
     lesson_title = serializers.CharField(source="lesson.title", read_only=True)
     module_title = serializers.CharField(source="lesson.module.title", read_only=True)
-    course_title = serializers.CharField(source="enrollment.course.title", read_only=True)
+    course_title = serializers.CharField(
+        source="enrollment.course.title", read_only=True
+    )
 
     class Meta:
         model = LessonProgress
@@ -147,7 +149,9 @@ class CourseProgressDetailSerializer(serializers.ModelSerializer):
         }
 
     def get_lesson_progresses(self, obj):
-        queryset = obj.lesson_progresses.select_related("lesson", "lesson__module").order_by(
+        queryset = obj.lesson_progresses.select_related(
+            "lesson", "lesson__module"
+        ).order_by(
             "lesson__module__order",
             "lesson__order",
             "id",

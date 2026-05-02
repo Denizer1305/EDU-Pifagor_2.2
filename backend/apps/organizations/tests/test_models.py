@@ -6,7 +6,11 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 
-from apps.organizations.models import Group, GroupCurator, Organization, TeacherOrganization
+from apps.organizations.models import (
+    Group,
+    GroupCurator,
+    TeacherOrganization,
+)
 from apps.organizations.tests.factories import (
     activate_group_join_code,
     activate_teacher_registration_code,

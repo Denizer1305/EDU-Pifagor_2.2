@@ -35,7 +35,10 @@ from apps.users.selectors import (
     get_user_with_related,
     get_users_queryset,
 )
-from apps.users.services.profile_services import ensure_role_profile, get_or_create_base_profile
+from apps.users.services.profile_services import (
+    ensure_role_profile,
+    get_or_create_base_profile,
+)
 from apps.users.services.role_services import assign_role_to_user
 
 User = get_user_model()
@@ -133,7 +136,9 @@ class RoleSelectorsTestCase(BaseUsersSelectorTestCase):
 
 class StudentSelectorsTestCase(BaseUsersSelectorTestCase):
     def setUp(self):
-        self.organization = create_organization(name="Организация селекторов", short_name="ОргС")
+        self.organization = create_organization(
+            name="Организация селекторов", short_name="ОргС"
+        )
         self.department = create_department(
             organization=self.organization,
             name="Отделение селекторов",
@@ -147,7 +152,9 @@ class StudentSelectorsTestCase(BaseUsersSelectorTestCase):
         )
 
     def test_get_student_profiles_queryset(self):
-        user = self.create_user("student-selector@example.com", registration_type="student")
+        user = self.create_user(
+            "student-selector@example.com", registration_type="student"
+        )
         profile = user.student_profile
         profile.requested_organization = self.organization
         profile.requested_department = self.department
@@ -159,7 +166,9 @@ class StudentSelectorsTestCase(BaseUsersSelectorTestCase):
         self.assertIn(profile, queryset)
 
     def test_get_pending_student_profiles_queryset(self):
-        user = self.create_user("student-pending@example.com", registration_type="student")
+        user = self.create_user(
+            "student-pending@example.com", registration_type="student"
+        )
         profile = user.student_profile
         profile.verification_status = VERIFICATION_STATUS_PENDING
         profile.save()
@@ -168,14 +177,18 @@ class StudentSelectorsTestCase(BaseUsersSelectorTestCase):
         self.assertIn(profile, queryset)
 
     def test_get_student_profile_by_user_id(self):
-        user = self.create_user("student-by-user@example.com", registration_type="student")
+        user = self.create_user(
+            "student-by-user@example.com", registration_type="student"
+        )
         profile = get_student_profile_by_user_id(user.id)
         self.assertEqual(profile.user_id, user.id)
 
 
 class TeacherSelectorsTestCase(BaseUsersSelectorTestCase):
     def setUp(self):
-        self.organization = create_organization(name="Организация преподов", short_name="ОргП")
+        self.organization = create_organization(
+            name="Организация преподов", short_name="ОргП"
+        )
         self.department = create_department(
             organization=self.organization,
             name="Отделение преподов",
@@ -183,7 +196,9 @@ class TeacherSelectorsTestCase(BaseUsersSelectorTestCase):
         )
 
     def test_get_teacher_profiles_queryset(self):
-        user = self.create_user("teacher-selector@example.com", registration_type="teacher")
+        user = self.create_user(
+            "teacher-selector@example.com", registration_type="teacher"
+        )
         profile = user.teacher_profile
         profile.requested_organization = self.organization
         profile.requested_department = self.department
@@ -196,7 +211,9 @@ class TeacherSelectorsTestCase(BaseUsersSelectorTestCase):
         self.assertIn(profile, queryset)
 
     def test_get_pending_teacher_profiles_queryset(self):
-        user = self.create_user("teacher-pending@example.com", registration_type="teacher")
+        user = self.create_user(
+            "teacher-pending@example.com", registration_type="teacher"
+        )
         profile = user.teacher_profile
         profile.verification_status = VERIFICATION_STATUS_PENDING
         profile.save()
@@ -205,20 +222,26 @@ class TeacherSelectorsTestCase(BaseUsersSelectorTestCase):
         self.assertIn(profile, queryset)
 
     def test_get_teacher_profile_by_user_id(self):
-        user = self.create_user("teacher-by-user@example.com", registration_type="teacher")
+        user = self.create_user(
+            "teacher-by-user@example.com", registration_type="teacher"
+        )
         profile = get_teacher_profile_by_user_id(user.id)
         self.assertEqual(profile.user_id, user.id)
 
 
 class ParentSelectorsTestCase(BaseUsersSelectorTestCase):
     def test_get_parent_profiles_queryset(self):
-        user = self.create_user("parent-selector@example.com", registration_type="parent")
+        user = self.create_user(
+            "parent-selector@example.com", registration_type="parent"
+        )
         queryset = get_parent_profiles_queryset(search="parent-selector")
         self.assertIn(user.parent_profile, queryset)
 
     def test_get_parent_student_links_queryset(self):
         parent = self.create_user("parent-link@example.com", registration_type="parent")
-        student = self.create_user("student-link@example.com", registration_type="student")
+        student = self.create_user(
+            "student-link@example.com", registration_type="student"
+        )
 
         link = ParentStudent.objects.create(
             parent=parent,
@@ -232,8 +255,12 @@ class ParentSelectorsTestCase(BaseUsersSelectorTestCase):
         self.assertIn(link, queryset)
 
     def test_get_pending_parent_student_links_queryset(self):
-        parent = self.create_user("parent-pending@example.com", registration_type="parent")
-        student = self.create_user("student-pending-link@example.com", registration_type="student")
+        parent = self.create_user(
+            "parent-pending@example.com", registration_type="parent"
+        )
+        student = self.create_user(
+            "student-pending-link@example.com", registration_type="student"
+        )
 
         link = ParentStudent.objects.create(
             parent=parent,

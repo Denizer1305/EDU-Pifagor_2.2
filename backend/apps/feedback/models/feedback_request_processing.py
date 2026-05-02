@@ -86,10 +86,7 @@ class FeedbackRequestProcessing(TimeStampedModel):
             FeedbackRequest.StatusChoices.ARCHIVED,
         }
 
-        if (
-            self.feedback_request.status in final_statuses
-            and self.processed_at is None
-        ):
+        if self.feedback_request.status in final_statuses and self.processed_at is None:
             errors["processed_at"] = (
                 "Финальный статус требует заполненной даты обработки."
             )

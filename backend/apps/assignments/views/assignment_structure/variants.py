@@ -34,16 +34,22 @@ class AssignmentVariantListCreateAPIView(APIView):
     def get(self, request, assignment_id: int, *args, **kwargs):
         assignment = self.get_object(request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         queryset = get_assignment_variants_queryset(assignment_id=assignment.id)
-        serializer = AssignmentVariantSerializer(queryset, many=True, context={"request": request})
+        serializer = AssignmentVariantSerializer(
+            queryset, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, assignment_id: int, *args, **kwargs):
         assignment = self.get_object(request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = AssignmentVariantWriteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -69,7 +75,9 @@ class AssignmentVariantDetailAPIView(APIView):
     def get(self, request, pk: int, *args, **kwargs):
         variant = self._get_variant(pk)
         if variant is None:
-            return Response({"detail": "Вариант не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вариант не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, variant)
 
@@ -79,7 +87,9 @@ class AssignmentVariantDetailAPIView(APIView):
     def patch(self, request, pk: int, *args, **kwargs):
         variant = self._get_variant(pk)
         if variant is None:
-            return Response({"detail": "Вариант не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вариант не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, variant)
 
@@ -97,7 +107,9 @@ class AssignmentVariantDetailAPIView(APIView):
     def delete(self, request, pk: int, *args, **kwargs):
         variant = self._get_variant(pk)
         if variant is None:
-            return Response({"detail": "Вариант не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вариант не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, variant)
 
@@ -111,7 +123,9 @@ class AssignmentVariantReorderAPIView(APIView):
     def post(self, request, assignment_id: int, *args, **kwargs):
         assignment = get_assignment_or_404(self, request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         ids = request.data.get("variant_ids", [])
         if not isinstance(ids, list):
@@ -124,5 +138,7 @@ class AssignmentVariantReorderAPIView(APIView):
             assignment=assignment,
             variant_ids_in_order=ids,
         )
-        serializer = AssignmentVariantSerializer(variants, many=True, context={"request": request})
+        serializer = AssignmentVariantSerializer(
+            variants, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)

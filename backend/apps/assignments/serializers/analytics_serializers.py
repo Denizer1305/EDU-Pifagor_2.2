@@ -35,7 +35,9 @@ class StudentAssignmentProgressSerializer(serializers.Serializer):
     last_submission_status = serializers.CharField(allow_blank=True)
     last_submission_attempt_number = serializers.IntegerField()
     last_submission_score = serializers.DecimalField(max_digits=10, decimal_places=2)
-    last_submission_percentage = serializers.DecimalField(max_digits=10, decimal_places=2)
+    last_submission_percentage = serializers.DecimalField(
+        max_digits=10, decimal_places=2
+    )
     passed = serializers.BooleanField()
 
 

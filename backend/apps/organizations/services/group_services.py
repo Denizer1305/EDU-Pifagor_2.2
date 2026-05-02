@@ -53,11 +53,15 @@ def create_group(
     description: str = "",
     is_active: bool = True,
 ) -> Group:
-    logger.info("create_group started organization_id=%s name=%s", organization.id, name.strip())
+    logger.info(
+        "create_group started organization_id=%s name=%s", organization.id, name.strip()
+    )
 
     if department and department.organization_id != organization.id:
         raise ValidationError(
-            {"department": "Подразделение должно принадлежать той же организации, что и группа."}
+            {
+                "department": "Подразделение должно принадлежать той же организации, что и группа."
+            }
         )
 
     group = Group(
@@ -82,14 +86,18 @@ def create_group(
 
 @transaction.atomic
 def update_group(*, group: Group, **validated_data) -> Group:
-    logger.info("update_group started id=%s fields=%s", group.id, sorted(validated_data.keys()))
+    logger.info(
+        "update_group started id=%s fields=%s", group.id, sorted(validated_data.keys())
+    )
 
     organization = validated_data.get("organization", group.organization)
     department = validated_data.get("department", group.department)
 
     if department and organization and department.organization_id != organization.id:
         raise ValidationError(
-            {"department": "Подразделение должно принадлежать той же организации, что и группа."}
+            {
+                "department": "Подразделение должно принадлежать той же организации, что и группа."
+            }
         )
 
     for field, value in validated_data.items():
@@ -126,10 +134,12 @@ def disable_group_join_code(*, group: Group) -> Group:
     logger.info("disable_group_join_code started group_id=%s", group.id)
     group.disable_join_code()
     group.full_clean()
-    group.save(update_fields=(
-        "join_code_is_active",
-        "updated_at",
-    ))
+    group.save(
+        update_fields=(
+            "join_code_is_active",
+            "updated_at",
+        )
+    )
     logger.info("disable_group_join_code completed group_id=%s", group.id)
     return group
 
@@ -139,12 +149,14 @@ def clear_group_join_code(*, group: Group) -> Group:
     logger.info("clear_group_join_code started group_id=%s", group.id)
     group.clear_join_code()
     group.full_clean()
-    group.save(update_fields=(
-        "join_code_hash",
-        "join_code_is_active",
-        "join_code_expires_at",
-        "updated_at",
-    ))
+    group.save(
+        update_fields=(
+            "join_code_hash",
+            "join_code_is_active",
+            "join_code_expires_at",
+            "updated_at",
+        )
+    )
     logger.info("clear_group_join_code completed group_id=%s", group.id)
     return group
 
@@ -160,10 +172,14 @@ def assign_group_curator(
     ends_at=None,
     notes: str = "",
 ) -> GroupCurator:
-    logger.info("assign_group_curator started group_id=%s teacher_id=%s", group.id, teacher.id)
+    logger.info(
+        "assign_group_curator started group_id=%s teacher_id=%s", group.id, teacher.id
+    )
 
     if not _has_teacher_role(teacher):
-        raise ValidationError({"teacher": "Куратором группы может быть только преподаватель."})
+        raise ValidationError(
+            {"teacher": "Куратором группы может быть только преподаватель."}
+        )
 
     curator, created = GroupCurator.objects.get_or_create(
         group=group,
@@ -203,7 +219,9 @@ def remove_group_curator(
     group: Group,
     teacher,
 ) -> None:
-    logger.info("remove_group_curator started group_id=%s teacher_id=%s", group.id, teacher.id)
+    logger.info(
+        "remove_group_curator started group_id=%s teacher_id=%s", group.id, teacher.id
+    )
 
     curator = GroupCurator.objects.filter(
         group=group,
@@ -221,10 +239,12 @@ def remove_group_curator(
     curator.is_active = False
     curator.is_primary = False
     curator.full_clean()
-    curator.save(update_fields=(
-        "is_active",
-        "is_primary",
-        "updated_at",
-    ))
+    curator.save(
+        update_fields=(
+            "is_active",
+            "is_primary",
+            "updated_at",
+        )
+    )
 
     logger.info("remove_group_curator completed curator_id=%s", curator.id)

@@ -39,7 +39,9 @@ def _try_sync_teacher_organization_link(teacher_profile) -> None:
 
     try:
         defaults = {}
-        teacher_org_fields = {field.name for field in TeacherOrganization._meta.get_fields()}
+        teacher_org_fields = {
+            field.name for field in TeacherOrganization._meta.get_fields()
+        }
 
         if "is_active" in teacher_org_fields:
             defaults["is_active"] = True
@@ -77,9 +79,16 @@ def submit_teacher_verification_request(
     is_public=None,
     show_on_teachers_page=None,
 ):
-    if requested_department and requested_department.organization_id != requested_organization.id:
+    if (
+        requested_department
+        and requested_department.organization_id != requested_organization.id
+    ):
         raise ValidationError(
-            {"requested_department": _("Отделение должно принадлежать выбранной образовательной организации.")}
+            {
+                "requested_department": _(
+                    "Отделение должно принадлежать выбранной образовательной организации."
+                )
+            }
         )
 
     teacher_profile.requested_organization = requested_organization
@@ -95,11 +104,17 @@ def submit_teacher_verification_request(
     if _has_field(teacher_profile.__class__, "education_info"):
         teacher_profile.education_info = (education_info or "").strip()
 
-    if _has_field(teacher_profile.__class__, "experience_years") and experience_years is not None:
+    if (
+        _has_field(teacher_profile.__class__, "experience_years")
+        and experience_years is not None
+    ):
         teacher_profile.experience_years = experience_years
 
     # Старая схема — обновляем только если значение реально передано
-    if _has_field(teacher_profile.__class__, "public_title") and public_title is not None:
+    if (
+        _has_field(teacher_profile.__class__, "public_title")
+        and public_title is not None
+    ):
         teacher_profile.public_title = public_title.strip()
 
     if _has_field(teacher_profile.__class__, "short_bio") and short_bio is not None:
@@ -114,13 +129,19 @@ def submit_teacher_verification_request(
     if _has_field(teacher_profile.__class__, "experience") and experience is not None:
         teacher_profile.experience = experience
 
-    if _has_field(teacher_profile.__class__, "achievements") and achievements is not None:
+    if (
+        _has_field(teacher_profile.__class__, "achievements")
+        and achievements is not None
+    ):
         teacher_profile.achievements = achievements.strip()
 
     if _has_field(teacher_profile.__class__, "is_public") and is_public is not None:
         teacher_profile.is_public = is_public
 
-    if _has_field(teacher_profile.__class__, "show_on_teachers_page") and show_on_teachers_page is not None:
+    if (
+        _has_field(teacher_profile.__class__, "show_on_teachers_page")
+        and show_on_teachers_page is not None
+    ):
         teacher_profile.show_on_teachers_page = show_on_teachers_page
 
     teacher_profile.verification_status = VERIFICATION_STATUS_PENDING
@@ -162,7 +183,11 @@ def approve_teacher_profile(*, teacher_profile, reviewer, comment: str = ""):
 def reject_teacher_profile(*, teacher_profile, reviewer, comment: str):
     if not (comment or "").strip():
         raise ValidationError(
-            {"comment": _("Для отклонения преподавательского профиля необходимо указать комментарий.")}
+            {
+                "comment": _(
+                    "Для отклонения преподавательского профиля необходимо указать комментарий."
+                )
+            }
         )
 
     teacher_profile.verification_status = VERIFICATION_STATUS_REJECTED

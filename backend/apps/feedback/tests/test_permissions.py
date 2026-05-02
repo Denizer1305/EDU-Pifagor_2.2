@@ -42,7 +42,9 @@ class FeedbackPermissionsTestCase(TestCase):
         request.user = user
 
         permission = IsFeedbackOwnerOrAdmin()
-        self.assertTrue(permission.has_object_permission(request, view=None, obj=feedback_request))
+        self.assertTrue(
+            permission.has_object_permission(request, view=None, obj=feedback_request)
+        )
 
     def test_is_feedback_owner_or_admin_allows_admin(self):
         admin_user = create_feedback_admin_user()
@@ -53,7 +55,9 @@ class FeedbackPermissionsTestCase(TestCase):
         request.user = admin_user
 
         permission = IsFeedbackOwnerOrAdmin()
-        self.assertTrue(permission.has_object_permission(request, view=None, obj=feedback_request))
+        self.assertTrue(
+            permission.has_object_permission(request, view=None, obj=feedback_request)
+        )
 
     def test_is_feedback_owner_or_admin_denies_other_user(self):
         owner = create_feedback_user(email="owner@example.com")
@@ -64,4 +68,6 @@ class FeedbackPermissionsTestCase(TestCase):
         request.user = other_user
 
         permission = IsFeedbackOwnerOrAdmin()
-        self.assertFalse(permission.has_object_permission(request, view=None, obj=feedback_request))
+        self.assertFalse(
+            permission.has_object_permission(request, view=None, obj=feedback_request)
+        )

@@ -15,7 +15,6 @@ from apps.feedback.models import (
 )
 from apps.users.tests.factories import create_admin_user, create_profile, create_user
 
-
 feedback_user_counter = count(1)
 feedback_admin_counter = count(1)
 feedback_request_counter = count(1)

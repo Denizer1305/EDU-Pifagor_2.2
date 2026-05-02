@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.test import TestCase
 
+from apps.assignments.models import AssignmentPublication
 from apps.assignments.selectors import (
     get_assignment_audiences_queryset,
     get_assignment_by_id,
@@ -25,15 +26,13 @@ from apps.assignments.tests.factories import (
     create_assignment,
     create_assignment_audience,
     create_assignment_publication,
-    create_grade_record,
     create_review_comment,
     create_rubric,
-    create_submission,
     create_student_user,
+    create_submission,
     create_teacher_user,
 )
-from apps.course.tests.factories import create_course_enrollment, create_course
-from apps.assignments.models import AssignmentPublication
+from apps.course.tests.factories import create_course, create_course_enrollment
 
 
 class AssignmentSelectorsTestCase(TestCase):
@@ -118,7 +117,7 @@ class AudienceSelectorsTestCase(TestCase):
 class SubmissionSelectorsTestCase(TestCase):
     def test_get_submissions_queryset(self):
         student = create_student_user()
-        submission = create_submission(student=student)
+        create_submission(student=student)
         create_submission()
 
         queryset = get_submissions_queryset(student_id=student.id)
@@ -215,7 +214,9 @@ class AnalyticsSelectorsTestCase(TestCase):
             passed=True,
         )
 
-        payload = get_student_assignment_progress(student=student, assignment=assignment)
+        payload = get_student_assignment_progress(
+            student=student, assignment=assignment
+        )
 
         self.assertEqual(payload["student_id"], student.id)
         self.assertEqual(payload["assignment_id"], assignment.id)

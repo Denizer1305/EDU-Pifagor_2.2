@@ -14,24 +14,39 @@ class TeacherProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherProfile
         fields = (
-            "id", "user",
-            "email", "full_name",
-            "public_title", "short_bio",
-            "bio", "education",
-            "experience", "achievements",
-            "is_public", "show_on_teachers_page",
-            "requested_organization", "requested_department",
-            "verification_status", "code_verified_at",
-            "verified_by", "verified_at",
-            "verification_comment", "created_at",
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "public_title",
+            "short_bio",
+            "bio",
+            "education",
+            "experience",
+            "achievements",
+            "is_public",
+            "show_on_teachers_page",
+            "requested_organization",
+            "requested_department",
+            "verification_status",
+            "code_verified_at",
+            "verified_by",
+            "verified_at",
+            "verification_comment",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "user",
-            "email", "full_name",
-            "verification_status", "code_verified_at",
-            "verified_by", "verified_at",
-            "verification_comment", "created_at",
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "verification_status",
+            "code_verified_at",
+            "verified_by",
+            "verified_at",
+            "verification_comment",
+            "created_at",
             "updated_at",
         )
 
@@ -50,7 +65,9 @@ class TeacherOnboardingSerializer(serializers.Serializer):
         required=False,
     )
 
-    public_title = serializers.CharField(required=False, allow_blank=True, max_length=255)
+    public_title = serializers.CharField(
+        required=False, allow_blank=True, max_length=255
+    )
     short_bio = serializers.CharField(required=False, allow_blank=True)
     bio = serializers.CharField(required=False, allow_blank=True)
     education = serializers.CharField(required=False, allow_blank=True)
@@ -58,7 +75,9 @@ class TeacherOnboardingSerializer(serializers.Serializer):
     achievements = serializers.CharField(required=False, allow_blank=True)
 
     position = serializers.CharField(required=False, allow_blank=True, write_only=True)
-    employee_code = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    employee_code = serializers.CharField(
+        required=False, allow_blank=True, write_only=True
+    )
 
     is_public = serializers.BooleanField(required=False)
     show_on_teachers_page = serializers.BooleanField(required=False)
@@ -73,7 +92,11 @@ class TeacherOnboardingSerializer(serializers.Serializer):
             and requested_department.organization_id != requested_organization.id
         ):
             raise serializers.ValidationError(
-                {"requested_department_id": _("Подразделение должно принадлежать выбранной организации.")}
+                {
+                    "requested_department_id": _(
+                        "Подразделение должно принадлежать выбранной организации."
+                    )
+                }
             )
 
         return attrs

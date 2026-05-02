@@ -60,7 +60,7 @@ class CourseListCreateAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseDetailSerializer(
             course,
@@ -105,7 +105,7 @@ class CourseDetailAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseDetailSerializer(
             get_course_by_id(course_id=course.id),

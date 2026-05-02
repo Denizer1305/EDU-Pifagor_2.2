@@ -43,7 +43,10 @@ def is_teacher_user(user) -> bool:
         return True
 
     role_codes = _get_user_role_codes(user)
-    return ROLE_TEACHER in role_codes or getattr(user, "registration_type", "") == "teacher"
+    return (
+        ROLE_TEACHER in role_codes
+        or getattr(user, "registration_type", "") == "teacher"
+    )
 
 
 def is_student_user(user) -> bool:
@@ -51,7 +54,10 @@ def is_student_user(user) -> bool:
         return False
 
     role_codes = _get_user_role_codes(user)
-    return ROLE_STUDENT in role_codes or getattr(user, "registration_type", "") == "student"
+    return (
+        ROLE_STUDENT in role_codes
+        or getattr(user, "registration_type", "") == "student"
+    )
 
 
 def validate_course_dates(*, starts_at=None, ends_at=None) -> None:
@@ -64,7 +70,9 @@ def validate_course_dates(*, starts_at=None, ends_at=None) -> None:
 def validate_course_teacher_user(*, user) -> None:
     if not is_teacher_user(user) and not is_admin_user(user):
         raise ValidationError(
-            {"teacher": "Преподавателем курса может быть только преподаватель или администратор."}
+            {
+                "teacher": "Преподавателем курса может быть только преподаватель или администратор."
+            }
         )
 
 
@@ -84,9 +92,7 @@ def validate_module_belongs_to_course(*, module, course) -> None:
 
 def validate_lesson_belongs_to_course(*, lesson, course) -> None:
     if lesson.course_id != course.id:
-        raise ValidationError(
-            {"lesson": "Урок должен принадлежать выбранному курсу."}
-        )
+        raise ValidationError({"lesson": "Урок должен принадлежать выбранному курсу."})
 
 
 def validate_course_can_be_published(*, course: Course) -> None:
@@ -119,7 +125,9 @@ def validate_assignment_payload(
     errors = {}
 
     if starts_at and ends_at and ends_at < starts_at:
-        errors["ends_at"] = "Дата окончания назначения не может быть раньше даты начала."
+        errors["ends_at"] = (
+            "Дата окончания назначения не может быть раньше даты начала."
+        )
 
     if assignment_type == CourseAssignment.AssignmentTypeChoices.GROUP:
         if group is None:

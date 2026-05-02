@@ -63,7 +63,7 @@ class CourseModuleListCreateAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseModuleDetailSerializer(
             module,
@@ -106,7 +106,7 @@ class CourseModuleDetailAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseModuleDetailSerializer(
             get_course_module_by_id(module_id=module.id),
@@ -120,7 +120,7 @@ class CourseModuleDetailAPIView(APIView):
         try:
             delete_course_module(module=module)
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -144,7 +144,7 @@ class CourseModuleReorderAPIView(APIView):
                 module_ids_in_order=serializer.validated_data["module_ids_in_order"],
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         queryset = course.modules.order_by("order", "id")
         output_serializer = CourseModuleListSerializer(

@@ -6,18 +6,15 @@ from apps.assignments.models import AssignmentAudience
 
 
 def get_assignment_audience_base_queryset() -> QuerySet[AssignmentAudience]:
-    return (
-        AssignmentAudience.objects.select_related(
-            "publication",
-            "publication__assignment",
-            "publication__course",
-            "publication__lesson",
-            "group",
-            "student",
-            "course_enrollment",
-        )
-        .order_by("-created_at")
-    )
+    return AssignmentAudience.objects.select_related(
+        "publication",
+        "publication__assignment",
+        "publication__course",
+        "publication__lesson",
+        "group",
+        "student",
+        "course_enrollment",
+    ).order_by("-created_at")
 
 
 def get_assignment_audiences_queryset(

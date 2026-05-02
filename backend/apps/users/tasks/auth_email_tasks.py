@@ -65,7 +65,9 @@ def send_verify_email_task(
         "email_title": _("Подтверждение электронной почты"),
         "heading": _("Подтвердите электронную почту"),
         "preheader": _("Завершите регистрацию в платформе."),
-        "footer_note": _("Если вы не создавали аккаунт, просто проигнорируйте это письмо."),
+        "footer_note": _(
+            "Если вы не создавали аккаунт, просто проигнорируйте это письмо."
+        ),
         "first_name": get_user_first_name(user),
         "verification_url": verification_url,
         "expires_at": expires_at,
@@ -135,7 +137,9 @@ def send_password_changed_email_task(user_id: int) -> None:
         "email_title": _("Пароль изменен"),
         "heading": _("Пароль успешно изменен"),
         "preheader": _("Ваш пароль в платформе был обновлен."),
-        "footer_note": _("Если это действие совершали не вы, срочно восстановите доступ."),
+        "footer_note": _(
+            "Если это действие совершали не вы, срочно восстановите доступ."
+        ),
         "first_name": get_user_first_name(user),
         "changed_at": timezone.localtime().strftime("%d.%m.%Y %H:%M"),
         "current_year": timezone.now().year,

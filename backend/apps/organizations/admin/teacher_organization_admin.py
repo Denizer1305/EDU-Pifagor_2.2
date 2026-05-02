@@ -58,34 +58,39 @@ class TeacherOrganizationAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "teacher",
-                "organization",
-                "position",
-                "employment_type",
-            )
-        }),
-        (_("Статус связи"), {
-            "fields": (
-                "is_primary",
-                "is_active",
-                "starts_at",
-                "ends_at",
-                "is_current_display",
-            )
-        }),
-        (_("Примечание"), {
-            "fields": (
-                "notes",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "teacher",
+                    "organization",
+                    "position",
+                    "employment_type",
+                )
+            },
+        ),
+        (
+            _("Статус связи"),
+            {
+                "fields": (
+                    "is_primary",
+                    "is_active",
+                    "starts_at",
+                    "ends_at",
+                    "is_current_display",
+                )
+            },
+        ),
+        (_("Примечание"), {"fields": ("notes",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     @admin.display(description=_("Актуально сейчас"), boolean=True)

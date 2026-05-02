@@ -13,9 +13,7 @@ class UserFilter(django_filters.FilterSet):
     q = django_filters.CharFilter(method="filter_q")
     registration_type = django_filters.CharFilter(field_name="registration_type")
     onboarding_status = django_filters.CharFilter(field_name="onboarding_status")
-    is_email_verified = django_filters.BooleanFilter(
-        method="filter_is_email_verified"
-    )
+    is_email_verified = django_filters.BooleanFilter(method="filter_is_email_verified")
     is_active = django_filters.BooleanFilter(field_name="is_active")
     is_staff = django_filters.BooleanFilter(field_name="is_staff")
     is_superuser = django_filters.BooleanFilter(field_name="is_superuser")

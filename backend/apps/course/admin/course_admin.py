@@ -74,62 +74,76 @@ class CourseAdmin(admin.ModelAdmin):
     inlines = [CourseTeacherInline, CourseModuleInline]
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "uid",
-                "code",
-                "slug",
-                "title",
-                "subtitle",
-                "description",
-            )
-        }),
-        (_("Тип и публикация"), {
-            "fields": (
-                "course_type",
-                "origin",
-                "status",
-                "visibility",
-                "level",
-                "language",
-                "is_template",
-                "is_active",
-            )
-        }),
-        (_("Автор и преподаватели"), {
-            "fields": (
-                "author",
-            )
-        }),
-        (_("Учебный контур"), {
-            "fields": (
-                "organization",
-                "subject",
-                "academic_year",
-                "period",
-                "group_subject",
-            )
-        }),
-        (_("Доступ и оформление"), {
-            "fields": (
-                "cover_image",
-                "allow_self_enrollment",
-                "enrollment_code",
-                "estimated_minutes",
-            )
-        }),
-        (_("Даты"), {
-            "fields": (
-                "starts_at",
-                "ends_at",
-                "published_at",
-                "archived_at",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "uid",
+                    "code",
+                    "slug",
+                    "title",
+                    "subtitle",
+                    "description",
+                )
+            },
+        ),
+        (
+            _("Тип и публикация"),
+            {
+                "fields": (
+                    "course_type",
+                    "origin",
+                    "status",
+                    "visibility",
+                    "level",
+                    "language",
+                    "is_template",
+                    "is_active",
+                )
+            },
+        ),
+        (_("Автор и преподаватели"), {"fields": ("author",)}),
+        (
+            _("Учебный контур"),
+            {
+                "fields": (
+                    "organization",
+                    "subject",
+                    "academic_year",
+                    "period",
+                    "group_subject",
+                )
+            },
+        ),
+        (
+            _("Доступ и оформление"),
+            {
+                "fields": (
+                    "cover_image",
+                    "allow_self_enrollment",
+                    "enrollment_code",
+                    "estimated_minutes",
+                )
+            },
+        ),
+        (
+            _("Даты"),
+            {
+                "fields": (
+                    "starts_at",
+                    "ends_at",
+                    "published_at",
+                    "archived_at",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )

@@ -138,55 +138,87 @@ def get_my_feedback_requests_queryset(
 
 
 def get_new_feedback_requests_queryset() -> QuerySet[FeedbackRequest]:
-    return _base_feedback_queryset().filter(
-        status=FeedbackRequest.StatusChoices.NEW,
-    ).order_by("-created_at")
+    return (
+        _base_feedback_queryset()
+        .filter(
+            status=FeedbackRequest.StatusChoices.NEW,
+        )
+        .order_by("-created_at")
+    )
 
 
 def get_in_progress_feedback_requests_queryset() -> QuerySet[FeedbackRequest]:
-    return _base_feedback_queryset().filter(
-        status=FeedbackRequest.StatusChoices.IN_PROGRESS,
-    ).order_by("-created_at")
+    return (
+        _base_feedback_queryset()
+        .filter(
+            status=FeedbackRequest.StatusChoices.IN_PROGRESS,
+        )
+        .order_by("-created_at")
+    )
 
 
 def get_waiting_user_feedback_requests_queryset() -> QuerySet[FeedbackRequest]:
-    return _base_feedback_queryset().filter(
-        status=FeedbackRequest.StatusChoices.WAITING_USER,
-    ).order_by("-created_at")
+    return (
+        _base_feedback_queryset()
+        .filter(
+            status=FeedbackRequest.StatusChoices.WAITING_USER,
+        )
+        .order_by("-created_at")
+    )
 
 
 def get_resolved_feedback_requests_queryset() -> QuerySet[FeedbackRequest]:
-    return _base_feedback_queryset().filter(
-        status=FeedbackRequest.StatusChoices.RESOLVED,
-    ).order_by("-created_at")
+    return (
+        _base_feedback_queryset()
+        .filter(
+            status=FeedbackRequest.StatusChoices.RESOLVED,
+        )
+        .order_by("-created_at")
+    )
 
 
 def get_archived_feedback_requests_queryset() -> QuerySet[FeedbackRequest]:
-    return _base_feedback_queryset().filter(
-        status=FeedbackRequest.StatusChoices.ARCHIVED,
-    ).order_by("-created_at")
+    return (
+        _base_feedback_queryset()
+        .filter(
+            status=FeedbackRequest.StatusChoices.ARCHIVED,
+        )
+        .order_by("-created_at")
+    )
 
 
 def get_spam_feedback_requests_queryset() -> QuerySet[FeedbackRequest]:
-    return _base_feedback_queryset().filter(
-        Q(status=FeedbackRequest.StatusChoices.SPAM)
-        | Q(processing__is_spam_suspected=True)
-    ).order_by("-created_at")
+    return (
+        _base_feedback_queryset()
+        .filter(
+            Q(status=FeedbackRequest.StatusChoices.SPAM)
+            | Q(processing__is_spam_suspected=True)
+        )
+        .order_by("-created_at")
+    )
 
 
 def get_feedback_request_by_id(
     *,
     feedback_request_id: int,
 ) -> FeedbackRequest | None:
-    return _base_feedback_queryset().filter(
-        id=feedback_request_id,
-    ).first()
+    return (
+        _base_feedback_queryset()
+        .filter(
+            id=feedback_request_id,
+        )
+        .first()
+    )
 
 
 def get_feedback_request_by_uid(
     *,
     feedback_request_uid,
 ) -> FeedbackRequest | None:
-    return _base_feedback_queryset().filter(
-        uid=feedback_request_uid,
-    ).first()
+    return (
+        _base_feedback_queryset()
+        .filter(
+            uid=feedback_request_uid,
+        )
+        .first()
+    )

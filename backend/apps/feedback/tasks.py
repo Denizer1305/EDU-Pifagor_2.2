@@ -20,13 +20,17 @@ def archive_old_spam_feedback_requests(days: int = 30) -> dict:
     threshold = timezone.now() - timedelta(days=days)
 
     with transaction.atomic():
-        updated_count = FeedbackRequest.objects.filter(
-            status=FeedbackRequest.StatusChoices.SPAM,
-            created_at__lt=threshold,
-        ).exclude(
-            status=FeedbackRequest.StatusChoices.ARCHIVED,
-        ).update(
-            status=FeedbackRequest.StatusChoices.ARCHIVED,
+        updated_count = (
+            FeedbackRequest.objects.filter(
+                status=FeedbackRequest.StatusChoices.SPAM,
+                created_at__lt=threshold,
+            )
+            .exclude(
+                status=FeedbackRequest.StatusChoices.ARCHIVED,
+            )
+            .update(
+                status=FeedbackRequest.StatusChoices.ARCHIVED,
+            )
         )
 
     logger.info(
@@ -49,14 +53,18 @@ def archive_old_resolved_feedback_requests(days: int = 90) -> dict:
     threshold = timezone.now() - timedelta(days=days)
 
     with transaction.atomic():
-        updated_count = FeedbackRequest.objects.filter(
-            status=FeedbackRequest.StatusChoices.RESOLVED,
-            processing__processed_at__isnull=False,
-            processing__processed_at__lt=threshold,
-        ).exclude(
-            status=FeedbackRequest.StatusChoices.ARCHIVED,
-        ).update(
-            status=FeedbackRequest.StatusChoices.ARCHIVED,
+        updated_count = (
+            FeedbackRequest.objects.filter(
+                status=FeedbackRequest.StatusChoices.RESOLVED,
+                processing__processed_at__isnull=False,
+                processing__processed_at__lt=threshold,
+            )
+            .exclude(
+                status=FeedbackRequest.StatusChoices.ARCHIVED,
+            )
+            .update(
+                status=FeedbackRequest.StatusChoices.ARCHIVED,
+            )
         )
 
     logger.info(

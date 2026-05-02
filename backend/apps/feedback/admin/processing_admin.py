@@ -49,32 +49,37 @@ class FeedbackRequestProcessingAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "feedback_request",
-                "assigned_to",
-                "assigned_at",
-                "processed_by",
-                "processed_at",
-            )
-        }),
-        (_("Ответ и заметки"), {
-            "fields": (
-                "reply_message",
-                "internal_note",
-            )
-        }),
-        (_("Антиспам"), {
-            "fields": (
-                "is_spam_suspected",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "feedback_request",
+                    "assigned_to",
+                    "assigned_at",
+                    "processed_by",
+                    "processed_at",
+                )
+            },
+        ),
+        (
+            _("Ответ и заметки"),
+            {
+                "fields": (
+                    "reply_message",
+                    "internal_note",
+                )
+            },
+        ),
+        (_("Антиспам"), {"fields": ("is_spam_suspected",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     def get_queryset(self, request):

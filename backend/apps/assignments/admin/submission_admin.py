@@ -107,47 +107,62 @@ class SubmissionAdmin(admin.ModelAdmin):
     ]
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "publication",
-                "assignment",
-                "variant",
-                "student",
-                "status",
-                "attempt_number",
-            )
-        }),
-        (_("Сроки и время"), {
-            "fields": (
-                "started_at",
-                "submitted_at",
-                "completed_at",
-                "time_spent_minutes",
-                "is_late",
-                "late_minutes",
-            )
-        }),
-        (_("Оценивание"), {
-            "fields": (
-                "auto_score",
-                "manual_score",
-                "final_score",
-                "percentage",
-                "passed",
-            )
-        }),
-        (_("Проверка"), {
-            "fields": (
-                "checked_at",
-                "checked_by",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "publication",
+                    "assignment",
+                    "variant",
+                    "student",
+                    "status",
+                    "attempt_number",
+                )
+            },
+        ),
+        (
+            _("Сроки и время"),
+            {
+                "fields": (
+                    "started_at",
+                    "submitted_at",
+                    "completed_at",
+                    "time_spent_minutes",
+                    "is_late",
+                    "late_minutes",
+                )
+            },
+        ),
+        (
+            _("Оценивание"),
+            {
+                "fields": (
+                    "auto_score",
+                    "manual_score",
+                    "final_score",
+                    "percentage",
+                    "passed",
+                )
+            },
+        ),
+        (
+            _("Проверка"),
+            {
+                "fields": (
+                    "checked_at",
+                    "checked_by",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
 

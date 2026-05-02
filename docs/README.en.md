@@ -42,7 +42,7 @@ Documentation is needed to:
 
 ## Author’s Note
 
-> Human beings are born to dream and to create something great.  
-> Flying machines, space travel, even robots — everything begins with an idea.  
-> Imagination and science always go hand in hand,  
+> Human beings are born to dream and to create something great.
+> Flying machines, space travel, even robots — everything begins with an idea.
+> Imagination and science always go hand in hand,
 > and many modern achievements were once described in works of science fiction.

@@ -45,12 +45,8 @@ class OrganizationAdmin(admin.ModelAdmin):
         "address",
         "website",
     )
-    autocomplete_fields = (
-        "type",
-    )
-    ordering = (
-        "name",
-    )
+    autocomplete_fields = ("type",)
+    ordering = ("name",)
     readonly_fields = (
         "teacher_registration_code_hash",
         "has_active_teacher_registration_code_display",
@@ -63,47 +59,51 @@ class OrganizationAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "name",
-                "short_name",
-                "type",
-                "description",
-            )
-        }),
-        (_("Контактные данные"), {
-            "fields": (
-                "city",
-                "address",
-                "phone",
-                "email",
-                "website",
-            )
-        }),
-        (_("Логотип"), {
-            "fields": (
-                "logo",
-            )
-        }),
-        (_("Код регистрации преподавателя"), {
-            "fields": (
-                "teacher_registration_code_hash",
-                "teacher_registration_code_is_active",
-                "teacher_registration_code_expires_at",
-                "has_active_teacher_registration_code_display",
-            )
-        }),
-        (_("Статус"), {
-            "fields": (
-                "is_active",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "name",
+                    "short_name",
+                    "type",
+                    "description",
+                )
+            },
+        ),
+        (
+            _("Контактные данные"),
+            {
+                "fields": (
+                    "city",
+                    "address",
+                    "phone",
+                    "email",
+                    "website",
+                )
+            },
+        ),
+        (_("Логотип"), {"fields": ("logo",)}),
+        (
+            _("Код регистрации преподавателя"),
+            {
+                "fields": (
+                    "teacher_registration_code_hash",
+                    "teacher_registration_code_is_active",
+                    "teacher_registration_code_expires_at",
+                    "has_active_teacher_registration_code_display",
+                )
+            },
+        ),
+        (_("Статус"), {"fields": ("is_active",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     @admin.display(description=_("Код преподавателя активен"), boolean=True)

@@ -10,7 +10,9 @@ class SubmissionStartSerializer(serializers.Serializer):
 
 class SubmissionAnswerSaveSerializer(serializers.Serializer):
     question_id = serializers.IntegerField()
-    answer_text = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    answer_text = serializers.CharField(
+        required=False, allow_blank=True, allow_null=True
+    )
     answer_json = serializers.JSONField(required=False, allow_null=True)
     selected_options_json = serializers.JSONField(required=False, allow_null=True)
     numeric_answer = serializers.DecimalField(

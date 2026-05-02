@@ -139,10 +139,14 @@ def create_course_material(
         title = f"Материал {index}"
 
     if order is None:
-        last_item = CourseMaterial.objects.filter(
-            course=course,
-            lesson=lesson,
-        ).order_by("-order", "-id").first()
+        last_item = (
+            CourseMaterial.objects.filter(
+                course=course,
+                lesson=lesson,
+            )
+            .order_by("-order", "-id")
+            .first()
+        )
         order = (last_item.order if last_item else 0) + 1
 
     if file is None and material_type != CourseMaterial.MaterialTypeChoices.LINK:

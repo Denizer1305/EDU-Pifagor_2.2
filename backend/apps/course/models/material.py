@@ -99,16 +99,23 @@ class CourseMaterial(TimeStampedModel, OrderedModel):
         if self.lesson and not self.course:
             self.course = self.lesson.course
 
-        if self.material_type in {
-            self.MaterialTypeChoices.FILE,
-            self.MaterialTypeChoices.IMAGE,
-            self.MaterialTypeChoices.PRESENTATION,
-            self.MaterialTypeChoices.DOCUMENT,
-            self.MaterialTypeChoices.ARCHIVE,
-        } and not self.file:
+        if (
+            self.material_type
+            in {
+                self.MaterialTypeChoices.FILE,
+                self.MaterialTypeChoices.IMAGE,
+                self.MaterialTypeChoices.PRESENTATION,
+                self.MaterialTypeChoices.DOCUMENT,
+                self.MaterialTypeChoices.ARCHIVE,
+            }
+            and not self.file
+        ):
             errors["file"] = "Для выбранного типа материала нужно загрузить файл."
 
-        if self.material_type == self.MaterialTypeChoices.LINK and not self.external_url:
+        if (
+            self.material_type == self.MaterialTypeChoices.LINK
+            and not self.external_url
+        ):
             errors["external_url"] = "Для материала-ссылки нужно указать URL."
 
         if errors:

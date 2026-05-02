@@ -95,10 +95,14 @@ class AppealResolveSerializer(serializers.Serializer):
         status_value = attrs.get("status")
         resolution = attrs.get("resolution", "")
 
-        if status_value in {
-            Appeal.StatusChoices.RESOLVED,
-            Appeal.StatusChoices.REJECTED,
-        } and not resolution.strip():
+        if (
+            status_value
+            in {
+                Appeal.StatusChoices.RESOLVED,
+                Appeal.StatusChoices.REJECTED,
+            }
+            and not resolution.strip()
+        ):
             raise serializers.ValidationError(
                 {"resolution": "Для завершения апелляции нужно указать решение."}
             )

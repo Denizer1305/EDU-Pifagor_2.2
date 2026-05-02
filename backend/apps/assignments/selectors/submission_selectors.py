@@ -11,29 +11,30 @@ from apps.assignments.models import (
 
 
 def get_submission_base_queryset() -> QuerySet[Submission]:
-    return (
-        Submission.objects.select_related(
-            "publication",
-            "assignment",
-            "variant",
-            "student",
-            "checked_by",
-            "publication__course",
-            "publication__lesson",
-        )
-        .order_by("-created_at")
-    )
+    return Submission.objects.select_related(
+        "publication",
+        "assignment",
+        "variant",
+        "student",
+        "checked_by",
+        "publication__course",
+        "publication__lesson",
+    ).order_by("-created_at")
 
 
 def get_submission_detail_queryset() -> QuerySet[Submission]:
     return get_submission_base_queryset().prefetch_related(
         Prefetch(
             "answers",
-            queryset=SubmissionAnswer.objects.select_related("question").order_by("question__order", "id"),
+            queryset=SubmissionAnswer.objects.select_related("question").order_by(
+                "question__order", "id"
+            ),
         ),
         Prefetch(
             "attachments",
-            queryset=SubmissionAttachment.objects.select_related("question").order_by("-created_at"),
+            queryset=SubmissionAttachment.objects.select_related("question").order_by(
+                "-created_at"
+            ),
         ),
         Prefetch(
             "attempts",
@@ -125,13 +126,10 @@ def get_submission_answers_queryset(
     question_id: int | None = None,
     review_status: str = "",
 ) -> QuerySet[SubmissionAnswer]:
-    queryset = (
-        SubmissionAnswer.objects.select_related(
-            "submission",
-            "question",
-        )
-        .order_by("question__order", "id")
-    )
+    queryset = SubmissionAnswer.objects.select_related(
+        "submission",
+        "question",
+    ).order_by("question__order", "id")
 
     if submission_id:
         queryset = queryset.filter(submission_id=submission_id)
@@ -150,13 +148,10 @@ def get_submission_attachments_queryset(
     submission_id: int | None = None,
     question_id: int | None = None,
 ) -> QuerySet[SubmissionAttachment]:
-    queryset = (
-        SubmissionAttachment.objects.select_related(
-            "submission",
-            "question",
-        )
-        .order_by("-created_at")
-    )
+    queryset = SubmissionAttachment.objects.select_related(
+        "submission",
+        "question",
+    ).order_by("-created_at")
 
     if submission_id:
         queryset = queryset.filter(submission_id=submission_id)
@@ -172,9 +167,8 @@ def get_submission_attempts_queryset(
     submission_id: int | None = None,
     status: str = "",
 ) -> QuerySet[SubmissionAttempt]:
-    queryset = (
-        SubmissionAttempt.objects.select_related("submission")
-        .order_by("attempt_number", "id")
+    queryset = SubmissionAttempt.objects.select_related("submission").order_by(
+        "attempt_number", "id"
     )
 
     if submission_id:

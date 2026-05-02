@@ -8,7 +8,9 @@ from apps.assignments.serializers.common import UserBriefSerializer
 
 class ReviewCommentSerializer(serializers.ModelSerializer):
     question_id = serializers.IntegerField(source="question.id", read_only=True)
-    submission_answer_id = serializers.IntegerField(source="submission_answer.id", read_only=True)
+    submission_answer_id = serializers.IntegerField(
+        source="submission_answer.id", read_only=True
+    )
     created_by = UserBriefSerializer(read_only=True)
 
     class Meta:

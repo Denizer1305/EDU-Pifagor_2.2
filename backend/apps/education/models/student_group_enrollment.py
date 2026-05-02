@@ -149,7 +149,9 @@ class StudentGroupEnrollment(models.Model):
 
             student_profile = getattr(self.student, "student_profile", None)
             if student_profile is not None:
-                verification_status = getattr(student_profile, "verification_status", "")
+                verification_status = getattr(
+                    student_profile, "verification_status", ""
+                )
                 if verification_status and verification_status != "approved":
                     errors["student"] = _(
                         "Нельзя зачислить студента без подтвержденного студенческого профиля."
@@ -166,9 +168,7 @@ class StudentGroupEnrollment(models.Model):
                 )
 
         if self.status == self.StatusChoices.ACTIVE and self.completion_date:
-            errors["status"] = _(
-                "Активное зачисление не может иметь дату завершения."
-            )
+            errors["status"] = _("Активное зачисление не может иметь дату завершения.")
 
         if self.status != self.StatusChoices.ACTIVE and not self.completion_date:
             errors["completion_date"] = _(

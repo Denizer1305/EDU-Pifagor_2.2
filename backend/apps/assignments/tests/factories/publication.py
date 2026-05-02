@@ -70,10 +70,15 @@ def create_assignment_audience(
     if audience_type is None:
         audience_type = AssignmentAudience.AudienceTypeChoices.STUDENT
 
-    if audience_type in {
-        AssignmentAudience.AudienceTypeChoices.STUDENT,
-        AssignmentAudience.AudienceTypeChoices.SELECTED_STUDENTS,
-    } and student is None and course_enrollment is None:
+    if (
+        audience_type
+        in {
+            AssignmentAudience.AudienceTypeChoices.STUDENT,
+            AssignmentAudience.AudienceTypeChoices.SELECTED_STUDENTS,
+        }
+        and student is None
+        and course_enrollment is None
+    ):
         student = create_student_user()
 
     if audience_type == AssignmentAudience.AudienceTypeChoices.GROUP and group is None:

@@ -146,11 +146,7 @@ def set_primary_teacher_organization(
 
     if not link:
         raise ValidationError(
-            {
-                "organization": (
-                    "У преподавателя нет связи с указанной организацией."
-                )
-            }
+            {"organization": ("У преподавателя нет связи с указанной организацией.")}
         )
 
     if not link.is_active:

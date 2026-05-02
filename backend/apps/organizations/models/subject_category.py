@@ -44,9 +44,7 @@ class SubjectCategory(models.Model):
         db_table = "organizations_subject_category"
         verbose_name = _("Категория предметов")
         verbose_name_plural = _("Категории предметов")
-        ordering = (
-            "name",
-        )
+        ordering = ("name",)
 
     def __str__(self) -> str:
         return self.name

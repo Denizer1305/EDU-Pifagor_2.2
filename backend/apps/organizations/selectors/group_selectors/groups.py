@@ -126,6 +126,10 @@ def get_groups_with_active_join_code_queryset():
 def get_group_with_active_join_code(group_id: int):
     """Возвращает группу с активным кодом присоединения по id."""
 
-    return get_groups_queryset(
-        has_active_join_code=True,
-    ).filter(id=group_id).first()
+    return (
+        get_groups_queryset(
+            has_active_join_code=True,
+        )
+        .filter(id=group_id)
+        .first()
+    )

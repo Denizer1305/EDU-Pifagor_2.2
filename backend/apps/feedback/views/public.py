@@ -11,15 +11,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.feedback.filters import FeedbackRequestFilter
+from apps.feedback.selectors import (
+    get_feedback_request_by_id,
+    get_my_feedback_requests_queryset,
+)
 from apps.feedback.serializers import (
     FeedbackRequestCreateSerializer,
     FeedbackRequestDetailSerializer,
     FeedbackRequestErrorCreateSerializer,
     FeedbackRequestListSerializer,
-)
-from apps.feedback.selectors import (
-    get_feedback_request_by_id,
-    get_my_feedback_requests_queryset,
 )
 from apps.feedback.services.feedback_services import (
     create_contact_feedback_request,
@@ -85,14 +85,22 @@ class FeedbackRequestCreateAPIView(APIView):
                 full_name=serializer.validated_data.get("full_name", ""),
                 email=serializer.validated_data.get("email", ""),
                 phone=serializer.validated_data.get("phone", ""),
-                organization_name=serializer.validated_data.get("organization_name", ""),
+                organization_name=serializer.validated_data.get(
+                    "organization_name", ""
+                ),
                 type=serializer.validated_data.get("type"),
-                is_personal_data_consent=serializer.validated_data["is_personal_data_consent"],
+                is_personal_data_consent=serializer.validated_data[
+                    "is_personal_data_consent"
+                ],
                 files=serializer.validated_data.get("attachments", []),
                 request=request,
             )
         except DjangoValidationError as exc:
-            payload = exc.message_dict if hasattr(exc, "message_dict") else {"detail": exc.messages}
+            payload = (
+                exc.message_dict
+                if hasattr(exc, "message_dict")
+                else {"detail": exc.messages}
+            )
             return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
         output_serializer = FeedbackRequestDetailSerializer(
@@ -130,7 +138,9 @@ class FeedbackErrorCreateAPIView(APIView):
                 subject=serializer.validated_data.get("subject", ""),
                 message=serializer.validated_data["message"],
                 type=serializer.validated_data.get("type"),
-                is_personal_data_consent=serializer.validated_data["is_personal_data_consent"],
+                is_personal_data_consent=serializer.validated_data[
+                    "is_personal_data_consent"
+                ],
                 files=serializer.validated_data.get("attachments", []),
                 page_url=serializer.validated_data.get("page_url", ""),
                 frontend_route=serializer.validated_data.get("frontend_route", ""),
@@ -142,7 +152,11 @@ class FeedbackErrorCreateAPIView(APIView):
                 request=request,
             )
         except DjangoValidationError as exc:
-            payload = exc.message_dict if hasattr(exc, "message_dict") else {"detail": exc.messages}
+            payload = (
+                exc.message_dict
+                if hasattr(exc, "message_dict")
+                else {"detail": exc.messages}
+            )
             return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
         output_serializer = FeedbackRequestDetailSerializer(

@@ -46,7 +46,10 @@ def is_teacher_user(user) -> bool:
         return True
 
     role_codes = _get_user_role_codes(user)
-    return ROLE_TEACHER in role_codes or getattr(user, "registration_type", "") == "teacher"
+    return (
+        ROLE_TEACHER in role_codes
+        or getattr(user, "registration_type", "") == "teacher"
+    )
 
 
 def is_student_user(user) -> bool:
@@ -56,4 +59,7 @@ def is_student_user(user) -> bool:
         return False
 
     role_codes = _get_user_role_codes(user)
-    return ROLE_STUDENT in role_codes or getattr(user, "registration_type", "") == "student"
+    return (
+        ROLE_STUDENT in role_codes
+        or getattr(user, "registration_type", "") == "student"
+    )

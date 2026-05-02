@@ -94,20 +94,38 @@ class AssignmentPublication(TimeStampedModel):
 
         self.title_override = normalize_text(self.title_override)
 
-        if self.lesson_id and self.course_id and self.lesson.course_id != self.course_id:
+        if (
+            self.lesson_id
+            and self.course_id
+            and self.lesson.course_id != self.course_id
+        ):
             errors["lesson"] = "Урок должен принадлежать выбранному курсу."
 
-        if self.assignment.lesson_id and self.lesson_id and self.assignment.lesson_id != self.lesson_id:
-            errors["lesson"] = "Публикация должна ссылаться на тот же урок, что и работа."
+        if (
+            self.assignment.lesson_id
+            and self.lesson_id
+            and self.assignment.lesson_id != self.lesson_id
+        ):
+            errors["lesson"] = (
+                "Публикация должна ссылаться на тот же урок, что и работа."
+            )
 
-        if self.assignment.course_id and self.course_id and self.assignment.course_id != self.course_id:
-            errors["course"] = "Публикация должна ссылаться на тот же курс, что и работа."
+        if (
+            self.assignment.course_id
+            and self.course_id
+            and self.assignment.course_id != self.course_id
+        ):
+            errors["course"] = (
+                "Публикация должна ссылаться на тот же курс, что и работа."
+            )
 
         if self.starts_at and self.due_at and self.starts_at > self.due_at:
             errors["due_at"] = "Срок сдачи не может быть раньше даты начала."
 
         if self.due_at and self.available_until and self.due_at > self.available_until:
-            errors["available_until"] = "Дата окончания доступа не может быть раньше срока сдачи."
+            errors["available_until"] = (
+                "Дата окончания доступа не может быть раньше срока сдачи."
+            )
 
         if self.status == self.StatusChoices.ARCHIVED and self.is_active:
             errors["status"] = "Архивная публикация не может быть активной."

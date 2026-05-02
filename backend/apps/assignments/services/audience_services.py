@@ -94,7 +94,9 @@ def assign_publication_to_all_course_students(
     create_individual_audiences: bool = False,
 ) -> list[AssignmentAudience]:
     if publication.course_id is None:
-        raise ValueError("Для назначения всем студентам публикация должна быть привязана к курсу.")
+        raise ValueError(
+            "Для назначения всем студентам публикация должна быть привязана к курсу."
+        )
 
     created_items: list[AssignmentAudience] = []
 

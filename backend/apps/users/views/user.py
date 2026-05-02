@@ -28,7 +28,9 @@ class CurrentUserAPIView(APIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.select_related("profile").prefetch_related("user_roles__role")
+    queryset = User.objects.select_related("profile").prefetch_related(
+        "user_roles__role"
+    )
     serializer_class = UserSerializer
     permission_classes = (CanManageUserRoles,)
     filterset_class = UserFilter

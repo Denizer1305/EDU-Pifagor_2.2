@@ -34,35 +34,33 @@ class SubjectAdmin(admin.ModelAdmin):
         "category__code",
         "description",
     )
-    autocomplete_fields = (
-        "category",
-    )
-    ordering = (
-        "name",
-    )
+    autocomplete_fields = ("category",)
+    ordering = ("name",)
     readonly_fields = (
         "created_at",
         "updated_at",
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "name",
-                "short_name",
-                "category",
-                "description",
-            )
-        }),
-        (_("Статус"), {
-            "fields": (
-                "is_active",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "name",
+                    "short_name",
+                    "category",
+                    "description",
+                )
+            },
+        ),
+        (_("Статус"), {"fields": ("is_active",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )

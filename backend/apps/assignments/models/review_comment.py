@@ -70,10 +70,18 @@ class ReviewComment(TimeStampedModel):
     def clean(self):
         errors: dict[str, str] = {}
 
-        if self.submission_answer_id and self.submission_answer.submission_id != self.review.submission_id:
-            errors["submission_answer"] = "Ответ должен относиться к сдаче выбранной проверки."
+        if (
+            self.submission_answer_id
+            and self.submission_answer.submission_id != self.review.submission_id
+        ):
+            errors["submission_answer"] = (
+                "Ответ должен относиться к сдаче выбранной проверки."
+            )
 
-        if self.question_id and self.question.assignment_id != self.review.submission.assignment_id:
+        if (
+            self.question_id
+            and self.question.assignment_id != self.review.submission.assignment_id
+        ):
             errors["question"] = "Вопрос должен относиться к работе выбранной сдачи."
 
         if errors:

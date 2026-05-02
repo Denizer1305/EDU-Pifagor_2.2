@@ -35,7 +35,9 @@ class AssignmentAttachmentListCreateAPIView(APIView):
     def get(self, request, assignment_id: int, *args, **kwargs):
         assignment = self.get_object(request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = AssignmentAttachmentSerializer(
             assignment.attachments.order_by("order", "id"),
@@ -47,7 +49,9 @@ class AssignmentAttachmentListCreateAPIView(APIView):
     def post(self, request, assignment_id: int, *args, **kwargs):
         assignment = self.get_object(request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = AssignmentAttachmentWriteSerializer(
             data=request.data,
@@ -63,7 +67,9 @@ class AssignmentAttachmentListCreateAPIView(APIView):
         except (DjangoValidationError, ValueError) as exc:
             return validation_error_response(exc)
 
-        output = AssignmentAttachmentSerializer(attachment, context={"request": request})
+        output = AssignmentAttachmentSerializer(
+            attachment, context={"request": request}
+        )
         return Response(output.data, status=status.HTTP_201_CREATED)
 
 
@@ -72,25 +78,35 @@ class AssignmentAttachmentDetailAPIView(APIView):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
 
     def _get_attachment(self, pk: int):
-        return AssignmentAttachment.objects.select_related(
-            "assignment",
-            "variant",
-        ).filter(id=pk).first()
+        return (
+            AssignmentAttachment.objects.select_related(
+                "assignment",
+                "variant",
+            )
+            .filter(id=pk)
+            .first()
+        )
 
     def get(self, request, pk: int, *args, **kwargs):
         attachment = self._get_attachment(pk)
         if attachment is None:
-            return Response({"detail": "Вложение не найдено."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вложение не найдено."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, attachment)
 
-        serializer = AssignmentAttachmentSerializer(attachment, context={"request": request})
+        serializer = AssignmentAttachmentSerializer(
+            attachment, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk: int, *args, **kwargs):
         attachment = self._get_attachment(pk)
         if attachment is None:
-            return Response({"detail": "Вложение не найдено."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вложение не найдено."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, attachment)
 
@@ -102,17 +118,23 @@ class AssignmentAttachmentDetailAPIView(APIView):
         serializer.is_valid(raise_exception=True)
 
         try:
-            attachment = update_assignment_attachment(attachment, **serializer.validated_data)
+            attachment = update_assignment_attachment(
+                attachment, **serializer.validated_data
+            )
         except (DjangoValidationError, ValueError) as exc:
             return validation_error_response(exc)
 
-        output = AssignmentAttachmentSerializer(attachment, context={"request": request})
+        output = AssignmentAttachmentSerializer(
+            attachment, context={"request": request}
+        )
         return Response(output.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk: int, *args, **kwargs):
         attachment = self._get_attachment(pk)
         if attachment is None:
-            return Response({"detail": "Вложение не найдено."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вложение не найдено."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, attachment)
 

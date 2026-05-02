@@ -5,7 +5,10 @@ from datetime import date
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from apps.education.models import AcademicYear, Curriculum, CurriculumItem, EducationPeriod, GroupSubject
+from apps.education.models import (
+    AcademicYear,
+    EducationPeriod,
+)
 from apps.education.tests.factories import (
     create_academic_year,
     create_curriculum,
@@ -77,9 +80,9 @@ class GroupSubjectModelTestCase(TestCase):
 
     def test_group_subject_period_must_belong_to_same_academic_year(self):
         academic_year_1 = create_academic_year(name="2025/2026")
-        academic_year_2 = create_academic_year(name="2026/2027",
-                                               start_date=date(2026, 9, 1),
-                                               end_date=date(2027, 6,  1))
+        academic_year_2 = create_academic_year(
+            name="2026/2027", start_date=date(2026, 9, 1), end_date=date(2027, 6, 1)
+        )
 
         period = create_education_period(
             academic_year=academic_year_2,
@@ -124,7 +127,7 @@ class CurriculumModelTestCase(TestCase):
         )
         other_period = create_education_period(
             academic_year=other_year,
-            start_date=date(2028, 9,1),
+            start_date=date(2028, 9, 1),
             end_date=date(2028, 12, 31),
         )
 

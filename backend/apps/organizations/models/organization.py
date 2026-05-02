@@ -141,7 +141,11 @@ class Organization(models.Model):
         raw_code = (raw_code or "").strip()
         if not raw_code:
             raise ValidationError(
-                {"teacher_registration_code": _("Код регистрации преподавателя не может быть пустым.")}
+                {
+                    "teacher_registration_code": _(
+                        "Код регистрации преподавателя не может быть пустым."
+                    )
+                }
             )
 
         self.teacher_registration_code_hash = make_password(raw_code)

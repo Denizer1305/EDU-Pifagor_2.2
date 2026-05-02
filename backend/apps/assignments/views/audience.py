@@ -9,13 +9,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.assignments.permissions import IsTeacherOrAdmin
-from apps.assignments.serializers import (
-    AssignmentAudienceCreateSerializer,
-    AssignmentAudienceSerializer,
-)
 from apps.assignments.selectors import (
     get_assignment_audiences_queryset,
     get_assignment_publication_by_id,
+)
+from apps.assignments.serializers import (
+    AssignmentAudienceCreateSerializer,
+    AssignmentAudienceSerializer,
 )
 from apps.assignments.services import (
     assign_publication_to_course_enrollment,
@@ -91,7 +91,9 @@ class AssignmentAudienceListCreateAPIView(APIView):
             )
         else:
             return Response(
-                {"detail": "Пока поддерживается назначение на студента или запись на курс."},
+                {
+                    "detail": "Пока поддерживается назначение на студента или запись на курс."
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

@@ -14,7 +14,9 @@ def generate_code(prefix: str = "CRS") -> str:
     return f"{prefix}-{uuid4().hex[:10].upper()}"
 
 
-def build_unique_slug(model_class, value: str, instance=None, slug_field: str = "slug") -> str:
+def build_unique_slug(
+    model_class, value: str, instance=None, slug_field: str = "slug"
+) -> str:
     base_slug = slugify(value) or uuid4().hex[:8]
     slug = base_slug
     counter = 2

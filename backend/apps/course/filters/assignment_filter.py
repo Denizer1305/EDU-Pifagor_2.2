@@ -19,9 +19,15 @@ class CourseAssignmentFilter(django_filters.FilterSet):
     is_active = django_filters.BooleanFilter(field_name="is_active")
     auto_enroll = django_filters.BooleanFilter(field_name="auto_enroll")
 
-    starts_at_from = django_filters.DateTimeFilter(field_name="starts_at", lookup_expr="gte")
-    starts_at_to = django_filters.DateTimeFilter(field_name="starts_at", lookup_expr="lte")
-    ends_at_from = django_filters.DateTimeFilter(field_name="ends_at", lookup_expr="gte")
+    starts_at_from = django_filters.DateTimeFilter(
+        field_name="starts_at", lookup_expr="gte"
+    )
+    starts_at_to = django_filters.DateTimeFilter(
+        field_name="starts_at", lookup_expr="lte"
+    )
+    ends_at_from = django_filters.DateTimeFilter(
+        field_name="ends_at", lookup_expr="gte"
+    )
     ends_at_to = django_filters.DateTimeFilter(field_name="ends_at", lookup_expr="lte")
 
     class Meta:

@@ -71,44 +71,52 @@ class GroupAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "organization",
-                "department",
-                "name",
-                "code",
-                "description",
-            )
-        }),
-        (_("Учебные параметры"), {
-            "fields": (
-                "study_form",
-                "course_number",
-                "admission_year",
-                "graduation_year",
-                "academic_year",
-                "status",
-            )
-        }),
-        (_("Код присоединения к группе"), {
-            "fields": (
-                "join_code_hash",
-                "join_code_is_active",
-                "join_code_expires_at",
-                "has_active_join_code_display",
-            )
-        }),
-        (_("Статус"), {
-            "fields": (
-                "is_active",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "organization",
+                    "department",
+                    "name",
+                    "code",
+                    "description",
+                )
+            },
+        ),
+        (
+            _("Учебные параметры"),
+            {
+                "fields": (
+                    "study_form",
+                    "course_number",
+                    "admission_year",
+                    "graduation_year",
+                    "academic_year",
+                    "status",
+                )
+            },
+        ),
+        (
+            _("Код присоединения к группе"),
+            {
+                "fields": (
+                    "join_code_hash",
+                    "join_code_is_active",
+                    "join_code_expires_at",
+                    "has_active_join_code_display",
+                )
+            },
+        ),
+        (_("Статус"), {"fields": ("is_active",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     @admin.display(description=_("Код группы активен"), boolean=True)

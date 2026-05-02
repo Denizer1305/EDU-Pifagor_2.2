@@ -3,7 +3,12 @@ from __future__ import annotations
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
-from apps.education.models import AcademicYear, Curriculum, CurriculumItem, EducationPeriod
+from apps.education.models import (
+    AcademicYear,
+    Curriculum,
+    CurriculumItem,
+    EducationPeriod,
+)
 from apps.organizations.models import Department, Organization, Subject
 
 
@@ -25,7 +30,9 @@ def create_curriculum(
 ) -> Curriculum:
     if department and department.organization_id != organization.id:
         raise ValidationError(
-            {"department": "Подразделение должно принадлежать той же организации, что и учебный план."}
+            {
+                "department": "Подразделение должно принадлежать той же организации, что и учебный план."
+            }
         )
 
     curriculum = Curriculum(
@@ -54,7 +61,9 @@ def update_curriculum(
 
     if department and department.organization_id != organization.id:
         raise ValidationError(
-            {"department": "Подразделение должно принадлежать той же организации, что и учебный план."}
+            {
+                "department": "Подразделение должно принадлежать той же организации, что и учебный план."
+            }
         )
 
     for field, value in validated_data.items():
@@ -84,7 +93,9 @@ def create_curriculum_item(
 ) -> CurriculumItem:
     if period.academic_year_id != curriculum.academic_year_id:
         raise ValidationError(
-            {"period": "Учебный период должен принадлежать тому же учебному году, что и учебный план."}
+            {
+                "period": "Учебный период должен принадлежать тому же учебному году, что и учебный план."
+            }
         )
 
     item = CurriculumItem(
@@ -116,7 +127,9 @@ def update_curriculum_item(
 
     if period.academic_year_id != curriculum.academic_year_id:
         raise ValidationError(
-            {"period": "Учебный период должен принадлежать тому же учебному году, что и учебный план."}
+            {
+                "period": "Учебный период должен принадлежать тому же учебному году, что и учебный план."
+            }
         )
 
     for field, value in validated_data.items():

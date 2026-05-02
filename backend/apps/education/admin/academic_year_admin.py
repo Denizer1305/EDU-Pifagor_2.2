@@ -31,9 +31,7 @@ class AcademicYearAdmin(admin.ModelAdmin):
         "name",
         "description",
     )
-    ordering = (
-        "-start_date",
-    )
+    ordering = ("-start_date",)
     readonly_fields = (
         "created_at",
         "updated_at",
@@ -41,24 +39,33 @@ class AcademicYearAdmin(admin.ModelAdmin):
     date_hierarchy = "start_date"
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "name",
-                "start_date",
-                "end_date",
-                "description",
-            )
-        }),
-        (_("Статус"), {
-            "fields": (
-                "is_current",
-                "is_active",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "name",
+                    "start_date",
+                    "end_date",
+                    "description",
+                )
+            },
+        ),
+        (
+            _("Статус"),
+            {
+                "fields": (
+                    "is_current",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )

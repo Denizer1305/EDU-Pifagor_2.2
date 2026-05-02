@@ -13,9 +13,11 @@ from apps.education.services import (
 from apps.education.tests.factories import (
     create_academic_year,
     create_education_period,
-    create_group_subject as create_group_subject_factory,
     create_student_user,
     create_teacher_user,
+)
+from apps.education.tests.factories import (
+    create_group_subject as create_group_subject_factory,
 )
 from apps.organizations.tests.factories import (
     create_group,

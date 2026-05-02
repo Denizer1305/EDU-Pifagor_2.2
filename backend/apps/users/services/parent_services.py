@@ -42,7 +42,11 @@ def create_parent_student_link_request(
 
     if existing and existing.status == LINK_STATUS_PENDING:
         raise ValidationError(
-            {"link": _("Запрос на связь родителя и студента уже ожидает подтверждения.")}
+            {
+                "link": _(
+                    "Запрос на связь родителя и студента уже ожидает подтверждения."
+                )
+            }
         )
 
     if existing and existing.status == LINK_STATUS_APPROVED:
@@ -117,7 +121,9 @@ def reject_parent_student_link(*, link, reviewer, comment: str) -> ParentStudent
 
 
 @transaction.atomic
-def revoke_parent_student_link(*, link, reviewer=None, comment: str = "") -> ParentStudent:
+def revoke_parent_student_link(
+    *, link, reviewer=None, comment: str = ""
+) -> ParentStudent:
     link.status = LINK_STATUS_REVOKED
     link.approved_by = reviewer
     link.approved_at = timezone.now()

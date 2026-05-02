@@ -5,7 +5,6 @@ import os
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-
 MAX_ATTACHMENTS_COUNT = 5
 MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024
 MAX_ERROR_DETAILS_LENGTH = 10000
@@ -49,9 +48,7 @@ def validate_feedback_attachments_count(files) -> list:
     files = list(files or [])
 
     if len(files) > MAX_ATTACHMENTS_COUNT:
-        raise ValidationError(
-            _("Можно прикрепить не более 5 файлов.")
-        )
+        raise ValidationError(_("Можно прикрепить не более 5 файлов."))
 
     return files
 
@@ -60,9 +57,7 @@ def validate_attachment_extension(filename: str) -> str:
     ext = os.path.splitext(filename or "")[1].lower()
 
     if ext not in ALLOWED_ATTACHMENT_EXTENSIONS:
-        raise ValidationError(
-            _("Поддерживаются только изображения, PDF, DOC и DOCX.")
-        )
+        raise ValidationError(_("Поддерживаются только изображения, PDF, DOC и DOCX."))
 
     return ext
 
@@ -71,8 +66,6 @@ def validate_attachment_size(file_obj) -> int:
     file_size = getattr(file_obj, "size", 0) or 0
 
     if file_size > MAX_ATTACHMENT_SIZE:
-        raise ValidationError(
-            _("Размер файла не должен превышать 10 МБ.")
-        )
+        raise ValidationError(_("Размер файла не должен превышать 10 МБ."))
 
     return file_size

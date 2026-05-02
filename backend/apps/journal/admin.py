@@ -26,7 +26,16 @@ class GradeInline(admin.TabularInline):
 
     model = JournalGrade
     extra = 0
-    fields = ("student", "grade_type", "scale", "score_five", "score_points", "is_passed", "weight", "comment")
+    fields = (
+        "student",
+        "grade_type",
+        "scale",
+        "score_five",
+        "score_points",
+        "is_passed",
+        "weight",
+        "comment",
+    )
     autocomplete_fields = ("student",)
 
 
@@ -124,7 +133,13 @@ class JournalGradeAdmin(admin.ModelAdmin):
         "student__user__last_name",
         "lesson__planned_topic",
     )
-    autocomplete_fields = ("lesson", "student", "graded_by", "submission", "grade_record")
+    autocomplete_fields = (
+        "lesson",
+        "student",
+        "graded_by",
+        "submission",
+        "grade_record",
+    )
     ordering = ("-lesson__date",)
 
     @admin.display(description=_("Значение"))

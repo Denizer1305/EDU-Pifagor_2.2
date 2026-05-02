@@ -18,9 +18,7 @@ class AssignmentSignalsTestCase(TestCase):
     def test_assignment_creation_creates_policy(self):
         assignment = create_assignment()
 
-        self.assertTrue(
-            AssignmentPolicy.objects.filter(assignment=assignment).exists()
-        )
+        self.assertTrue(AssignmentPolicy.objects.filter(assignment=assignment).exists())
 
     def test_question_save_recalculates_policy_max_score(self):
         assignment = create_assignment()

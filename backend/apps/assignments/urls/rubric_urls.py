@@ -16,14 +16,12 @@ urlpatterns: list[URLPattern | URLResolver] = [
         RubricListCreateAPIView.as_view(),
         name="rubric-list-create",
     ),
-
     # Совместимость: рубрики конкретной работы.
     path(
         "assignments/<int:assignment_id>/rubrics/",
         RubricListCreateAPIView.as_view(),
         name="assignment-rubric-list-create",
     ),
-
     path(
         "rubrics/<int:pk>/",
         RubricDetailAPIView.as_view(),

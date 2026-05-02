@@ -34,7 +34,9 @@ def _verify_group_join_code(group, code: str) -> None:
     """
     code = (code or "").strip()
     if not code:
-        raise ValidationError({"submitted_group_code": _("Необходимо указать код группы.")})
+        raise ValidationError(
+            {"submitted_group_code": _("Необходимо указать код группы.")}
+        )
 
     has_hash = hasattr(group, "join_code_hash")
     has_active = hasattr(group, "join_code_is_active")
@@ -45,7 +47,9 @@ def _verify_group_join_code(group, code: str) -> None:
 
     code_hash = getattr(group, "join_code_hash", "") or ""
     if not code_hash:
-        raise ValidationError({"submitted_group_code": _("Для группы не настроен код присоединения.")})
+        raise ValidationError(
+            {"submitted_group_code": _("Для группы не настроен код присоединения.")}
+        )
 
     if has_active and not getattr(group, "join_code_is_active", False):
         raise ValidationError({"submitted_group_code": _("Код группы отключён.")})
@@ -53,7 +57,9 @@ def _verify_group_join_code(group, code: str) -> None:
     if has_expires:
         expires_at = getattr(group, "join_code_expires_at", None)
         if expires_at and timezone.now() > expires_at:
-            raise ValidationError({"submitted_group_code": _("Срок действия кода группы истёк.")})
+            raise ValidationError(
+                {"submitted_group_code": _("Срок действия кода группы истёк.")}
+            )
 
     if not check_password(code, code_hash):
         raise ValidationError({"submitted_group_code": _("Неверный код группы.")})
@@ -83,7 +89,9 @@ def _try_sync_student_group_enrollment(
     if academic_year is None:
         academic_year = (
             AcademicYear.objects.filter(is_current=True, is_active=True).first()
-            or AcademicYear.objects.filter(is_active=True).order_by("-start_date").first()
+            or AcademicYear.objects.filter(is_active=True)
+            .order_by("-start_date")
+            .first()
         )
 
     if academic_year is None:
@@ -104,7 +112,10 @@ def _try_sync_student_group_enrollment(
         if not created:
             changed = False
 
-            if hasattr(enrollment, "status") and enrollment.status != StudentGroupEnrollment.StatusChoices.ACTIVE:
+            if (
+                hasattr(enrollment, "status")
+                and enrollment.status != StudentGroupEnrollment.StatusChoices.ACTIVE
+            ):
                 enrollment.status = StudentGroupEnrollment.StatusChoices.ACTIVE
                 changed = True
 
@@ -138,17 +149,32 @@ def submit_student_group_request(
     """
     Сохраняет заявку студента на учебную привязку.
     """
-    if requested_department and requested_department.organization_id != requested_organization.id:
+    if (
+        requested_department
+        and requested_department.organization_id != requested_organization.id
+    ):
         raise ValidationError(
-            {"requested_department": _("Отделение должно принадлежать выбранной образовательной организации.")}
+            {
+                "requested_department": _(
+                    "Отделение должно принадлежать выбранной образовательной организации."
+                )
+            }
         )
 
     if requested_group.organization_id != requested_organization.id:
         raise ValidationError(
-            {"requested_group": _("Группа должна принадлежать выбранной образовательной организации.")}
+            {
+                "requested_group": _(
+                    "Группа должна принадлежать выбранной образовательной организации."
+                )
+            }
         )
 
-    if requested_department and requested_group.department_id and requested_group.department_id != requested_department.id:
+    if (
+        requested_department
+        and requested_group.department_id
+        and requested_group.department_id != requested_department.id
+    ):
         raise ValidationError(
             {"requested_group": _("Группа должна принадлежать выбранному отделению.")}
         )
@@ -229,7 +255,11 @@ def reject_student_profile(*, student_profile, reviewer, comment: str):
     """
     if not (comment or "").strip():
         raise ValidationError(
-            {"comment": _("Для отклонения учебной привязки необходимо указать комментарий.")}
+            {
+                "comment": _(
+                    "Для отклонения учебной привязки необходимо указать комментарий."
+                )
+            }
         )
 
     student_profile.verification_status = VERIFICATION_STATUS_REJECTED

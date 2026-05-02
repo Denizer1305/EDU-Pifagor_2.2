@@ -4,8 +4,8 @@ from django.urls import reverse
 from rest_framework import status
 
 from apps.feedback.models import FeedbackRequest
-from apps.feedback.tests.test_api.api_base import FeedbackApiBaseTestCase
 from apps.feedback.tests.factories import create_uploaded_file
+from apps.feedback.tests.test_api.api_base import FeedbackApiBaseTestCase
 
 
 class FeedbackPublicApiTestCase(FeedbackApiBaseTestCase):

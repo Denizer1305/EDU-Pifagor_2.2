@@ -46,12 +46,14 @@ class TeacherSubject(models.Model):
         verbose_name = _("Связь преподавателя с предметом")
         verbose_name_plural = _("Связи преподавателей с предметами")
         ordering = (
-            "teacher", "subject",
+            "teacher",
+            "subject",
         )
         constraints = [
             models.UniqueConstraint(
                 fields=(
-                    "teacher", "subject",
+                    "teacher",
+                    "subject",
                 ),
                 name="unique_teacher_subject_link",
             )

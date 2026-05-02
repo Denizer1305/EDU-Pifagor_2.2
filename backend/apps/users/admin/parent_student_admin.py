@@ -36,9 +36,7 @@ class ParentStudentAdmin(admin.ModelAdmin):
         "student__profile__last_name",
         "comment",
     )
-    ordering = (
-        "-created_at",
-    )
+    ordering = ("-created_at",)
     readonly_fields = (
         "approved_at",
         "created_at",
@@ -75,11 +73,7 @@ class ParentStudentAdmin(admin.ModelAdmin):
         ),
         (
             _("Системная информация"),
-            {
-                "fields": (
-                    "created_at",
-                )
-            },
+            {"fields": ("created_at",)},
         ),
     )
 

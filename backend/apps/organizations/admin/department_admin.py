@@ -34,9 +34,7 @@ class DepartmentAdmin(admin.ModelAdmin):
         "organization__short_name",
         "description",
     )
-    autocomplete_fields = (
-        "organization",
-    )
+    autocomplete_fields = ("organization",)
     ordering = (
         "organization",
         "name",
@@ -47,23 +45,25 @@ class DepartmentAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "organization",
-                "name",
-                "short_name",
-                "description",
-            )
-        }),
-        (_("Статус"), {
-            "fields": (
-                "is_active",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "organization",
+                    "name",
+                    "short_name",
+                    "description",
+                )
+            },
+        ),
+        (_("Статус"), {"fields": ("is_active",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )

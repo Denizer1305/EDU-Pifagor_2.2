@@ -17,9 +17,7 @@ class AssignmentModelTestCase(TestCase):
         assignment = create_assignment()
 
         self.assertIsNotNone(assignment.pk)
-        self.assertTrue(
-            AssignmentPolicy.objects.filter(assignment=assignment).exists()
-        )
+        self.assertTrue(AssignmentPolicy.objects.filter(assignment=assignment).exists())
 
     def test_assignment_has_uid_after_save(self):
         assignment = create_assignment()
@@ -36,7 +34,7 @@ class ReviewModelTestCase(TestCase):
         self.assertIsNotNone(review.pk)
         self.assertEqual(
             review.review_status,
-            getattr(review, "review_status"),
+            review.review_status,
         )
 
     def test_review_comment_belongs_to_review(self):

@@ -14,8 +14,12 @@ class FeedbackRequestFilter(django_filters.FilterSet):
     source = django_filters.CharFilter(field_name="source")
 
     user_id = django_filters.NumberFilter(field_name="user_id")
-    assigned_to_id = django_filters.NumberFilter(field_name="processing__assigned_to_id")
-    processed_by_id = django_filters.NumberFilter(field_name="processing__processed_by_id")
+    assigned_to_id = django_filters.NumberFilter(
+        field_name="processing__assigned_to_id"
+    )
+    processed_by_id = django_filters.NumberFilter(
+        field_name="processing__processed_by_id"
+    )
 
     is_processed = django_filters.BooleanFilter(method="filter_is_processed")
     is_spam_suspected = django_filters.BooleanFilter(

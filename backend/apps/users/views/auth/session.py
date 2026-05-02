@@ -29,11 +29,7 @@ class LoginAPIView(APIView):
         user = serializer.validated_data["user"]
 
         if user.onboarding_status == User.OnboardingStatusChoices.BLOCKED:
-            raise ValidationError(
-                {
-                    "detail": _("Учетная запись заблокирована.")
-                }
-            )
+            raise ValidationError({"detail": _("Учетная запись заблокирована.")})
 
         login(request, user)
 
@@ -52,8 +48,6 @@ class LogoutAPIView(APIView):
     def post(self, request, *args, **kwargs):
         logout(request)
         return Response(
-            {
-                "detail": _("Вы успешно вышли из системы.")
-            },
+            {"detail": _("Вы успешно вышли из системы.")},
             status=status.HTTP_200_OK,
         )

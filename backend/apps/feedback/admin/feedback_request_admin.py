@@ -76,9 +76,7 @@ class FeedbackRequestAdmin(admin.ModelAdmin):
         "updated_at",
         "personal_data_consent_at",
     )
-    autocomplete_fields = (
-        "user",
-    )
+    autocomplete_fields = ("user",)
     date_hierarchy = "created_at"
     inlines = [
         FeedbackRequestContactInline,
@@ -89,34 +87,46 @@ class FeedbackRequestAdmin(admin.ModelAdmin):
     ]
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "uid",
-                "user",
-                "type",
-                "status",
-                "source",
-            )
-        }),
-        (_("Контент обращения"), {
-            "fields": (
-                "subject",
-                "message",
-            )
-        }),
-        (_("Согласие на обработку данных"), {
-            "fields": (
-                "is_personal_data_consent",
-                "personal_data_consent_at",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "attachments_count_display",
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "uid",
+                    "user",
+                    "type",
+                    "status",
+                    "source",
+                )
+            },
+        ),
+        (
+            _("Контент обращения"),
+            {
+                "fields": (
+                    "subject",
+                    "message",
+                )
+            },
+        ),
+        (
+            _("Согласие на обработку данных"),
+            {
+                "fields": (
+                    "is_personal_data_consent",
+                    "personal_data_consent_at",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "attachments_count_display",
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     def get_queryset(self, request):

@@ -20,7 +20,7 @@ class AcademicYear(models.Model):
         max_length=32,
         unique=True,
         help_text=_("Например: 2025/2026"),
-        validators=[validate_academic_year_name]
+        validators=[validate_academic_year_name],
     )
     start_date = models.DateField(
         _("Дата начала"),

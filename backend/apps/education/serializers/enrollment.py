@@ -40,16 +40,25 @@ class StudentGroupEnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentGroupEnrollment
         fields = (
-            "id", "student_id",
-            "student_email", "student_full_name",
-            "group", "group_id",
-            "academic_year", "academic_year_id",
-            "enrollment_date", "completion_date",
-            "status", "is_primary",
-            "journal_number", "notes",
-            "created_at", "updated_at",
+            "id",
+            "student_id",
+            "student_email",
+            "student_full_name",
+            "group",
+            "group_id",
+            "academic_year",
+            "academic_year_id",
+            "enrollment_date",
+            "completion_date",
+            "status",
+            "is_primary",
+            "journal_number",
+            "notes",
+            "created_at",
+            "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )

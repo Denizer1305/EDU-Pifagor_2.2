@@ -30,27 +30,31 @@ class OrganizationTypeAdmin(admin.ModelAdmin):
         "code",
         "description",
     )
-    ordering = (
-        "name",
-    )
+    ordering = ("name",)
     readonly_fields = (
         "created_at",
         "updated_at",
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "name",
-                "code",
-                "description",
-                "is_active",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "name",
+                    "code",
+                    "description",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )

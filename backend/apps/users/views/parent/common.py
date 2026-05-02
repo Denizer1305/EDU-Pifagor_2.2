@@ -65,7 +65,5 @@ def apply_parent_student_review_action(
         )
 
     raise ValidationError(
-        {
-            "status": "Допустимы только approved, rejected или revoked."
-        }
+        {"status": "Допустимы только approved, rejected или revoked."}
     )

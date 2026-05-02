@@ -42,7 +42,9 @@ class PermissionsTestCase(TestCase):
         request.user = user
 
         permission = IsTeacherProfileOwnerOrAdmin()
-        self.assertTrue(permission.has_object_permission(request, view=None, obj=teacher_profile))
+        self.assertTrue(
+            permission.has_object_permission(request, view=None, obj=teacher_profile)
+        )
 
     def test_teacher_profile_admin_has_access(self):
         admin = create_admin_user()
@@ -52,7 +54,9 @@ class PermissionsTestCase(TestCase):
         request.user = admin
 
         permission = IsTeacherProfileOwnerOrAdmin()
-        self.assertTrue(permission.has_object_permission(request, view=None, obj=teacher_profile))
+        self.assertTrue(
+            permission.has_object_permission(request, view=None, obj=teacher_profile)
+        )
 
     def test_teacher_profile_other_user_denied(self):
         other_user = create_user(email="other@example.com", password="TestPass123!")
@@ -62,7 +66,9 @@ class PermissionsTestCase(TestCase):
         request.user = other_user
 
         permission = IsTeacherProfileOwnerOrAdmin()
-        self.assertFalse(permission.has_object_permission(request, view=None, obj=teacher_profile))
+        self.assertFalse(
+            permission.has_object_permission(request, view=None, obj=teacher_profile)
+        )
 
     def test_parent_profile_owner_has_access(self):
         user, parent_profile = create_parent_user()
@@ -70,4 +76,6 @@ class PermissionsTestCase(TestCase):
         request.user = user
 
         permission = IsParentProfileOwnerOrAdmin()
-        self.assertTrue(permission.has_object_permission(request, view=None, obj=parent_profile))
+        self.assertTrue(
+            permission.has_object_permission(request, view=None, obj=parent_profile)
+        )

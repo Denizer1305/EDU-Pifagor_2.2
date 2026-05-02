@@ -54,16 +54,15 @@ class AssignmentAudienceCreateSerializer(serializers.Serializer):
         course_enrollment_id = attrs.get("course_enrollment_id")
 
         if audience_type in {"student", "selected_students"} and not student_id:
-            raise serializers.ValidationError(
-                {"student_id": "Нужно указать студента."}
-            )
+            raise serializers.ValidationError({"student_id": "Нужно указать студента."})
 
         if audience_type == "group" and not group_id:
-            raise serializers.ValidationError(
-                {"group_id": "Нужно указать группу."}
-            )
+            raise serializers.ValidationError({"group_id": "Нужно указать группу."})
 
-        if audience_type in {"course_enrollment", "enrollment"} and not course_enrollment_id:
+        if (
+            audience_type in {"course_enrollment", "enrollment"}
+            and not course_enrollment_id
+        ):
             raise serializers.ValidationError(
                 {"course_enrollment_id": "Нужно указать запись на курс."}
             )

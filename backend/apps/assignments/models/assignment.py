@@ -191,7 +191,11 @@ class Assignment(TimeStampedModel):
         if not self.title:
             errors["title"] = "Название работы обязательно."
 
-        if self.lesson_id and self.course_id and self.lesson.course_id != self.course_id:
+        if (
+            self.lesson_id
+            and self.course_id
+            and self.lesson.course_id != self.course_id
+        ):
             errors["lesson"] = "Урок должен принадлежать выбранному курсу."
 
         if self.lesson_id and not self.course_id:

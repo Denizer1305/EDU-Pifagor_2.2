@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from contextvars import ContextVar
 
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
@@ -25,9 +26,16 @@ from apps.assignments.services.grading_services import (
 
 logger = logging.getLogger(__name__)
 
+_is_score_recalculation_running: ContextVar[bool] = ContextVar(
+    "assignments_score_recalculation_running",
+    default=False,
+)
+
 
 @receiver(post_save, sender=Assignment)
-def ensure_assignment_policy_exists(sender, instance: Assignment, created: bool, **kwargs):
+def ensure_assignment_policy_exists(
+    sender, instance: Assignment, created: bool, **kwargs
+):
     if created:
         AssignmentPolicy.objects.get_or_create(
             assignment=instance,
@@ -91,29 +99,53 @@ def variant_deleted_recalculate_policy(sender, instance: AssignmentVariant, **kw
 
 
 @receiver(post_save, sender=SubmissionAnswer)
-def submission_answer_saved_update_submission_score(sender, instance: SubmissionAnswer, **kwargs):
+def submission_answer_saved_update_submission_score(
+    sender,
+    instance,
+    created,
+    raw=False,
+    update_fields=None,
+    **kwargs,
+):
+    """Пересчитывает баллы попытки после сохранения ответа студента."""
+
+    if raw or instance.submission_id is None:
+        return
+
+    if _is_score_recalculation_running.get():
+        return
+
+    if update_fields is not None:
+        score_only_fields = {
+            "is_correct",
+            "auto_score",
+            "manual_score",
+            "final_score",
+            "review_status",
+            "updated_at",
+        }
+
+        if set(update_fields).issubset(score_only_fields):
+            return
+
+    token = _is_score_recalculation_running.set(True)
+
     try:
         calculate_submission_scores(instance.submission)
     except Exception:
         logger.exception(
-            "Failed to calculate submission scores after answer save. submission_answer_id=%s",
+            "Failed to calculate submission scores after answer save. "
+            "submission_answer_id=%s",
             instance.id,
         )
-
-
-@receiver(post_delete, sender=SubmissionAnswer)
-def submission_answer_deleted_update_submission_score(sender, instance: SubmissionAnswer, **kwargs):
-    try:
-        calculate_submission_scores(instance.submission)
-    except Exception:
-        logger.exception(
-            "Failed to calculate submission scores after answer delete. submission_answer_id=%s",
-            instance.id,
-        )
+    finally:
+        _is_score_recalculation_running.reset(token)
 
 
 @receiver(post_save, sender=SubmissionReview)
-def submission_review_saved_sync_submission(sender, instance: SubmissionReview, **kwargs):
+def submission_review_saved_sync_submission(
+    sender, instance: SubmissionReview, **kwargs
+):
     try:
         sync_submission_review_result(instance)
     except Exception:
@@ -124,7 +156,13 @@ def submission_review_saved_sync_submission(sender, instance: SubmissionReview, 
 
 
 @receiver(post_save, sender=Submission)
-def submission_saved_fill_started_at(sender, instance: Submission, created: bool, **kwargs):
-    if created and instance.status == Submission.StatusChoices.IN_PROGRESS and instance.started_at is None:
+def submission_saved_fill_started_at(
+    sender, instance: Submission, created: bool, **kwargs
+):
+    if (
+        created
+        and instance.status == Submission.StatusChoices.IN_PROGRESS
+        and instance.started_at is None
+    ):
         instance.started_at = instance.created_at
         instance.save(update_fields=("started_at", "updated_at"))

@@ -75,15 +75,22 @@ class CourseProgress(TimeStampedModel):
         errors = {}
 
         if self.completed_lessons_count > self.total_lessons_count:
-            errors["completed_lessons_count"] = "Завершённых уроков не может быть больше общего количества."
+            errors["completed_lessons_count"] = (
+                "Завершённых уроков не может быть больше общего количества."
+            )
 
         if self.completed_required_lessons_count > self.required_lessons_count:
-            errors["completed_required_lessons_count"] = "Завершённых обязательных уроков не может быть больше общего количества обязательных."
+            errors["completed_required_lessons_count"] = (
+                "Завершённых обязательных уроков не может быть больше общего количества обязательных."
+            )
 
         if self.progress_percent < 0 or self.progress_percent > 100:
             errors["progress_percent"] = "Прогресс должен быть в диапазоне от 0 до 100."
 
-        if self.last_lesson_id and self.last_lesson.course_id != self.enrollment.course_id:
+        if (
+            self.last_lesson_id
+            and self.last_lesson.course_id != self.enrollment.course_id
+        ):
             errors["last_lesson"] = "Последний урок должен относиться к тому же курсу."
 
         if errors:
@@ -192,8 +199,13 @@ class LessonProgress(TimeStampedModel):
         if self.lesson.course_id != self.enrollment.course_id:
             errors["lesson"] = "Урок должен относиться к тому же курсу, что и запись."
 
-        if self.course_progress_id and self.course_progress.enrollment_id != self.enrollment_id:
-            errors["course_progress"] = "Прогресс по курсу должен относиться к той же записи."
+        if (
+            self.course_progress_id
+            and self.course_progress.enrollment_id != self.enrollment_id
+        ):
+            errors["course_progress"] = (
+                "Прогресс по курсу должен относиться к той же записи."
+            )
 
         if errors:
             raise ValidationError(errors)

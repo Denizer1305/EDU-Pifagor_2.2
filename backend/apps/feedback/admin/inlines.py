@@ -109,9 +109,7 @@ class FeedbackAttachmentInline(admin.TabularInline):
 class FeedbackStatusHistoryInline(admin.TabularInline):
     model = FeedbackStatusHistory
     extra = 0
-    autocomplete_fields = (
-        "changed_by",
-    )
+    autocomplete_fields = ("changed_by",)
     fields = (
         "from_status",
         "to_status",
@@ -119,7 +117,5 @@ class FeedbackStatusHistoryInline(admin.TabularInline):
         "changed_by",
         "created_at",
     )
-    readonly_fields = (
-        "created_at",
-    )
+    readonly_fields = ("created_at",)
     ordering = ("-created_at",)

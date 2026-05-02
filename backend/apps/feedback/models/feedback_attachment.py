@@ -98,8 +98,8 @@ class FeedbackAttachment(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         if self.file:
-            self.original_name = (
-                normalize_text(self.original_name) or os.path.basename(self.file.name)
+            self.original_name = normalize_text(self.original_name) or os.path.basename(
+                self.file.name
             )
             self.file_size = getattr(self.file, "size", 0) or 0
             self.mime_type = getattr(self.file, "content_type", "") or ""

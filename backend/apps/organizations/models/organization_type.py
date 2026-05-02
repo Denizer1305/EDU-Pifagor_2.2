@@ -43,9 +43,7 @@ class OrganizationType(models.Model):
         db_table = "organizations_organization_type"
         verbose_name = _("Тип образовательной организации")
         verbose_name_plural = _("Типы образовательных организаций")
-        ordering = (
-            "name",
-        )
+        ordering = ("name",)
 
     def __str__(self) -> str:
         return self.name

@@ -18,9 +18,9 @@ from .course import (
     CourseTeacherListCreateAPIView,
 )
 from .progress import (
+    CourseEnrollmentStartAPIView,
     CourseProgressDetailAPIView,
     CourseProgressListAPIView,
-    CourseEnrollmentStartAPIView,
     LessonProgressCompleteAPIView,
     LessonProgressListAPIView,
     LessonProgressMarkInProgressAPIView,

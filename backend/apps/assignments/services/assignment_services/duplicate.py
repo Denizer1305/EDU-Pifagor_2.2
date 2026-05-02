@@ -10,18 +10,19 @@ from apps.assignments.models import (
     AssignmentOfficialFormat,
 )
 from apps.assignments.services.assignment_services.crud import create_assignment
-
 from apps.assignments.services.assignment_structure_services import (
-        create_assignment_attachment,
-        create_assignment_variant,
-        create_assignment_section,
-        create_assignment_question,
-    )
+    create_assignment_attachment,
+    create_assignment_question,
+    create_assignment_section,
+    create_assignment_variant,
+)
 
 logger = logging.getLogger(__name__)
 
 
-def _copy_assignment_policy(source_assignment: Assignment, target_assignment: Assignment) -> None:
+def _copy_assignment_policy(
+    source_assignment: Assignment, target_assignment: Assignment
+) -> None:
     """Копирует настройки проверки и оценивания."""
 
     if not hasattr(source_assignment, "policy"):

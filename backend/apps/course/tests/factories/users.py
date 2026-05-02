@@ -5,7 +5,11 @@ from uuid import uuid4
 from apps.course.tests.factories.common import _unwrap_factory_result
 from apps.users.tests.factories import (
     create_admin_user as base_create_admin_user,
+)
+from apps.users.tests.factories import (
     create_student_user as base_create_student_user,
+)
+from apps.users.tests.factories import (
     create_teacher_user as base_create_teacher_user,
 )
 

@@ -30,7 +30,6 @@ urlpatterns = [
         AcademicYearDetailView.as_view(),
         name="academic-year-detail",
     ),
-
     path(
         "periods/",
         EducationPeriodListView.as_view(),
@@ -41,7 +40,6 @@ urlpatterns = [
         EducationPeriodDetailView.as_view(),
         name="education-period-detail",
     ),
-
     path(
         "enrollments/",
         StudentGroupEnrollmentListView.as_view(),
@@ -52,7 +50,6 @@ urlpatterns = [
         StudentGroupEnrollmentDetailView.as_view(),
         name="student-group-enrollment-detail",
     ),
-
     path(
         "group-subjects/",
         GroupSubjectListView.as_view(),
@@ -63,7 +60,6 @@ urlpatterns = [
         GroupSubjectDetailView.as_view(),
         name="group-subject-detail",
     ),
-
     path(
         "teacher-group-subjects/",
         TeacherGroupSubjectListView.as_view(),
@@ -74,7 +70,6 @@ urlpatterns = [
         TeacherGroupSubjectDetailView.as_view(),
         name="teacher-group-subject-detail",
     ),
-
     path(
         "curricula/",
         CurriculumListView.as_view(),
@@ -85,7 +80,6 @@ urlpatterns = [
         CurriculumDetailView.as_view(),
         name="curriculum-detail",
     ),
-
     path(
         "curriculum-items/",
         CurriculumItemListView.as_view(),

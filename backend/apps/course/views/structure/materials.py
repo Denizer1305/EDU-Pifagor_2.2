@@ -68,7 +68,7 @@ class CourseMaterialListCreateAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseMaterialDetailSerializer(
             material,
@@ -81,10 +81,14 @@ class CourseMaterialDetailAPIView(APIView):
     permission_classes = (IsAuthenticated, IsCourseTeacherOrAdmin)
 
     def get_object(self, material_pk: int):
-        material = CourseMaterial.objects.select_related(
-            "course",
-            "lesson",
-        ).filter(id=material_pk).first()
+        material = (
+            CourseMaterial.objects.select_related(
+                "course",
+                "lesson",
+            )
+            .filter(id=material_pk)
+            .first()
+        )
 
         if material is None:
             raise NotFound("Материал не найден.")
@@ -118,7 +122,7 @@ class CourseMaterialDetailAPIView(APIView):
                 **serializer.validated_data,
             )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseMaterialDetailSerializer(
             material,
@@ -132,6 +136,6 @@ class CourseMaterialDetailAPIView(APIView):
         try:
             delete_course_material(material=material)
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         return Response(status=status.HTTP_204_NO_CONTENT)

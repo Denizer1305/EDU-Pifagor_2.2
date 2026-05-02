@@ -56,7 +56,7 @@ class TeacherOnboardingAPIView(APIView):
         except DjangoValidationError as exc:
             raise ValidationError(
                 exc.message_dict if hasattr(exc, "message_dict") else exc.messages
-            )
+            ) from exc
 
         return Response(
             TeacherProfileSerializer(profile).data,
@@ -78,9 +78,7 @@ class TeacherProfileViewSet(viewsets.ModelViewSet):
         "created_at",
         "updated_at",
     )
-    ordering = (
-        "-created_at",
-    )
+    ordering = ("-created_at",)
 
     def get_permissions(self):
         if self.action in {"list", "create", "destroy"}:
@@ -126,7 +124,7 @@ class TeacherProfileReviewAPIView(generics.UpdateAPIView):
         except DjangoValidationError as exc:
             raise ValidationError(
                 exc.message_dict if hasattr(exc, "message_dict") else exc.messages
-            )
+            ) from exc
 
         return Response(
             TeacherProfileSerializer(instance).data,

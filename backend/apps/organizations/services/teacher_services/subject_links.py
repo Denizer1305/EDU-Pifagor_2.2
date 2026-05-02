@@ -31,11 +31,7 @@ def assign_teacher_subject(
 
     if not _user_has_teacher_role(teacher):
         raise ValidationError(
-            {
-                "teacher": (
-                    "Связь с предметом можно создать только для преподавателя."
-                )
-            }
+            {"teacher": ("Связь с предметом можно создать только для преподавателя.")}
         )
 
     link, created = TeacherSubject.objects.get_or_create(

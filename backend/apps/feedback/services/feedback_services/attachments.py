@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Iterable
+from collections.abc import Iterable
 
 from django.core.exceptions import ValidationError
 
@@ -24,8 +24,7 @@ def _validate_attachments_payload(files: Iterable | None) -> list:
         raise ValidationError(
             {
                 "attachments": (
-                    f"Можно прикрепить не более "
-                    f"{MAX_ATTACHMENTS_PER_REQUEST} файлов."
+                    f"Можно прикрепить не более {MAX_ATTACHMENTS_PER_REQUEST} файлов."
                 )
             }
         )

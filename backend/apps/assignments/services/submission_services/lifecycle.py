@@ -7,7 +7,9 @@ from django.db import transaction
 from django.utils import timezone
 
 from apps.assignments.models import Submission, SubmissionAttempt
-from apps.assignments.services.submission_services.availability import is_student_assigned
+from apps.assignments.services.submission_services.availability import (
+    is_student_assigned,
+)
 from apps.assignments.services.submission_services.common import (
     get_assignment_policy,
     get_next_attempt_number,
@@ -35,7 +37,9 @@ def start_submission(
         publication.StatusChoices.PUBLISHED,
         publication.StatusChoices.SCHEDULED,
     }:
-        raise ValidationError("Нельзя начать выполнение по неопубликованной публикации.")
+        raise ValidationError(
+            "Нельзя начать выполнение по неопубликованной публикации."
+        )
 
     if publication.starts_at and timezone.now() < publication.starts_at:
         raise ValidationError("Работа ещё недоступна для выполнения.")
@@ -48,15 +52,19 @@ def start_submission(
 
     policy = get_assignment_policy(publication.assignment)
 
-    existing_draft = Submission.objects.filter(
-        publication=publication,
-        student=student,
-        status__in=(
-            Submission.StatusChoices.DRAFT,
-            Submission.StatusChoices.IN_PROGRESS,
-            Submission.StatusChoices.RETURNED_FOR_REVISION,
-        ),
-    ).order_by("-attempt_number", "-id").first()
+    existing_draft = (
+        Submission.objects.filter(
+            publication=publication,
+            student=student,
+            status__in=(
+                Submission.StatusChoices.DRAFT,
+                Submission.StatusChoices.IN_PROGRESS,
+                Submission.StatusChoices.RETURNED_FOR_REVISION,
+            ),
+        )
+        .order_by("-attempt_number", "-id")
+        .first()
+    )
 
     if existing_draft:
         return existing_draft
@@ -116,7 +124,10 @@ def submit_submission(submission: Submission) -> Submission:
 
         if submission.started_at and submission.submitted_at:
             attempt.time_spent_minutes = max(
-                int((submission.submitted_at - submission.started_at).total_seconds() // 60),
+                int(
+                    (submission.submitted_at - submission.started_at).total_seconds()
+                    // 60
+                ),
                 0,
             )
 
@@ -125,7 +136,9 @@ def submit_submission(submission: Submission) -> Submission:
 
     if submission.started_at and submission.submitted_at:
         submission.time_spent_minutes = max(
-            int((submission.submitted_at - submission.started_at).total_seconds() // 60),
+            int(
+                (submission.submitted_at - submission.started_at).total_seconds() // 60
+            ),
             0,
         )
         submission.save(update_fields=("time_spent_minutes", "updated_at"))

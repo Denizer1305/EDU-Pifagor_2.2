@@ -47,9 +47,7 @@ class ProfileAdmin(admin.ModelAdmin):
         "full_name",
         "short_name",
     )
-    autocomplete_fields = (
-        "user",
-    )
+    autocomplete_fields = ("user",)
 
     fieldsets = (
         (

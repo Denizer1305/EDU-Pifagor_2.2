@@ -100,8 +100,12 @@ class CourseEnrollmentStartAPIView(APIView):
         try:
             enrollment = start_course_enrollment(enrollment=enrollment)
         except DjangoValidationError as exc:
-            payload = exc.message_dict if hasattr(exc, "message_dict") else {"detail": exc.messages}
-            raise ValidationError(payload)
+            payload = (
+                exc.message_dict
+                if hasattr(exc, "message_dict")
+                else {"detail": exc.messages}
+            )
+            raise ValidationError(payload) from exc
 
         progress = get_course_progress_by_enrollment_id(enrollment_id=enrollment.id)
         serializer = CourseProgressDetailSerializer(
@@ -143,7 +147,11 @@ class LessonProgressMarkInProgressAPIView(APIView):
         self.check_object_permissions(request, enrollment)
 
         lesson = get_course_structure_queryset().prefetch_related().first()
-        lesson = enrollment.course.lessons.filter(id=lesson_pk).select_related("course", "module").first()
+        lesson = (
+            enrollment.course.lessons.filter(id=lesson_pk)
+            .select_related("course", "module")
+            .first()
+        )
         if lesson is None:
             raise NotFound("Урок не найден.")
 
@@ -159,8 +167,12 @@ class LessonProgressMarkInProgressAPIView(APIView):
                 lesson=lesson,
             )
         except DjangoValidationError as exc:
-            payload = exc.message_dict if hasattr(exc, "message_dict") else {"detail": exc.messages}
-            raise ValidationError(payload)
+            payload = (
+                exc.message_dict
+                if hasattr(exc, "message_dict")
+                else {"detail": exc.messages}
+            )
+            raise ValidationError(payload) from exc
 
         output_serializer = LessonProgressDetailSerializer(
             lesson_progress,
@@ -179,7 +191,11 @@ class LessonProgressCompleteAPIView(APIView):
 
         self.check_object_permissions(request, enrollment)
 
-        lesson = enrollment.course.lessons.filter(id=lesson_pk).select_related("course", "module").first()
+        lesson = (
+            enrollment.course.lessons.filter(id=lesson_pk)
+            .select_related("course", "module")
+            .first()
+        )
         if lesson is None:
             raise NotFound("Урок не найден.")
 
@@ -195,11 +211,17 @@ class LessonProgressCompleteAPIView(APIView):
                 lesson=lesson,
                 spent_minutes=serializer.validated_data.get("spent_minutes"),
                 score=serializer.validated_data.get("score"),
-                attempts_increment=serializer.validated_data.get("attempts_increment", True),
+                attempts_increment=serializer.validated_data.get(
+                    "attempts_increment", True
+                ),
             )
         except DjangoValidationError as exc:
-            payload = exc.message_dict if hasattr(exc, "message_dict") else {"detail": exc.messages}
-            raise ValidationError(payload)
+            payload = (
+                exc.message_dict
+                if hasattr(exc, "message_dict")
+                else {"detail": exc.messages}
+            )
+            raise ValidationError(payload) from exc
 
         output_serializer = LessonProgressDetailSerializer(
             lesson_progress,

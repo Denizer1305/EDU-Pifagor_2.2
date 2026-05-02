@@ -7,7 +7,6 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.users.constants import ONBOARDING_STATUS_ACTIVE
 
-
 PHONE_RE = re.compile(r"^\+?[0-9()\-\s]{7,20}$")
 
 
@@ -41,9 +40,16 @@ def validate_phone(phone: str) -> None:
 
 
 def validate_user_onboarding_transition(user) -> None:
-    if user.onboarding_status == ONBOARDING_STATUS_ACTIVE and not _get_email_verified_value(user):
+    if (
+        user.onboarding_status == ONBOARDING_STATUS_ACTIVE
+        and not _get_email_verified_value(user)
+    ):
         raise ValidationError(
-            {"onboarding_status": _("Нельзя активировать пользователя без подтвержденной почты.")}
+            {
+                "onboarding_status": _(
+                    "Нельзя активировать пользователя без подтвержденной почты."
+                )
+            }
         )
 
 
@@ -55,19 +61,31 @@ def validate_student_profile_request(student_profile) -> None:
     if requested_department and requested_organization:
         if requested_department.organization_id != requested_organization.id:
             raise ValidationError(
-                {"requested_department": _("Отделение должно принадлежать выбранной образовательной организации.")}
+                {
+                    "requested_department": _(
+                        "Отделение должно принадлежать выбранной образовательной организации."
+                    )
+                }
             )
 
     if requested_group and requested_organization:
         if requested_group.organization_id != requested_organization.id:
             raise ValidationError(
-                {"requested_group": _("Группа должна принадлежать выбранной образовательной организации.")}
+                {
+                    "requested_group": _(
+                        "Группа должна принадлежать выбранной образовательной организации."
+                    )
+                }
             )
 
     if requested_group and requested_department and requested_group.department_id:
         if requested_group.department_id != requested_department.id:
             raise ValidationError(
-                {"requested_group": _("Группа должна принадлежать выбранному отделению.")}
+                {
+                    "requested_group": _(
+                        "Группа должна принадлежать выбранному отделению."
+                    )
+                }
             )
 
 
@@ -78,7 +96,11 @@ def validate_teacher_profile_request(teacher_profile) -> None:
     if requested_department and requested_organization:
         if requested_department.organization_id != requested_organization.id:
             raise ValidationError(
-                {"requested_department": _("Подразделение должно принадлежать выбранной образовательной организации.")}
+                {
+                    "requested_department": _(
+                        "Подразделение должно принадлежать выбранной образовательной организации."
+                    )
+                }
             )
 
 

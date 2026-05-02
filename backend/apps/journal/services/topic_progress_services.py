@@ -32,7 +32,9 @@ def create_topic_progress(
             _("Запись о прогрессе для этой темы и группы уже существует.")
         )
 
-    days_behind = _compute_days_behind(planned_date=planned_date, actual_date=actual_date, status=status)
+    days_behind = _compute_days_behind(
+        planned_date=planned_date, actual_date=actual_date, status=status
+    )
 
     progress = TopicProgress(
         course_id=course_id,
@@ -130,6 +132,7 @@ def recalculate_days_behind(*, progress: TopicProgress) -> TopicProgress:
 # ---------------------------------------------------------------------------
 # Внутренние утилиты
 # ---------------------------------------------------------------------------
+
 
 def _compute_days_behind(
     *,

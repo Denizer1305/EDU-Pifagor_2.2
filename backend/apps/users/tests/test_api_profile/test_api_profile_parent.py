@@ -75,6 +75,4 @@ class ParentProfileApiTestCase(ProfileApiBaseTestCase):
             self.parent.onboarding_status,
             ONBOARDING_STATUS_ACTIVE,
         )
-        self.assertTrue(
-            self.parent.user_roles.filter(role__code=ROLE_PARENT).exists()
-        )
+        self.assertTrue(self.parent.user_roles.filter(role__code=ROLE_PARENT).exists())

@@ -112,13 +112,21 @@ class CourseLesson(TimeStampedModel, OrderedModel):
         if self.order < 1:
             errors["order"] = "Порядок урока должен быть больше нуля."
 
-        if self.module_id and self.course_id and self.module.course_id != self.course_id:
+        if (
+            self.module_id
+            and self.course_id
+            and self.module.course_id != self.course_id
+        ):
             errors["module"] = "Модуль должен принадлежать тому же курсу, что и урок."
 
         if self.lesson_type == self.LessonTypeChoices.VIDEO and not self.video_url:
             errors["video_url"] = "Для видеоурока необходимо указать ссылку на видео."
 
-        if self.lesson_type in {self.LessonTypeChoices.LINK, self.LessonTypeChoices.WEBINAR} and not self.external_url:
+        if (
+            self.lesson_type
+            in {self.LessonTypeChoices.LINK, self.LessonTypeChoices.WEBINAR}
+            and not self.external_url
+        ):
             errors["external_url"] = "Для этого типа урока нужна внешняя ссылка."
 
         if errors:

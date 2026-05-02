@@ -1,19 +1,19 @@
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
-from django.db.models import Avg, Count, Q
+from django.db.models import Avg
 
 from apps.journal.models import (
     AttendanceRecord,
     AttendanceStatus,
+    GradeScale,
     JournalGrade,
     JournalLesson,
     JournalSummary,
     LessonStatus,
     TopicProgress,
     TopicProgressStatus,
-    GradeScale,
 )
 
 
@@ -47,7 +47,9 @@ def recalculate_summary_for_group(
 
     total_attendance_marks = attended + absent
     attendance_percent = (
-        Decimal(attended / total_attendance_marks * 100).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        Decimal(attended / total_attendance_marks * 100).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
         if total_attendance_marks > 0
         else Decimal("0.00")
     )
@@ -70,7 +72,9 @@ def recalculate_summary_for_group(
     completed_topics = topic_qs.filter(status=TopicProgressStatus.COMPLETED).count()
     topics_behind = topic_qs.filter(status=TopicProgressStatus.BEHIND).count()
     progress_percent = (
-        Decimal(completed_topics / total_topics * 100).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        Decimal(completed_topics / total_topics * 100).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
         if total_topics > 0
         else Decimal("0.00")
     )
@@ -127,7 +131,9 @@ def recalculate_summary_for_student(
     ).count()
 
     attendance_percent = (
-        Decimal(attended / total_lessons * 100).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        Decimal(attended / total_lessons * 100).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
         if total_lessons > 0
         else Decimal("0.00")
     )
@@ -159,7 +165,9 @@ def recalculate_summary_for_student(
     completed_topics = topic_qs.filter(status=TopicProgressStatus.COMPLETED).count()
     topics_behind = topic_qs.filter(status=TopicProgressStatus.BEHIND).count()
     progress_percent = (
-        Decimal(completed_topics / total_topics * 100).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        Decimal(completed_topics / total_topics * 100).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
         if total_topics > 0
         else Decimal("0.00")
     )

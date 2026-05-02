@@ -135,7 +135,9 @@ class CourseDetailSerializer(serializers.ModelSerializer):
         )
 
     def get_teachers(self, obj):
-        queryset = obj.course_teachers.select_related("teacher").order_by("created_at", "id")
+        queryset = obj.course_teachers.select_related("teacher").order_by(
+            "created_at", "id"
+        )
         return CourseTeacherSerializer(
             queryset,
             many=True,

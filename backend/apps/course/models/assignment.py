@@ -102,7 +102,9 @@ class CourseAssignment(TimeStampedModel):
         self.notes = normalize_text(self.notes)
 
         if self.starts_at and self.ends_at and self.ends_at < self.starts_at:
-            errors["ends_at"] = "Дата окончания доступа не может быть раньше даты начала."
+            errors["ends_at"] = (
+                "Дата окончания доступа не может быть раньше даты начала."
+            )
 
         if self.assignment_type == self.AssignmentTypeChoices.GROUP:
             if not self.group:

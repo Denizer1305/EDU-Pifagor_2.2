@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from apps.assignments.models import AssignmentPublication, Submission
-from apps.assignments.tests.test_api.api_common import COURSE_ENROLLMENT_AUDIENCE
 from apps.assignments.tests.factories import (
     create_assignment,
     create_assignment_audience,
@@ -17,6 +16,7 @@ from apps.assignments.tests.factories import (
     create_submission,
     create_teacher_user,
 )
+from apps.assignments.tests.test_api.api_common import COURSE_ENROLLMENT_AUDIENCE
 
 
 class SubmissionApiTestCase(APITestCase):

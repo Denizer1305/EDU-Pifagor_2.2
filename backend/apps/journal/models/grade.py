@@ -153,8 +153,12 @@ class JournalGrade(models.Model):
         db_table = "journal_grade"
         ordering = ["lesson__date", "student"]
         indexes = [
-            models.Index(fields=["lesson", "student"], name="idx_jgrade_lesson_student"),
-            models.Index(fields=["student", "grade_type"], name="idx_jgrade_student_type"),
+            models.Index(
+                fields=["lesson", "student"], name="idx_jgrade_lesson_student"
+            ),
+            models.Index(
+                fields=["student", "grade_type"], name="idx_jgrade_student_type"
+            ),
             models.Index(fields=["grade_type"], name="idx_jgrade_type"),
         ]
 

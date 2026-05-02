@@ -3,7 +3,7 @@ from __future__ import annotations
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from apps.journal.models import JournalGrade, GradeScale, JournalLesson
+from apps.journal.models import GradeScale, JournalGrade, JournalLesson
 
 
 def create_journal_grade(
@@ -121,12 +121,14 @@ def create_grade_from_grade_record(
     Используется при автоматической синхронизации оценок из assignments/
     в электронный журнал.
     """
-    from apps.assignments.models import GradeRecord  # локальный импорт во избежание цикличности
+    from apps.assignments.models import (
+        GradeRecord,  # локальный импорт во избежание цикличности
+    )
 
     try:
         gr = GradeRecord.objects.select_related("student").get(pk=grade_record_id)
-    except GradeRecord.DoesNotExist:
-        raise ValidationError(_("GradeRecord не найден."))
+    except GradeRecord.DoesNotExist as exc:
+        raise ValidationError(_("GradeRecord не найден.")) from exc
 
     # Определяем шкалу и значение из GradeRecord
     scale = GradeScale.POINTS
@@ -160,6 +162,7 @@ def create_grade_from_grade_record(
 # Внутренние валидаторы
 # ---------------------------------------------------------------------------
 
+
 def _validate_grade_values(
     *,
     scale: str,
@@ -177,6 +180,4 @@ def _validate_grade_values(
             _("Для шкалы зачёт/незачёт необходимо указать is_passed.")
         )
     if scale == GradeScale.POINTS and score_points is None:
-        raise ValidationError(
-            _("Для балльной шкалы необходимо указать score_points.")
-        )
+        raise ValidationError(_("Для балльной шкалы необходимо указать score_points."))

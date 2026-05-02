@@ -13,8 +13,7 @@ def _validate_attachments_count(attachments: list) -> None:
         raise serializers.ValidationError(
             {
                 "attachments": (
-                    f"Можно прикрепить не более "
-                    f"{MAX_ATTACHMENTS_PER_REQUEST} файлов."
+                    f"Можно прикрепить не более {MAX_ATTACHMENTS_PER_REQUEST} файлов."
                 )
             }
         )
@@ -98,11 +97,7 @@ class FeedbackRequestCreateSerializer(serializers.Serializer):
 
         if not email and not (user and user.is_authenticated):
             raise serializers.ValidationError(
-                {
-                    "email": (
-                        "Для неавторизованного пользователя email обязателен."
-                    )
-                }
+                {"email": ("Для неавторизованного пользователя email обязателен.")}
             )
 
         _validate_attachments_count(attrs.get("attachments") or [])

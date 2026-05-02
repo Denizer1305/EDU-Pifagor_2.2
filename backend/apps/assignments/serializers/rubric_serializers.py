@@ -3,7 +3,10 @@ from __future__ import annotations
 from rest_framework import serializers
 
 from apps.assignments.models import Rubric, RubricCriterion
-from apps.assignments.serializers.common import OrganizationBriefSerializer, UserBriefSerializer
+from apps.assignments.serializers.common import (
+    OrganizationBriefSerializer,
+    UserBriefSerializer,
+)
 
 
 class RubricCriterionSerializer(serializers.ModelSerializer):

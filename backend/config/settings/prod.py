@@ -55,4 +55,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Настройки безопасности: отключаем debug-toolbar в продакшн
 INSTALLED_APPS = [app for app in INSTALLED_APPS if app != "debug_toolbar"]
-MIDDLEWARE = [mw for mw in MIDDLEWARE if mw != "debug_toolbar.middleware.DebugToolbarMiddleware"]
+MIDDLEWARE = [
+    mw for mw in MIDDLEWARE if mw != "debug_toolbar.middleware.DebugToolbarMiddleware"
+]

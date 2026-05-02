@@ -34,16 +34,22 @@ class AssignmentQuestionListCreateAPIView(APIView):
     def get(self, request, assignment_id: int, *args, **kwargs):
         assignment = self.get_object(request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         queryset = get_assignment_questions_queryset(assignment_id=assignment.id)
-        serializer = AssignmentQuestionSerializer(queryset, many=True, context={"request": request})
+        serializer = AssignmentQuestionSerializer(
+            queryset, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, assignment_id: int, *args, **kwargs):
         assignment = self.get_object(request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = AssignmentQuestionWriteSerializer(
             data=request.data,
@@ -72,17 +78,23 @@ class AssignmentQuestionDetailAPIView(APIView):
     def get(self, request, pk: int, *args, **kwargs):
         question = self._get_question(pk)
         if question is None:
-            return Response({"detail": "Вопрос не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вопрос не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, question)
 
-        serializer = AssignmentQuestionSerializer(question, context={"request": request})
+        serializer = AssignmentQuestionSerializer(
+            question, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk: int, *args, **kwargs):
         question = self._get_question(pk)
         if question is None:
-            return Response({"detail": "Вопрос не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вопрос не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, question)
 
@@ -104,7 +116,9 @@ class AssignmentQuestionDetailAPIView(APIView):
     def delete(self, request, pk: int, *args, **kwargs):
         question = self._get_question(pk)
         if question is None:
-            return Response({"detail": "Вопрос не найден."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Вопрос не найден."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         check_assignment_object_permission(self, request, question)
 
@@ -118,7 +132,9 @@ class AssignmentQuestionReorderAPIView(APIView):
     def post(self, request, assignment_id: int, *args, **kwargs):
         assignment = get_assignment_or_404(self, request, assignment_id)
         if assignment is None:
-            return Response({"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Работа не найдена."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         ids = request.data.get("question_ids", [])
         if not isinstance(ids, list):
@@ -131,5 +147,7 @@ class AssignmentQuestionReorderAPIView(APIView):
             assignment=assignment,
             question_ids_in_order=ids,
         )
-        serializer = AssignmentQuestionSerializer(questions, many=True, context={"request": request})
+        serializer = AssignmentQuestionSerializer(
+            questions, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -68,38 +68,46 @@ class StudentGroupEnrollmentAdmin(admin.ModelAdmin):
     date_hierarchy = "enrollment_date"
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "student",
-                "group",
-                "academic_year",
-            )
-        }),
-        (_("Статус зачисления"), {
-            "fields": (
-                "status",
-                "is_primary",
-                "journal_number",
-                "is_current_display",
-            )
-        }),
-        (_("Даты"), {
-            "fields": (
-                "enrollment_date",
-                "completion_date",
-            )
-        }),
-        (_("Дополнительно"), {
-            "fields": (
-                "notes",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "student",
+                    "group",
+                    "academic_year",
+                )
+            },
+        ),
+        (
+            _("Статус зачисления"),
+            {
+                "fields": (
+                    "status",
+                    "is_primary",
+                    "journal_number",
+                    "is_current_display",
+                )
+            },
+        ),
+        (
+            _("Даты"),
+            {
+                "fields": (
+                    "enrollment_date",
+                    "completion_date",
+                )
+            },
+        ),
+        (_("Дополнительно"), {"fields": ("notes",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     @admin.display(description=_("Студент"))

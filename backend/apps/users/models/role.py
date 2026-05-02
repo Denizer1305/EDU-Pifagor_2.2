@@ -15,7 +15,7 @@ class Role(models.Model):
         max_length=10,
         unique=True,
         db_index=True,
-        help_text=_("Системные роли: admin, teacher, student, parent.")
+        help_text=_("Системные роли: admin, teacher, student, parent."),
     )
     name = models.CharField(
         _("Название роли"),
@@ -42,9 +42,7 @@ class Role(models.Model):
         db_table = "users_roles"
         verbose_name = _("Роль")
         verbose_name_plural = _("Роли")
-        ordering = (
-            "id",
-        )
+        ordering = ("id",)
 
     def __str__(self) -> str:
         """Возвращает строковое представление объекта."""

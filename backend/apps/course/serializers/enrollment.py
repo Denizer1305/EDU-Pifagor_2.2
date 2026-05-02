@@ -95,7 +95,9 @@ class CourseAssignmentDetailSerializer(serializers.ModelSerializer):
 
 
 class CourseAssignmentCreateSerializer(serializers.Serializer):
-    assignment_type = serializers.ChoiceField(choices=CourseAssignment.AssignmentTypeChoices.choices)
+    assignment_type = serializers.ChoiceField(
+        choices=CourseAssignment.AssignmentTypeChoices.choices
+    )
     group = serializers.PrimaryKeyRelatedField(
         queryset=Group.objects.all(),
         required=False,
@@ -213,7 +215,9 @@ class CourseEnrollmentCreateSerializer(serializers.Serializer):
     def validate(self, attrs):
         course = self.context.get("course")
         if course is None:
-            raise serializers.ValidationError({"course": "Курс не передан в контекст сериализатора."})
+            raise serializers.ValidationError(
+                {"course": "Курс не передан в контекст сериализатора."}
+            )
 
         validate_enrollment_payload(
             course=course,

@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from django.urls import URLPattern, URLResolver
 
-from . import analytics_urls
-from . import assignment_urls
-from . import grade_urls
-from . import publication_urls
-from . import review_urls
-from . import rubric_urls
-from . import structure_urls
-from . import submission_urls
+from . import (
+    analytics_urls,
+    assignment_urls,
+    grade_urls,
+    publication_urls,
+    review_urls,
+    rubric_urls,
+    structure_urls,
+    submission_urls,
+)
 
 app_name = "assignments"
 

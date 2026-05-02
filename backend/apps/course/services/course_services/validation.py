@@ -9,14 +9,10 @@ def _validate_course_can_be_published(course: Course) -> None:
     """Проверяет, можно ли опубликовать курс."""
 
     if not course.title:
-        raise ValidationError(
-            {"title": "Нельзя публиковать курс без названия."}
-        )
+        raise ValidationError({"title": "Нельзя публиковать курс без названия."})
 
     if not course.modules.exists():
-        raise ValidationError(
-            {"status": "Нельзя публиковать курс без модулей."}
-        )
+        raise ValidationError({"status": "Нельзя публиковать курс без модулей."})
 
     has_published_lessons = course.lessons.filter(
         is_published=True,

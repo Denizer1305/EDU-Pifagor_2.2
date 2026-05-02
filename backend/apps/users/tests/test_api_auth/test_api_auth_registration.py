@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 
 from apps.users.tests.test_api_auth.api_auth_base import AuthApiBaseTestCase
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -101,7 +101,9 @@ class AuthRegistrationApiTestCase(AuthApiBaseTestCase):
 
         user = User.objects.get(email="teacher-api-register@example.com")
         self.assertTrue(hasattr(user, "teacher_profile"))
-        self.assertEqual(user.teacher_profile.requested_organization_id, organization.id)
+        self.assertEqual(
+            user.teacher_profile.requested_organization_id, organization.id
+        )
         self.assertEqual(user.teacher_profile.requested_department_id, department.id)
         mock_send_verify_email.assert_called_once()
 

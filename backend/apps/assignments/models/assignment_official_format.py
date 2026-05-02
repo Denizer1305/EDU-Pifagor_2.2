@@ -96,8 +96,13 @@ class AssignmentOfficialFormat(TimeStampedModel):
     def clean(self):
         errors: dict[str, str] = {}
 
-        if self.official_family != self.OfficialFamilyChoices.NONE and not self.is_preparation_only:
-            errors["is_preparation_only"] = "Официальные форматы в системе используются только для подготовки."
+        if (
+            self.official_family != self.OfficialFamilyChoices.NONE
+            and not self.is_preparation_only
+        ):
+            errors["is_preparation_only"] = (
+                "Официальные форматы в системе используются только для подготовки."
+            )
 
         if self.official_family in {
             self.OfficialFamilyChoices.VPR,

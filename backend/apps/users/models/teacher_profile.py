@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
@@ -29,7 +29,7 @@ class TeacherProfile(models.Model):
         _("Публичный заголовок"),
         max_length=255,
         blank=True,
-        help_text=_('Например: "Преподаватель математики".')
+        help_text=_('Например: "Преподаватель математики".'),
     )
     short_bio = models.CharField(
         _("Краткое описание"),
@@ -54,7 +54,7 @@ class TeacherProfile(models.Model):
     achievements = models.TextField(
         _("Краткое описание достижений и наград"),
         blank=True,
-        help_text=_("Короткий блок достижений для карточки преподавателя.")
+        help_text=_("Короткий блок достижений для карточки преподавателя."),
     )
 
     cover_image = models.ImageField(
@@ -150,8 +150,13 @@ class TeacherProfile(models.Model):
         if (
             self.requested_department
             and self.requested_organization
-            and self.requested_department.organization_id != self.requested_organization_id
+            and self.requested_department.organization_id
+            != self.requested_organization_id
         ):
             raise ValidationError(
-                {"requested_department": _("Подразделение должно принадлежать выбранной организации.")}
+                {
+                    "requested_department": _(
+                        "Подразделение должно принадлежать выбранной организации."
+                    )
+                }
             )

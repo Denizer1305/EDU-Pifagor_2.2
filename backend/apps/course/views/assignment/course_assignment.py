@@ -106,7 +106,7 @@ class CourseAssignmentListCreateAPIView(APIView):
                         assignment=assignment,
                     )
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseAssignmentDetailSerializer(
             assignment,
@@ -159,7 +159,7 @@ class CourseAssignmentDetailAPIView(APIView):
             assignment.full_clean()
             assignment.save()
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         output_serializer = CourseAssignmentDetailSerializer(
             assignment,
@@ -173,6 +173,6 @@ class CourseAssignmentDetailAPIView(APIView):
         try:
             remove_course_assignment(assignment=assignment)
         except DjangoValidationError as exc:
-            raise ValidationError(validation_error_payload(exc))
+            raise ValidationError(validation_error_payload(exc)) from exc
 
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -10,10 +10,12 @@ from apps.organizations.models import GroupCurator
 from apps.organizations.services import (
     assign_group_curator,
     clear_group_join_code,
-    create_group as create_group_service,
     disable_group_join_code,
     remove_group_curator,
     set_group_join_code,
+)
+from apps.organizations.services import (
+    create_group as create_group_service,
 )
 from apps.organizations.tests.factories import (
     create_department,

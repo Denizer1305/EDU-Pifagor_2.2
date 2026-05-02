@@ -15,9 +15,17 @@ from apps.course.services import (
 )
 from apps.course.tests.factories import (
     create_course as create_course_factory,
+)
+from apps.course.tests.factories import (
     create_course_author,
+)
+from apps.course.tests.factories import (
     create_course_lesson as create_course_lesson_factory,
+)
+from apps.course.tests.factories import (
     create_course_material as create_course_material_factory,
+)
+from apps.course.tests.factories import (
     create_course_module as create_course_module_factory,
 )
 

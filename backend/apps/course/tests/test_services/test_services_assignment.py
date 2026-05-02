@@ -12,6 +12,8 @@ from apps.course.services import (
 )
 from apps.course.tests.factories import (
     create_course as create_course_factory,
+)
+from apps.course.tests.factories import (
     create_course_student,
     create_course_with_context,
 )

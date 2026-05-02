@@ -117,7 +117,9 @@ class JournalLesson(models.Model):
         db_table = "journal_lesson"
         ordering = ["date", "started_at"]
         indexes = [
-            models.Index(fields=["course", "group", "date"], name="idx_jlesson_course_group_date"),
+            models.Index(
+                fields=["course", "group", "date"], name="idx_jlesson_course_group_date"
+            ),
             models.Index(fields=["teacher", "date"], name="idx_jlesson_teacher_date"),
             models.Index(fields=["status"], name="idx_jlesson_status"),
         ]

@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """Создает пользователя с заданными атрибутами."""
         if not email:
-            raise ValueError(_('Адрес эл.почты обязателен для регистрации.'))
+            raise ValueError(_("Адрес эл.почты обязателен для регистрации."))
 
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
@@ -34,18 +34,14 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password=None, **extra_fields):
         """Создает пользователя с заданными атрибутами."""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValidationError(
-                _("У админа is_staff должен быть True.")
-            )
-        if extra_fields.get('is_superuser') is not True:
-            raise ValidationError(
-                _("У админа is_superuser должен быть True.")
-            )
+        if extra_fields.get("is_staff") is not True:
+            raise ValidationError(_("У админа is_staff должен быть True."))
+        if extra_fields.get("is_superuser") is not True:
+            raise ValidationError(_("У админа is_superuser должен быть True."))
 
         return self.create_user(email, password, **extra_fields)
 
@@ -72,12 +68,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         BLOCKED = "blocked", _("Заблокирован")
 
     email = models.EmailField(
-        _('Основная эл.почта'),
+        _("Основная эл.почта"),
         unique=True,
         db_index=True,
     )
     reset_email = models.EmailField(
-        _('Резервная почта для восстановления'),
+        _("Резервная почта для восстановления"),
         blank=True,
         null=True,
     )
@@ -145,27 +141,37 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     class Meta:
-        db_table = 'users_user'
+        db_table = "users_user"
         verbose_name = _("Пользователь")
         verbose_name_plural = _("Пользователи")
-        ordering = (
-            "-created_at",
-        )
+        ordering = ("-created_at",)
 
     def __str__(self):
         """Возвращает строковое представление объекта."""
         return self.email
 
     @property
-    def full_name(self):
-        """Возвращает полное имя пользователя."""
-        if hasattr(self, 'profile') and self.profile:
-            return self.profile.full_name
-        return self.email
+    def full_name(self) -> str:
+        """Возвращает полное имя пользователя из связанного профиля."""
+
+        if not self.pk:
+            return ""
+
+        Profile = self._meta.apps.get_model("users", "Profile")
+        profile = (
+            Profile.objects.filter(user_id=self.pk)
+            .only("last_name", "first_name", "patronymic")
+            .first()
+        )
+
+        if profile is None:
+            return ""
+
+        return profile.full_name
 
     def clean(self) -> None:
         """Выполняет валидацию и нормализацию полей."""

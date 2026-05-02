@@ -7,7 +7,10 @@ from rest_framework.test import APITestCase
 
 from apps.users.constants import ROLE_STUDENT, ROLE_TEACHER
 from apps.users.models import Role
-from apps.users.services.profile_services import ensure_role_profile, get_or_create_base_profile
+from apps.users.services.profile_services import (
+    ensure_role_profile,
+    get_or_create_base_profile,
+)
 
 User = get_user_model()
 
@@ -33,8 +36,12 @@ class UserApiTestCase(APITestCase):
         admin_profile.full_clean()
         admin_profile.save()
 
-        self.user = self.create_user("regular-user@example.com", registration_type="student")
-        self.teacher = self.create_user("teacher-user@example.com", registration_type="teacher")
+        self.user = self.create_user(
+            "regular-user@example.com", registration_type="student"
+        )
+        self.teacher = self.create_user(
+            "teacher-user@example.com", registration_type="teacher"
+        )
 
     def create_user(
         self,
@@ -107,7 +114,9 @@ class UserApiTestCase(APITestCase):
 
     def test_teacher_profile_owner_can_get_own_profile(self):
         self.client.force_authenticate(user=self.teacher)
-        url = reverse("users:teacher-profile-detail", args=[self.teacher.teacher_profile.id])
+        url = reverse(
+            "users:teacher-profile-detail", args=[self.teacher.teacher_profile.id]
+        )
 
         response = self.client.get(url)
 

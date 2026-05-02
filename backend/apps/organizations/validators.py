@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-
 GROUP_CODE_PATTERN = re.compile(r"^[A-Za-zА-Яа-я0-9\-_/ ]+$")
 ACADEMIC_YEAR_PATTERN = re.compile(r"^\d{4}/\d{4}$")
 
@@ -21,9 +20,7 @@ def validate_group_code(value: str) -> None:
 
     value = value.strip()
     if not GROUP_CODE_PATTERN.fullmatch(value):
-        raise ValidationError(
-            _("Код группы содержит недопустимые символы.")
-        )
+        raise ValidationError(_("Код группы содержит недопустимые символы."))
 
 
 def validate_academic_year(value: str) -> None:
@@ -36,9 +33,7 @@ def validate_academic_year(value: str) -> None:
 
     value = value.strip()
     if not ACADEMIC_YEAR_PATTERN.fullmatch(value):
-        raise ValidationError(
-            _("Учебный год должен быть в формате ГГГГ/ГГГГ.")
-        )
+        raise ValidationError(_("Учебный год должен быть в формате ГГГГ/ГГГГ."))
 
     start_year, end_year = value.split("/")
     if int(end_year) != int(start_year) + 1:
@@ -56,9 +51,7 @@ def validate_year_order(
     Проверяет, что год выпуска не раньше года набора.
     """
     if admission_year and graduation_year and graduation_year < admission_year:
-        raise ValidationError(
-            _("Год выпуска не может быть раньше года набора.")
-        )
+        raise ValidationError(_("Год выпуска не может быть раньше года набора."))
 
 
 def validate_date_range(*, starts_at, ends_at) -> None:
@@ -66,9 +59,7 @@ def validate_date_range(*, starts_at, ends_at) -> None:
     Проверяет, что дата окончания не раньше даты начала.
     """
     if starts_at and ends_at and ends_at < starts_at:
-        raise ValidationError(
-            _("Дата окончания не может быть раньше даты начала.")
-        )
+        raise ValidationError(_("Дата окончания не может быть раньше даты начала."))
 
 
 def validate_future_datetime(*, value, field_label: str = _("Дата")) -> None:
@@ -97,10 +88,12 @@ def validate_raw_access_code(value: str, *, field_label: str = _("Код")) -> N
 
     if len(value) < 6:
         raise ValidationError(
-            _("%(field_label)s должен содержать не менее 6 символов.") % {"field_label": field_label}
+            _("%(field_label)s должен содержать не менее 6 символов.")
+            % {"field_label": field_label}
         )
 
     if len(value) > 128:
         raise ValidationError(
-            _("%(field_label)s не должен превышать 128 символов.") % {"field_label": field_label}
+            _("%(field_label)s не должен превышать 128 символов.")
+            % {"field_label": field_label}
         )

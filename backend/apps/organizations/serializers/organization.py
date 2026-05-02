@@ -9,13 +9,17 @@ class OrganizationTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationType
         fields = (
-            "id", "code",
-            "name", "description",
-            "is_active", "created_at",
+            "id",
+            "code",
+            "name",
+            "description",
+            "is_active",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )
 
@@ -26,9 +30,12 @@ class OrganizationShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = (
-            "id", "name",
-            "short_name", "type_name",
-            "city", "is_active",
+            "id",
+            "name",
+            "short_name",
+            "type_name",
+            "city",
+            "is_active",
         )
         read_only_fields = fields
 
@@ -46,16 +53,23 @@ class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = (
-            "id", "type",
-            "type_id", "name",
-            "short_name", "description",
-            "city", "address",
-            "phone", "email",
-            "website", "logo",
+            "id",
+            "type",
+            "type_id",
+            "name",
+            "short_name",
+            "description",
+            "city",
+            "address",
+            "phone",
+            "email",
+            "website",
+            "logo",
             "teacher_registration_code_is_active",
             "teacher_registration_code_expires_at",
             "has_active_teacher_registration_code",
-            "is_active", "created_at",
+            "is_active",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
@@ -93,14 +107,19 @@ class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = (
-            "id", "organization",
-            "organization_id", "name",
-            "short_name", "description",
-            "is_active", "created_at",
+            "id",
+            "organization",
+            "organization_id",
+            "name",
+            "short_name",
+            "description",
+            "is_active",
+            "created_at",
             "updated_at",
         )
         read_only_fields = (
-            "id", "created_at",
+            "id",
+            "created_at",
             "updated_at",
         )
 

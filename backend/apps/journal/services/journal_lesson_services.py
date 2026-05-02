@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.journal.models import JournalLesson, LessonStatus
 
 if TYPE_CHECKING:
-    from apps.users.models import User
+    pass
 
 
 def create_journal_lesson(
@@ -111,9 +111,7 @@ def conduct_lesson(
     Если фактическая тема не указана — подставляет плановую.
     """
     if lesson.date > date.today():
-        raise ValidationError(
-            _("Нельзя провести занятие с датой в будущем.")
-        )
+        raise ValidationError(_("Нельзя провести занятие с датой в будущем."))
 
     lesson.status = LessonStatus.CONDUCTED
     lesson.actual_topic = actual_topic or lesson.planned_topic
@@ -121,7 +119,9 @@ def conduct_lesson(
         lesson.teacher_comment = teacher_comment
 
     lesson.full_clean()
-    lesson.save(update_fields=["status", "actual_topic", "teacher_comment", "updated_at"])
+    lesson.save(
+        update_fields=["status", "actual_topic", "teacher_comment", "updated_at"]
+    )
     return lesson
 
 
@@ -134,9 +134,7 @@ def cancel_lesson(
     Отменяет занятие. Нельзя отменить уже проведённое.
     """
     if lesson.status == LessonStatus.CONDUCTED:
-        raise ValidationError(
-            _("Нельзя отменить уже проведённое занятие.")
-        )
+        raise ValidationError(_("Нельзя отменить уже проведённое занятие."))
 
     lesson.status = LessonStatus.CANCELLED
     if teacher_comment:

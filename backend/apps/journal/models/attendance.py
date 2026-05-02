@@ -58,7 +58,9 @@ class AttendanceRecord(models.Model):
         ordering = ["lesson__date", "student"]
         indexes = [
             models.Index(fields=["lesson", "status"], name="idx_attend_lesson_status"),
-            models.Index(fields=["student", "status"], name="idx_attend_student_status"),
+            models.Index(
+                fields=["student", "status"], name="idx_attend_student_status"
+            ),
         ]
         constraints = [
             models.UniqueConstraint(

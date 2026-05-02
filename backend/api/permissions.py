@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class ReadOnlyOrAdmin(BasePermission):
@@ -8,18 +8,14 @@ class ReadOnlyOrAdmin(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         return bool(
-            request.user
-            and request.user.is_authenticated
-            and request.user.is_staff
+            request.user and request.user.is_authenticated and request.user.is_staff
         )
 
 
 class IsAuthenticatedAndActive(BasePermission):
     def has_permission(self, request, view) -> bool:
         return bool(
-            request.user
-            and request.user.is_authenticated
-            and request.user.is_active
+            request.user and request.user.is_authenticated and request.user.is_active
         )
 
 

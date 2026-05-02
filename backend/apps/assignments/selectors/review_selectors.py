@@ -6,15 +6,12 @@ from apps.assignments.models import ReviewComment, SubmissionReview
 
 
 def get_submission_review_base_queryset() -> QuerySet[SubmissionReview]:
-    return (
-        SubmissionReview.objects.select_related(
-            "submission",
-            "submission__assignment",
-            "submission__student",
-            "reviewer",
-        )
-        .order_by("-created_at")
-    )
+    return SubmissionReview.objects.select_related(
+        "submission",
+        "submission__assignment",
+        "submission__student",
+        "reviewer",
+    ).order_by("-created_at")
 
 
 def get_submission_reviews_queryset(
@@ -69,15 +66,12 @@ def get_review_comments_queryset(
     question_id: int | None = None,
     submission_answer_id: int | None = None,
 ) -> QuerySet[ReviewComment]:
-    queryset = (
-        ReviewComment.objects.select_related(
-            "review",
-            "question",
-            "submission_answer",
-            "created_by",
-        )
-        .order_by("-created_at")
-    )
+    queryset = ReviewComment.objects.select_related(
+        "review",
+        "question",
+        "submission_answer",
+        "created_by",
+    ).order_by("-created_at")
 
     if review_id:
         queryset = queryset.filter(review_id=review_id)

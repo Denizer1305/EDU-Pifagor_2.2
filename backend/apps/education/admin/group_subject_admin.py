@@ -67,40 +67,48 @@ class GroupSubjectAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        (_("Основное"), {
-            "fields": (
-                "group",
-                "subject",
-                "academic_year",
-                "period",
-            )
-        }),
-        (_("Нагрузка"), {
-            "fields": (
-                "planned_hours",
-                "contact_hours",
-                "independent_hours",
-                "hours_balance_display",
-            )
-        }),
-        (_("Аттестация и статус"), {
-            "fields": (
-                "assessment_type",
-                "is_required",
-                "is_active",
-            )
-        }),
-        (_("Дополнительно"), {
-            "fields": (
-                "notes",
-            )
-        }),
-        (_("Служебное"), {
-            "fields": (
-                "created_at",
-                "updated_at",
-            )
-        }),
+        (
+            _("Основное"),
+            {
+                "fields": (
+                    "group",
+                    "subject",
+                    "academic_year",
+                    "period",
+                )
+            },
+        ),
+        (
+            _("Нагрузка"),
+            {
+                "fields": (
+                    "planned_hours",
+                    "contact_hours",
+                    "independent_hours",
+                    "hours_balance_display",
+                )
+            },
+        ),
+        (
+            _("Аттестация и статус"),
+            {
+                "fields": (
+                    "assessment_type",
+                    "is_required",
+                    "is_active",
+                )
+            },
+        ),
+        (_("Дополнительно"), {"fields": ("notes",)}),
+        (
+            _("Служебное"),
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     @admin.display(description=_("Остаток часов"))

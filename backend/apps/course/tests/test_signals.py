@@ -16,9 +16,7 @@ class CourseSignalsTestCase(TestCase):
     def test_course_enrollment_creates_progress_via_signal(self):
         enrollment = create_course_enrollment()
 
-        self.assertTrue(
-            CourseProgress.objects.filter(enrollment=enrollment).exists()
-        )
+        self.assertTrue(CourseProgress.objects.filter(enrollment=enrollment).exists())
 
     def test_lesson_save_recalculates_module_and_course_minutes(self):
         course = create_course()

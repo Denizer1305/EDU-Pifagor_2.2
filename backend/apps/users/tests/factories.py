@@ -3,8 +3,14 @@ from __future__ import annotations
 from django.contrib.auth import get_user_model
 
 from apps.users.constants import ROLE_ADMIN, ROLE_PARENT, ROLE_STUDENT, ROLE_TEACHER
-from apps.users.models import ParentProfile, Profile, Role, StudentProfile, TeacherProfile, UserRole
-from apps.users.services.profile_services import ensure_role_profile, get_or_create_base_profile
+from apps.users.models import (
+    Role,
+    UserRole,
+)
+from apps.users.services.profile_services import (
+    ensure_role_profile,
+    get_or_create_base_profile,
+)
 
 User = get_user_model()
 

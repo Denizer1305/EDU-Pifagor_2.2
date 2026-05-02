@@ -121,7 +121,11 @@ class TeacherOrganization(models.Model):
         if self.teacher_id and hasattr(self.teacher, "registration_type"):
             if self.teacher.registration_type != "teacher":
                 raise ValidationError(
-                    {"teacher": _("Связь с организацией может быть создана только для пользователя с типом регистрации teacher.")}
+                    {
+                        "teacher": _(
+                            "Связь с организацией может быть создана только для пользователя с типом регистрации teacher."
+                        )
+                    }
                 )
 
         if self.is_primary and not self.is_active:
@@ -140,5 +144,9 @@ class TeacherOrganization(models.Model):
 
             if queryset.exists():
                 raise ValidationError(
-                    {"is_primary": _("У преподавателя уже есть другая основная активная организация.")}
+                    {
+                        "is_primary": _(
+                            "У преподавателя уже есть другая основная активная организация."
+                        )
+                    }
                 )
