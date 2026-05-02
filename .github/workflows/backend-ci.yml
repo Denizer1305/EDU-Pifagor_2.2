@@ -7,24 +7,38 @@ on:
       - dev
       - dev-backend
       - dev-frontend
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+      - ".pre-commit-config.yaml"
+      - ".editorconfig"
+      - ".gitignore"
   pull_request:
     branches:
       - main
       - dev
       - dev-backend
       - dev-frontend
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+      - ".pre-commit-config.yaml"
+      - ".editorconfig"
+      - ".gitignore"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: backend-ci-${{ github.ref }}
+  group: backend-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   backend:
     name: Backend checks
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     services:
       postgres:
@@ -44,16 +58,13 @@ jobs:
     env:
       DJANGO_SETTINGS_MODULE: config.settings.testing
       USE_POSTGRES_FOR_TESTS: "1"
-
       SECRET_KEY: github-actions-test-secret-key
       DEBUG: "False"
-
       POSTGRES_DB: pifagor_test
       POSTGRES_USER: pifagor
       POSTGRES_PASSWORD: pifagor
       DB_HOST: localhost
       DB_PORT: "5432"
-
       PYTHONUNBUFFERED: "1"
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
 
@@ -79,5 +90,11 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install -r requirements/dev.txt
 
-      - name: Run backend CI
+      - name: Show versions
+        run: |
+          python --version
+          python -m pip --version
+          python -m django --version
+
+      - name: Run backend checks
         run: make ci
