@@ -23,7 +23,9 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_("Адрес эл.почты обязателен для регистрации."))
 
-        email = self.normalize_email(email)
+        email = self.normalize_email(email).lower()
+        extra_fields["reset_email"] = extra_fields.get("reset_email") or ""
+
         user = self.model(email=email, **extra_fields)
         if password:
             user.set_password(password)
@@ -75,6 +77,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     reset_email = models.EmailField(
         _("Резервная почта для восстановления"),
         blank=True,
+        default="",
     )
 
     registration_type = models.CharField(

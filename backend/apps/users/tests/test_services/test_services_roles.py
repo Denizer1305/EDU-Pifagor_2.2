@@ -29,3 +29,12 @@ class RoleServicesTestCase(BaseUsersServiceTestCase):
             ROLE_STUDENT,
             list_user_role_codes(user),
         )
+
+    def test_assign_role_to_user_is_idempotent(self):
+        user = self.create_user("role-idempotent@example.com")
+
+        first = assign_role_to_user(user, ROLE_STUDENT)
+        second = assign_role_to_user(user, ROLE_STUDENT)
+
+        self.assertEqual(first.id, second.id)
+        self.assertEqual(user.user_roles.filter(role__code=ROLE_STUDENT).count(), 1)

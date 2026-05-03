@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.test import TestCase
 
 from apps.organizations.tests.factories import (
@@ -57,6 +58,9 @@ def _relation_type_father():
 
 
 class BaseUsersSelectorTestCase(TestCase):
+    def setUp(self):
+        cache.clear()
+
     def create_user(self, email: str, registration_type: str = "student"):
         user = User.objects.create_user(
             email=email,
@@ -104,6 +108,11 @@ class ProfileSelectorsTestCase(BaseUsersSelectorTestCase):
         profile = get_profile_by_user_id(user.id)
         self.assertEqual(profile.user_id, user.id)
 
+    def test_get_profile_by_user_id_returns_none_for_unknown_user(self):
+        profile = get_profile_by_user_id(999999)
+
+        self.assertIsNone(profile)
+
 
 class RoleSelectorsTestCase(BaseUsersSelectorTestCase):
     def setUp(self):
@@ -132,6 +141,11 @@ class RoleSelectorsTestCase(BaseUsersSelectorTestCase):
 
         queryset = get_user_roles_queryset(user_id=user.id, role_code=ROLE_STUDENT)
         self.assertEqual(queryset.count(), 1)
+
+    def test_get_role_by_code_selector_returns_none_for_unknown_code(self):
+        role = get_role_by_code_selector("unknown-role")
+
+        self.assertIsNone(role)
 
 
 class StudentSelectorsTestCase(BaseUsersSelectorTestCase):
@@ -183,6 +197,11 @@ class StudentSelectorsTestCase(BaseUsersSelectorTestCase):
         profile = get_student_profile_by_user_id(user.id)
         self.assertEqual(profile.user_id, user.id)
 
+    def test_get_student_profile_by_user_id_returns_none_for_unknown_user(self):
+        profile = get_student_profile_by_user_id(999999)
+
+        self.assertIsNone(profile)
+
 
 class TeacherSelectorsTestCase(BaseUsersSelectorTestCase):
     def setUp(self):
@@ -227,6 +246,11 @@ class TeacherSelectorsTestCase(BaseUsersSelectorTestCase):
         )
         profile = get_teacher_profile_by_user_id(user.id)
         self.assertEqual(profile.user_id, user.id)
+
+    def test_get_teacher_profile_by_user_id_returns_none_for_unknown_user(self):
+        profile = get_teacher_profile_by_user_id(999999)
+
+        self.assertIsNone(profile)
 
 
 class ParentSelectorsTestCase(BaseUsersSelectorTestCase):

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -17,6 +18,7 @@ User = get_user_model()
 
 class UserApiTestCase(APITestCase):
     def setUp(self):
+        cache.clear()
         self.student_role, _ = Role.objects.get_or_create(
             code=ROLE_STUDENT,
             defaults={"name": "Студент", "is_active": True},
@@ -122,3 +124,24 @@ class UserApiTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["email"], self.teacher.email)
+
+    def test_current_user_requires_authentication(self):
+        url = reverse("users:current-user")
+
+        response = self.client.get(url)
+
+        self.assertIn(
+            response.status_code,
+            {
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            },
+        )
+
+    def test_user_detail_non_admin_forbidden(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse("users:user-detail", args=[self.teacher.id])
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

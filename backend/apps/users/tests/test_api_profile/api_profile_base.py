@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.core.cache import cache
 from django.utils import timezone
 from rest_framework.test import APITestCase
 
@@ -50,6 +51,7 @@ class ProfileApiBaseTestCase(APITestCase):
     password = "StrongPass123!"
 
     def setUp(self):
+        cache.clear()
         self._ensure_system_roles()
 
         self.organization = create_organization(

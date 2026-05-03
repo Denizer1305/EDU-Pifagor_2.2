@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.core.cache import cache
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
@@ -18,6 +19,7 @@ from apps.users.tests.factories import (
 
 class PermissionsTestCase(TestCase):
     def setUp(self):
+        cache.clear()
         self.factory = APIRequestFactory()
 
     def test_can_manage_user_roles_for_admin_role(self):
@@ -74,6 +76,30 @@ class PermissionsTestCase(TestCase):
         user, parent_profile = create_parent_user()
         request = self.factory.get("/fake-url/")
         request.user = user
+
+        permission = IsParentProfileOwnerOrAdmin()
+        self.assertTrue(
+            permission.has_object_permission(request, view=None, obj=parent_profile)
+        )
+
+    def test_parent_profile_other_user_denied(self):
+        other_user = create_user(email="other-parent-profile@example.com")
+        _, parent_profile = create_parent_user(email="parent2@example.com")
+
+        request = self.factory.get("/fake-url/")
+        request.user = other_user
+
+        permission = IsParentProfileOwnerOrAdmin()
+        self.assertFalse(
+            permission.has_object_permission(request, view=None, obj=parent_profile)
+        )
+
+    def test_parent_profile_admin_has_access(self):
+        admin = create_admin_user()
+        _, parent_profile = create_parent_user(email="parent-admin-access@example.com")
+
+        request = self.factory.get("/fake-url/")
+        request.user = admin
 
         permission = IsParentProfileOwnerOrAdmin()
         self.assertTrue(

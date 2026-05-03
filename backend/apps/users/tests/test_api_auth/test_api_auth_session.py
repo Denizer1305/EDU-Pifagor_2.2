@@ -4,7 +4,9 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 
-from apps.users.tests.test_api_auth.api_auth_base import AuthApiBaseTestCase
+from apps.users.tests.test_api_auth.api_auth_base import (
+    AuthApiBaseTestCase,
+)
 
 User = get_user_model()
 

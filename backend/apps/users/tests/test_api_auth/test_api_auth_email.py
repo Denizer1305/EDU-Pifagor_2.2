@@ -6,7 +6,9 @@ from django.urls import reverse
 from rest_framework import status
 
 from apps.users.services.auth_services import build_verify_email_token
-from apps.users.tests.test_api_auth.api_auth_base import AuthApiBaseTestCase
+from apps.users.tests.test_api_auth.api_auth_base import (
+    AuthApiBaseTestCase,
+)
 
 
 class AuthEmailApiTestCase(AuthApiBaseTestCase):

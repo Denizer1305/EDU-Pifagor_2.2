@@ -23,9 +23,10 @@ class UserServicesTestCase(BaseUsersServiceTestCase):
         self.assertTrue(user.is_email_verified)
 
     def test_activate_user_onboarding(self):
-        user = self.create_user("activate@example.com")
-        user.is_email_verified = True
-        user.save(update_fields=["is_email_verified"])
+        user = self.create_user(
+            "activate@example.com",
+            is_email_verified=True,
+        )
 
         activate_user_onboarding(
             user,

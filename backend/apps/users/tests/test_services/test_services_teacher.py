@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from django.core.exceptions import ValidationError
+
 from apps.users.constants import (
     ONBOARDING_STATUS_ACTIVE,
     ONBOARDING_STATUS_REJECTED,
@@ -21,8 +23,9 @@ class TeacherServicesTestCase(BaseUsersServiceTestCase):
     def test_submit_teacher_verification_request(self):
         organization, department, _ = self.create_org_stack()
         user = self.create_user(
-            "teacher-service@example.com",
+            "teacher-approve@example.com",
             registration_type="teacher",
+            is_email_verified=True,
         )
 
         profile = submit_teacher_verification_request(
@@ -95,3 +98,22 @@ class TeacherServicesTestCase(BaseUsersServiceTestCase):
             user.onboarding_status,
             ONBOARDING_STATUS_REJECTED,
         )
+
+    def test_approve_teacher_profile_without_verified_email_raises_validation_error(
+        self,
+    ):
+        reviewer = self.create_user(
+            "reviewer-teacher-email@example.com",
+            registration_type="teacher",
+        )
+        user = self.create_user(
+            "teacher-unverified@example.com",
+            registration_type="teacher",
+        )
+
+        with self.assertRaises(ValidationError):
+            approve_teacher_profile(
+                teacher_profile=user.teacher_profile,
+                reviewer=reviewer,
+                comment="Подтвержден",
+            )

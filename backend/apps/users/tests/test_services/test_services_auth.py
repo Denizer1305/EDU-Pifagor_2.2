@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from django.core.exceptions import ValidationError
+
 from apps.users.constants import VERIFICATION_STATUS_PENDING
 from apps.users.services.auth_services import (
     authenticate_user,
@@ -98,3 +100,34 @@ class AuthServicesTestCase(BaseUsersServiceTestCase):
         user.refresh_from_db()
 
         self.assertTrue(user.check_password("ChangedStrong123!"))
+
+    def test_authenticate_user_with_wrong_password_raises_validation_error(self):
+        user = self.create_user("auth-wrong@example.com")
+
+        with self.assertRaises(ValidationError):
+            authenticate_user(
+                email=user.email,
+                password="WrongStrongPass123!",
+            )
+
+    def test_reset_password_by_token_password_mismatch_raises_validation_error(self):
+        user = self.create_user("reset-mismatch-service@example.com")
+        token = build_password_reset_token(user)
+
+        with self.assertRaises(ValidationError):
+            reset_password_by_token(
+                token=token,
+                password="NewStrongPass123!",
+                password_repeat="AnotherStrongPass123!",
+            )
+
+    def test_change_user_password_wrong_old_password_raises_validation_error(self):
+        user = self.create_user("change-wrong-service@example.com")
+
+        with self.assertRaises(ValidationError):
+            change_user_password(
+                user=user,
+                old_password="WrongStrongPass123!",
+                new_password="ChangedStrong123!",
+                new_password_confirm="ChangedStrong123!",
+            )

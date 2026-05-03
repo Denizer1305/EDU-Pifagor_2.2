@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from apps.users.services.auth_services import verify_user_email_by_token
@@ -16,6 +17,8 @@ class VerifyEmailAPIView(APIView):
     """Подтверждение email пользователя."""
 
     permission_classes = (AllowAny,)
+    throttle_classes = (ScopedRateThrottle,)
+    throttle_scope = "email_verify"
 
     def post(self, request, *args, **kwargs):
         token = (
