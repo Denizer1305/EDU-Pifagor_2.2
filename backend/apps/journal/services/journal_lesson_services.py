@@ -1,144 +1,137 @@
 from __future__ import annotations
 
-from datetime import date
-from typing import TYPE_CHECKING
+import logging
+from datetime import date, time
+from typing import Any
 
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
+from django.db import transaction
 
-from apps.journal.models import JournalLesson, LessonStatus
+from apps.journal.models import JournalLesson
+from apps.journal.models.choices import JournalLessonStatus
 
-if TYPE_CHECKING:
-    pass
+logger = logging.getLogger(__name__)
 
 
+@transaction.atomic
 def create_journal_lesson(
     *,
-    course_id: int,
-    group_id: int,
-    teacher_id: int,
-    lesson_date: date,
-    planned_topic: str = "",
+    course,
+    group,
+    date: date,
+    planned_topic: str,
+    teacher=None,
+    course_lesson=None,
+    lesson_number: int | None = None,
+    started_at: time | None = None,
+    ended_at: time | None = None,
     actual_topic: str = "",
     homework: str = "",
-    status: str = LessonStatus.PLANNED,
+    status: str = JournalLessonStatus.PLANNED,
     teacher_comment: str = "",
-    course_lesson_id: int | None = None,
-    lesson_number: int | None = None,
-    started_at=None,
-    ended_at=None,
 ) -> JournalLesson:
-    """
-    Создаёт новое занятие в журнале.
+    """Создаёт занятие в журнале."""
 
-    Проверяет, что дата не в будущем при статусе CONDUCTED.
-    """
-    if status == LessonStatus.CONDUCTED and lesson_date > date.today():
-        raise ValidationError(
-            _("Нельзя отметить как проведённое занятие с датой в будущем.")
-        )
+    logger.info(
+        "create_journal_lesson started course_id=%s group_id=%s date=%s",
+        getattr(course, "id", None),
+        getattr(group, "id", None),
+        date,
+    )
 
     lesson = JournalLesson(
-        course_id=course_id,
-        group_id=group_id,
-        teacher_id=teacher_id,
-        date=lesson_date,
+        course=course,
+        group=group,
+        teacher=teacher,
+        course_lesson=course_lesson,
+        lesson_number=lesson_number,
+        date=date,
+        started_at=started_at,
+        ended_at=ended_at,
         planned_topic=planned_topic,
         actual_topic=actual_topic,
         homework=homework,
         status=status,
         teacher_comment=teacher_comment,
-        course_lesson_id=course_lesson_id,
-        lesson_number=lesson_number,
-        started_at=started_at,
-        ended_at=ended_at,
     )
+
+    _validate_lesson_time(lesson)
+
     lesson.full_clean()
     lesson.save()
+
+    logger.info("create_journal_lesson completed lesson_id=%s", lesson.id)
     return lesson
 
 
+@transaction.atomic
 def update_journal_lesson(
-    *,
     lesson: JournalLesson,
-    **kwargs,
+    **fields: Any,
 ) -> JournalLesson:
-    """
-    Обновляет поля занятия. Передаются только изменяемые поля.
+    """Обновляет занятие журнала."""
 
-    Допустимые поля: planned_topic, actual_topic, homework, status,
-    teacher_comment, started_at, ended_at, lesson_number, course_lesson_id.
-    """
-    allowed_fields = {
-        "planned_topic",
-        "actual_topic",
-        "homework",
-        "status",
-        "teacher_comment",
-        "started_at",
-        "ended_at",
-        "lesson_number",
-        "course_lesson_id",
-        "date",
+    logger.info("update_journal_lesson started lesson_id=%s", lesson.id)
+
+    for field_name, value in fields.items():
+        setattr(lesson, field_name, value)
+
+    _validate_lesson_time(lesson)
+
+    lesson.full_clean()
+    lesson.save()
+
+    logger.info("update_journal_lesson completed lesson_id=%s", lesson.id)
+    return lesson
+
+
+@transaction.atomic
+def mark_lesson_conducted(
+    lesson: JournalLesson,
+    *,
+    actual_topic: str | None = None,
+    homework: str | None = None,
+    teacher_comment: str | None = None,
+) -> JournalLesson:
+    """Отмечает занятие как проведённое."""
+
+    update_fields: dict[str, Any] = {
+        "status": JournalLessonStatus.CONDUCTED,
     }
 
-    for field, value in kwargs.items():
-        if field not in allowed_fields:
-            raise ValueError(f"Поле '{field}' не разрешено для обновления.")
-        setattr(lesson, field, value)
+    if actual_topic is not None:
+        update_fields["actual_topic"] = actual_topic
 
-    lesson.full_clean()
-    lesson.save(update_fields=list(kwargs.keys()) + ["updated_at"])
-    return lesson
+    if homework is not None:
+        update_fields["homework"] = homework
 
+    if teacher_comment is not None:
+        update_fields["teacher_comment"] = teacher_comment
 
-def delete_journal_lesson(*, lesson: JournalLesson) -> None:
-    """
-    Удаляет занятие из журнала.
-    Каскадно удаляет записи посещаемости и оценки (через on_delete=CASCADE).
-    """
-    lesson.delete()
+    return update_journal_lesson(lesson, **update_fields)
 
 
-def conduct_lesson(
-    *,
+@transaction.atomic
+def cancel_journal_lesson(
     lesson: JournalLesson,
-    actual_topic: str = "",
-    teacher_comment: str = "",
+    *,
+    reason: str = "",
 ) -> JournalLesson:
-    """
-    Отмечает занятие как проведённое.
-    Если фактическая тема не указана — подставляет плановую.
-    """
-    if lesson.date > date.today():
-        raise ValidationError(_("Нельзя провести занятие с датой в будущем."))
+    """Отменяет занятие."""
 
-    lesson.status = LessonStatus.CONDUCTED
-    lesson.actual_topic = actual_topic or lesson.planned_topic
-    if teacher_comment:
-        lesson.teacher_comment = teacher_comment
-
-    lesson.full_clean()
-    lesson.save(
-        update_fields=["status", "actual_topic", "teacher_comment", "updated_at"]
+    return update_journal_lesson(
+        lesson,
+        status=JournalLessonStatus.CANCELLED,
+        teacher_comment=reason or lesson.teacher_comment,
     )
-    return lesson
 
 
-def cancel_lesson(
-    *,
-    lesson: JournalLesson,
-    teacher_comment: str = "",
-) -> JournalLesson:
-    """
-    Отменяет занятие. Нельзя отменить уже проведённое.
-    """
-    if lesson.status == LessonStatus.CONDUCTED:
-        raise ValidationError(_("Нельзя отменить уже проведённое занятие."))
+def _validate_lesson_time(lesson: JournalLesson) -> None:
+    """Проверяет корректность времени занятия."""
 
-    lesson.status = LessonStatus.CANCELLED
-    if teacher_comment:
-        lesson.teacher_comment = teacher_comment
-
-    lesson.save(update_fields=["status", "teacher_comment", "updated_at"])
-    return lesson
+    if lesson.started_at and lesson.ended_at and lesson.started_at >= lesson.ended_at:
+        raise ValidationError(
+            {
+                "ended_at": "Время окончания занятия должно быть позже времени начала.",
+            }
+        )

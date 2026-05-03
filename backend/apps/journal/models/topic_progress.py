@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from apps.journal.models.choices import TopicProgressStatus
+
 
 class TopicProgress(models.Model):
     """Фактическое прохождение темы курса группой."""
@@ -105,6 +107,12 @@ class TopicProgress(models.Model):
 
     def __str__(self) -> str:
         return f"{self.course} — {self.group} — {self.lesson}"
+
+    @property
+    def is_behind(self) -> bool:
+        """Показывает, что тема отстаёт от плана."""
+
+        return self.status == TopicProgressStatus.BEHIND
 
     def clean(self) -> None:
         errors: dict[str, str] = {}

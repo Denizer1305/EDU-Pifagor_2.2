@@ -3,12 +3,15 @@ from __future__ import annotations
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from apps.journal.admin.forms import JournalGradeAdminForm
 from apps.journal.models import JournalGrade
 
 
 @admin.register(JournalGrade)
 class JournalGradeAdmin(admin.ModelAdmin):
     """Администрирование оценок в журнале."""
+
+    form = JournalGradeAdminForm
 
     list_display = (
         "id",
@@ -40,7 +43,9 @@ class JournalGradeAdmin(admin.ModelAdmin):
         "lesson__planned_topic",
         "lesson__actual_topic",
         "lesson__course__title",
+        "lesson__course__code",
         "lesson__group__name",
+        "lesson__group__code",
         "comment",
     )
     autocomplete_fields = (
@@ -86,12 +91,16 @@ class JournalGradeAdmin(admin.ModelAdmin):
         (
             _("Значение оценки"),
             {
+                "description": _(
+                    "Для пятибалльной шкалы заполняется только оценка 1–5. "
+                    "Для зачёта заполняется только результат зачёт/незачёт."
+                ),
                 "fields": (
                     "score_five",
                     "is_passed",
                     "weight",
                     "comment",
-                )
+                ),
             },
         ),
         (

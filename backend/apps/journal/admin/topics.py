@@ -42,6 +42,11 @@ class TopicProgressAdmin(admin.ModelAdmin):
         "lesson",
         "journal_lesson",
     )
+    readonly_fields = (
+        "days_behind",
+        "created_at",
+        "updated_at",
+    )
     ordering = (
         "planned_date",
         "course",
@@ -52,6 +57,42 @@ class TopicProgressAdmin(admin.ModelAdmin):
         "group",
         "lesson",
         "journal_lesson",
+    )
+
+    fieldsets = (
+        (
+            _("Связи"),
+            {
+                "fields": (
+                    "course",
+                    "group",
+                    "lesson",
+                    "journal_lesson",
+                )
+            },
+        ),
+        (
+            _("Даты и статус"),
+            {
+                "fields": (
+                    "planned_date",
+                    "actual_date",
+                    "status",
+                    "days_behind",
+                    "comment",
+                )
+            },
+        ),
+        (
+            _("Служебная информация"),
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                ),
+            },
+        ),
     )
 
     @admin.display(description=_("Отстаёт?"), boolean=True)

@@ -9,7 +9,7 @@ from apps.journal.models import JournalSummary
 
 @admin.register(JournalSummary)
 class JournalSummaryAdmin(admin.ModelAdmin):
-    """Администрирование кэша сводок журнала."""
+    """Администрирование кэша сводок журнала. Только просмотр."""
 
     list_display = (
         "id",
@@ -103,11 +103,20 @@ class JournalSummaryAdmin(admin.ModelAdmin):
         ),
         (
             _("Служебная информация"),
-            {"fields": ("calculated_at",)},
+            {
+                "fields": ("calculated_at",),
+            },
         ),
     )
 
     def has_add_permission(self, request: HttpRequest) -> bool:
+        return False
+
+    def has_change_permission(
+        self,
+        request: HttpRequest,
+        obj: JournalSummary | None = None,
+    ) -> bool:
         return False
 
     def has_delete_permission(

@@ -26,6 +26,7 @@ class JournalLessonAdmin(admin.ModelAdmin):
         "date",
         "course",
         "group",
+        "teacher",
     )
     search_fields = (
         "planned_topic",
@@ -44,6 +45,10 @@ class JournalLessonAdmin(admin.ModelAdmin):
         "group",
         "teacher",
         "course_lesson",
+    )
+    readonly_fields = (
+        "created_at",
+        "updated_at",
     )
     date_hierarchy = "date"
     ordering = (
@@ -102,6 +107,16 @@ class JournalLessonAdmin(admin.ModelAdmin):
                     "status",
                     "teacher_comment",
                 )
+            },
+        ),
+        (
+            _("Служебная информация"),
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                ),
             },
         ),
     )

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.contrib import admin
 
+from apps.journal.admin.forms import JournalGradeAdminForm
 from apps.journal.models import AttendanceRecord, JournalGrade
 
 
@@ -10,6 +11,7 @@ class AttendanceInline(admin.TabularInline):
 
     model = AttendanceRecord
     extra = 0
+    show_change_link = True
     fields = (
         "student",
         "status",
@@ -22,7 +24,9 @@ class GradeInline(admin.TabularInline):
     """Оценки студентов прямо в карточке занятия."""
 
     model = JournalGrade
+    form = JournalGradeAdminForm
     extra = 0
+    show_change_link = True
     fields = (
         "student",
         "grade_type",

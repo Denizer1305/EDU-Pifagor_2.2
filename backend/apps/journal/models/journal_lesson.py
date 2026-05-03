@@ -14,6 +14,7 @@ class JournalLesson(models.Model):
         COMPLETED = "completed", _("Проведено")
         CANCELLED = "cancelled", _("Отменено")
         RESCHEDULED = "rescheduled", _("Перенесено")
+        REPLACED = "replaced", _("Замена")
 
     course = models.ForeignKey(
         "course.Course",
@@ -125,6 +126,12 @@ class JournalLesson(models.Model):
 
     def __str__(self) -> str:
         return f"{self.course} — {self.group} — {self.date}"
+
+    @property
+    def topic(self) -> str:
+        """Возвращает фактическкую тему, если нет - плановую"""
+
+        return self.actual_topic or self.planned_topic
 
     def clean(self) -> None:
         errors: dict[str, str] = {}

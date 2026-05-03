@@ -10,7 +10,7 @@ class AttendanceRecord(models.Model):
 
     class AttendanceStatus(models.TextChoices):
         PRESENT = "present", _("Присутствовал")
-        ABSENT = "absent", _("Отсутствовал")
+        ABSENT = "absent", _("Отсутствовал без уважительной причины")
         LATE = "late", _("Опоздал")
         EXCUSED = "excused", _("Отсутствовал по уважительной причине")
         REMOTE = "remote", _("Присутствовал дистанционно")
@@ -88,3 +88,11 @@ class AttendanceRecord(models.Model):
             self.AttendanceStatus.ABSENT,
             self.AttendanceStatus.EXCUSED,
         }
+
+    @property
+    def is_unexcused_absence(self) -> bool:
+        return self.status == self.AttendanceStatus.ABSENT
+
+    @property
+    def is_excused_absence(self) -> bool:
+        return self.status == self.AttendanceStatus.EXCUSED
