@@ -1,164 +1,138 @@
 from __future__ import annotations
 
-from datetime import date
+import logging
+from datetime import date, datetime
 
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
+from django.db import transaction
+from django.utils import timezone
 
-from apps.journal.models import TopicProgress, TopicProgressStatus
+from apps.course.models import CourseLesson
+from apps.journal.models import JournalLesson, TopicProgress
+from apps.journal.models.choices import JournalLessonStatus, TopicProgressStatus
+
+logger = logging.getLogger(__name__)
 
 
-def create_topic_progress(
+@transaction.atomic
+def sync_topic_progress_for_course_group(
     *,
-    course_id: int,
-    group_id: int,
-    lesson_id: int,
-    planned_date: date | None = None,
-    actual_date: date | None = None,
-    status: str = TopicProgressStatus.PLANNED,
-    journal_lesson_id: int | None = None,
-    comment: str = "",
-) -> TopicProgress:
-    """
-    Создаёт запись о прогрессе прохождения темы КТП для группы.
+    course,
+    group,
+) -> list[TopicProgress]:
+    """Синхронизирует прогресс тем по курсу и группе.
 
-    Уникальность course + group + lesson обеспечивается ограничением в БД,
-    но для удобства проверяем заранее.
+    Не создаёт новых таблиц.
+    Создаёт/обновляет строки TopicProgress для существующих CourseLesson.
     """
-    if TopicProgress.objects.filter(
-        course_id=course_id, group_id=group_id, lesson_id=lesson_id
-    ).exists():
-        raise ValidationError(
-            _("Запись о прогрессе для этой темы и группы уже существует.")
+
+    logger.info(
+        "sync_topic_progress_for_course_group started course_id=%s group_id=%s",
+        getattr(course, "id", None),
+        getattr(group, "id", None),
+    )
+
+    course_lessons = CourseLesson.objects.filter(course=course).order_by("order", "id")
+
+    progress_items: list[TopicProgress] = []
+
+    for course_lesson in course_lessons:
+        journal_lesson = _get_latest_conducted_journal_lesson(
+            course=course,
+            group=group,
+            course_lesson=course_lesson,
         )
 
-    days_behind = _compute_days_behind(
-        planned_date=planned_date, actual_date=actual_date, status=status
+        planned_date = _normalize_date(getattr(course_lesson, "available_from", None))
+
+        status, actual_date, days_behind = _calculate_topic_status(
+            planned_date=planned_date,
+            journal_lesson=journal_lesson,
+        )
+
+        progress, _ = TopicProgress.objects.update_or_create(
+            course=course,
+            group=group,
+            lesson=course_lesson,
+            defaults={
+                "journal_lesson": journal_lesson,
+                "planned_date": planned_date,
+                "actual_date": actual_date,
+                "status": status,
+                "days_behind": days_behind,
+            },
+        )
+
+        progress_items.append(progress)
+
+    logger.info(
+        "sync_topic_progress_for_course_group completed course_id=%s group_id=%s count=%s",
+        getattr(course, "id", None),
+        getattr(group, "id", None),
+        len(progress_items),
     )
 
-    progress = TopicProgress(
-        course_id=course_id,
-        group_id=group_id,
-        lesson_id=lesson_id,
-        planned_date=planned_date,
-        actual_date=actual_date,
-        status=status,
-        journal_lesson_id=journal_lesson_id,
-        comment=comment,
-        days_behind=days_behind,
-    )
-    progress.full_clean()
-    progress.save()
-    return progress
+    return progress_items
 
 
-def update_topic_progress(
+def _get_latest_conducted_journal_lesson(
     *,
-    progress: TopicProgress,
-    status: str | None = None,
-    actual_date: date | None = None,
-    journal_lesson_id: int | None = None,
-    comment: str | None = None,
-) -> TopicProgress:
-    """
-    Обновляет запись о прогрессе темы.
-    После обновления пересчитывает days_behind.
-    """
-    update_fields = ["updated_at"]
-
-    if status is not None:
-        progress.status = status
-        update_fields.append("status")
-
-    if actual_date is not None:
-        progress.actual_date = actual_date
-        update_fields.append("actual_date")
-
-    if journal_lesson_id is not None:
-        progress.journal_lesson_id = journal_lesson_id
-        update_fields.append("journal_lesson_id")
-
-    if comment is not None:
-        progress.comment = comment
-        update_fields.append("comment")
-
-    # Пересчёт отставания
-    progress.days_behind = _compute_days_behind(
-        planned_date=progress.planned_date,
-        actual_date=progress.actual_date,
-        status=progress.status,
-    )
-    update_fields.append("days_behind")
-
-    progress.full_clean()
-    progress.save(update_fields=update_fields)
-    return progress
-
-
-def mark_topic_completed(
-    *,
-    progress: TopicProgress,
-    actual_date: date | None = None,
-    journal_lesson_id: int | None = None,
-    comment: str = "",
-) -> TopicProgress:
-    """
-    Помечает тему как пройденную.
-    Если actual_date не передана — используется сегодняшняя дата.
-    """
-    return update_topic_progress(
-        progress=progress,
-        status=TopicProgressStatus.COMPLETED,
-        actual_date=actual_date or date.today(),
-        journal_lesson_id=journal_lesson_id,
-        comment=comment or progress.comment,
+    course,
+    group,
+    course_lesson: CourseLesson,
+) -> JournalLesson | None:
+    return (
+        JournalLesson.objects.filter(
+            course=course,
+            group=group,
+            course_lesson=course_lesson,
+            status=JournalLessonStatus.CONDUCTED,
+        )
+        .order_by("-date", "-id")
+        .first()
     )
 
 
-def recalculate_days_behind(*, progress: TopicProgress) -> TopicProgress:
-    """
-    Принудительно пересчитывает поле days_behind для записи.
-    Используется в задачах Celery при пакетном пересчёте.
-    """
-    progress.days_behind = _compute_days_behind(
-        planned_date=progress.planned_date,
-        actual_date=progress.actual_date,
-        status=progress.status,
-    )
-    progress.save(update_fields=["days_behind", "updated_at"])
-    return progress
-
-
-# ---------------------------------------------------------------------------
-# Внутренние утилиты
-# ---------------------------------------------------------------------------
-
-
-def _compute_days_behind(
+def _calculate_topic_status(
     *,
     planned_date: date | None,
-    actual_date: date | None,
-    status: str,
-) -> int:
-    """
-    Вычисляет отставание в днях.
+    journal_lesson: JournalLesson | None,
+) -> tuple[str, date | None, int]:
+    if journal_lesson is not None:
+        return TopicProgressStatus.COMPLETED, journal_lesson.date, 0
 
-    Логика:
-    - Если тема выполнена и есть обе даты: actual_date - planned_date.
-    - Если тема ещё не выполнена и planned_date в прошлом: today - planned_date.
-    - Иначе: 0.
+    if planned_date is None:
+        return TopicProgressStatus.PLANNED, None, 0
 
-    Положительное значение = отставание, отрицательное = опережение.
-    """
-    today = date.today()
+    today = timezone.localdate()
 
-    if status == TopicProgressStatus.COMPLETED:
-        if planned_date and actual_date:
-            return (actual_date - planned_date).days
-        return 0
+    if planned_date < today:
+        return TopicProgressStatus.BEHIND, None, (today - planned_date).days
 
-    if status in (TopicProgressStatus.PLANNED, TopicProgressStatus.BEHIND):
-        if planned_date and planned_date < today:
-            return (today - planned_date).days
+    return TopicProgressStatus.PLANNED, None, 0
 
-    return 0
+
+def _normalize_date(value) -> date | None:
+    if value is None:
+        return None
+
+    if isinstance(value, datetime):
+        if timezone.is_aware(value):
+            return timezone.localdate(value)
+
+        return value.date()
+
+    if isinstance(value, date):
+        return value
+
+    if hasattr(value, "date"):
+        normalized = value.date()
+        if isinstance(normalized, datetime):
+            return (
+                timezone.localdate(normalized)
+                if timezone.is_aware(normalized)
+                else normalized.date()
+            )
+
+        return normalized
+
+    return None

@@ -1,132 +1,129 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+import logging
+from collections.abc import Iterable
 
-from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
 
-from apps.journal.models import (
-    AttendanceRecord,
-    AttendanceStatus,
-    JournalLesson,
-)
+from apps.journal.models import AttendanceRecord, JournalLesson
+from apps.journal.models.choices import AttendanceStatus
+
+logger = logging.getLogger(__name__)
 
 
-def create_attendance_record(
+@transaction.atomic
+def mark_attendance(
     *,
     lesson: JournalLesson,
-    student_id: int,
-    status: str = AttendanceStatus.PRESENT,
+    student,
+    status: str,
     comment: str = "",
 ) -> AttendanceRecord:
-    """
-    Создаёт запись о посещаемости студента на занятии.
-    Если запись уже существует — вызывает ValidationError.
-    """
-    if AttendanceRecord.objects.filter(lesson=lesson, student_id=student_id).exists():
-        raise ValidationError(
-            _(
-                "Запись посещаемости для этого студента на данном занятии уже существует."
-            )
-        )
+    """Создаёт или обновляет посещаемость студента на занятии."""
 
-    record = AttendanceRecord(
-        lesson=lesson,
-        student_id=student_id,
-        status=status,
-        comment=comment,
+    logger.info(
+        "mark_attendance started lesson_id=%s student_id=%s status=%s",
+        lesson.id,
+        getattr(student, "id", None),
+        status,
     )
-    record.full_clean()
-    record.save()
-    return record
+
+    attendance, _ = AttendanceRecord.objects.update_or_create(
+        lesson=lesson,
+        student=student,
+        defaults={
+            "status": status,
+            "comment": comment,
+        },
+    )
+
+    attendance.full_clean()
+    attendance.save()
+
+    logger.info("mark_attendance completed attendance_id=%s", attendance.id)
+    return attendance
 
 
-def bulk_set_attendance(
+@transaction.atomic
+def mark_present(
     *,
     lesson: JournalLesson,
-    records: Sequence[dict],
-) -> list[AttendanceRecord]:
-    """
-    Массовое проставление посещаемости для занятия.
-
-    Формат records:
-        [
-            {"student_id": 1, "status": "present", "comment": ""},
-            {"student_id": 2, "status": "absent", "comment": "Болеет"},
-        ]
-
-    Логика:
-    - Если запись уже есть — обновляет статус и комментарий.
-    - Если нет — создаёт новую.
-    - Всё выполняется в одной транзакции.
-    """
-    if not records:
-        return []
-
-    student_ids = [r["student_id"] for r in records]
-
-    # Загружаем существующие записи одним запросом
-    existing = {
-        rec.student_id: rec
-        for rec in AttendanceRecord.objects.filter(
-            lesson=lesson, student_id__in=student_ids
-        )
-    }
-
-    to_create: list[AttendanceRecord] = []
-    to_update: list[AttendanceRecord] = []
-
-    for item in records:
-        student_id = item["student_id"]
-        status = item.get("status", AttendanceStatus.PRESENT)
-        comment = item.get("comment", "")
-
-        if student_id in existing:
-            rec = existing[student_id]
-            rec.status = status
-            rec.comment = comment
-            to_update.append(rec)
-        else:
-            to_create.append(
-                AttendanceRecord(
-                    lesson=lesson,
-                    student_id=student_id,
-                    status=status,
-                    comment=comment,
-                )
-            )
-
-    with transaction.atomic():
-        if to_create:
-            AttendanceRecord.objects.bulk_create(to_create)
-        if to_update:
-            AttendanceRecord.objects.bulk_update(
-                to_update, fields=["status", "comment", "updated_at"]
-            )
-
-    return to_create + to_update
-
-
-def update_attendance_record(
-    *,
-    record: AttendanceRecord,
-    status: str | None = None,
-    comment: str | None = None,
+    student,
+    comment: str = "",
 ) -> AttendanceRecord:
-    """
-    Обновляет статус и/или комментарий записи посещаемости.
-    """
-    update_fields = ["updated_at"]
+    """Отмечает студента присутствующим."""
 
-    if status is not None:
-        record.status = status
-        update_fields.append("status")
+    return mark_attendance(
+        lesson=lesson,
+        student=student,
+        status=AttendanceStatus.PRESENT,
+        comment=comment,
+    )
 
-    if comment is not None:
-        record.comment = comment
-        update_fields.append("comment")
 
-    record.full_clean()
-    record.save(update_fields=update_fields)
-    return record
+@transaction.atomic
+def mark_absent(
+    *,
+    lesson: JournalLesson,
+    student,
+    comment: str = "",
+) -> AttendanceRecord:
+    """Отмечает студента отсутствующим."""
+
+    return mark_attendance(
+        lesson=lesson,
+        student=student,
+        status=AttendanceStatus.ABSENT,
+        comment=comment,
+    )
+
+
+@transaction.atomic
+def mark_late(
+    *,
+    lesson: JournalLesson,
+    student,
+    comment: str = "",
+) -> AttendanceRecord:
+    """Отмечает опоздание студента."""
+
+    return mark_attendance(
+        lesson=lesson,
+        student=student,
+        status=AttendanceStatus.LATE,
+        comment=comment,
+    )
+
+
+@transaction.atomic
+def bulk_mark_attendance(
+    *,
+    lesson: JournalLesson,
+    students: Iterable,
+    status: str,
+    comment: str = "",
+) -> list[AttendanceRecord]:
+    """Массово отмечает посещаемость студентов."""
+
+    records: list[AttendanceRecord] = []
+
+    for student in students:
+        records.append(
+            mark_attendance(
+                lesson=lesson,
+                student=student,
+                status=status,
+                comment=comment,
+            )
+        )
+
+    return records
+
+
+@transaction.atomic
+def delete_attendance_record(attendance: AttendanceRecord) -> None:
+    """Удаляет запись посещаемости."""
+
+    logger.info("delete_attendance_record started attendance_id=%s", attendance.id)
+    attendance.delete()
+    logger.info("delete_attendance_record completed")

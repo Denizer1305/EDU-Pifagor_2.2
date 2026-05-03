@@ -1,30 +1,21 @@
 from __future__ import annotations
 
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class LessonStatus(models.TextChoices):
-    """Статус занятия в журнале."""
-
-    PLANNED = "planned", _("Запланировано")
-    CONDUCTED = "conducted", _("Проведено")
-    CANCELLED = "cancelled", _("Отменено")
-    POSTPONED = "postponed", _("Перенесено")
-    REPLACED = "replaced", _("Замена")
-
-
 class JournalLesson(models.Model):
-    """
-    Занятие в электронном журнале.
+    """Фактически проведённое занятие в электронном журнале."""
 
-    Представляет конкретный факт проведения (или планирования) урока
-    в рамках курса для учебной группы. Может быть связано с уроком
-    из модуля course/ (если курс построен по КТП), либо быть
-    самостоятельным записью без привязки к структуре курса.
-    """
+    class LessonStatus(models.TextChoices):
+        PLANNED = "planned", _("Запланировано")
+        COMPLETED = "completed", _("Проведено")
+        CANCELLED = "cancelled", _("Отменено")
+        RESCHEDULED = "rescheduled", _("Перенесено")
+        REPLACED = "replaced", _("Замена")
 
-    # --- Связи с другими модулями ---
     course = models.ForeignKey(
         "course.Course",
         on_delete=models.CASCADE,
@@ -35,28 +26,30 @@ class JournalLesson(models.Model):
         "organizations.Group",
         on_delete=models.CASCADE,
         related_name="journal_lessons",
-        verbose_name=_("Учебная группа"),
+        verbose_name=_("Группа"),
     )
     teacher = models.ForeignKey(
-        "users.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
-        related_name="journal_lessons",
+        blank=True,
+        related_name="journal_lessons_as_teacher",
         verbose_name=_("Преподаватель"),
     )
-    # Опциональная привязка к уроку из структуры курса (КТП)
     course_lesson = models.ForeignKey(
         "course.CourseLesson",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="journal_lessons",
-        verbose_name=_("Урок курса (КТП)"),
+        verbose_name=_("Плановая тема курса"),
     )
 
-    # --- Дата и время ---
-    date = models.DateField(
-        verbose_name=_("Дата занятия"),
+    date = models.DateField(verbose_name=_("Дата занятия"))
+    lesson_number = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_("Номер занятия в дне"),
     )
     started_at = models.TimeField(
         null=True,
@@ -69,7 +62,6 @@ class JournalLesson(models.Model):
         verbose_name=_("Время окончания"),
     )
 
-    # --- Тема ---
     planned_topic = models.CharField(
         max_length=512,
         blank=True,
@@ -80,62 +72,86 @@ class JournalLesson(models.Model):
         blank=True,
         verbose_name=_("Фактическая тема"),
     )
-
-    # --- Домашнее задание ---
     homework = models.TextField(
         blank=True,
         verbose_name=_("Домашнее задание"),
     )
-
-    # --- Статус и комментарий ---
     status = models.CharField(
         max_length=20,
         choices=LessonStatus.choices,
         default=LessonStatus.PLANNED,
-        verbose_name=_("Статус"),
         db_index=True,
+        verbose_name=_("Статус"),
     )
     teacher_comment = models.TextField(
         blank=True,
         verbose_name=_("Комментарий преподавателя"),
     )
 
-    # --- Порядковый номер занятия в рамках курса/группы ---
-    lesson_number = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True,
-        verbose_name=_("Номер занятия"),
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Дата создания"),
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("Дата обновления"),
     )
 
-    # --- Служебные поля ---
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Создано"))
-    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Обновлено"))
-
     class Meta:
+        db_table = "journal_lesson"
         verbose_name = _("Занятие журнала")
         verbose_name_plural = _("Занятия журнала")
-        db_table = "journal_lesson"
-        ordering = ["date", "started_at"]
+        ordering = ["-date", "lesson_number", "id"]
         indexes = [
             models.Index(
-                fields=["course", "group", "date"], name="idx_jlesson_course_group_date"
+                fields=["course", "group", "date"],
+                name="idx_jlesson_course_group_date",
             ),
-            models.Index(fields=["teacher", "date"], name="idx_jlesson_teacher_date"),
-            models.Index(fields=["status"], name="idx_jlesson_status"),
+            models.Index(
+                fields=["teacher", "date"],
+                name="idx_jlesson_teacher_date",
+            ),
+            models.Index(
+                fields=["status"],
+                name="idx_jlesson_status",
+            ),
         ]
         constraints = [
             models.UniqueConstraint(
                 fields=["course", "group", "date", "lesson_number"],
-                name="uniq_jlesson_course_group_date_num",
                 condition=models.Q(lesson_number__isnull=False),
-            )
+                name="uniq_jlesson_course_group_date_num",
+            ),
         ]
 
     def __str__(self) -> str:
-        topic = self.actual_topic or self.planned_topic or "—"
-        return f"{self.date} | {self.group} | {topic[:60]}"
+        return f"{self.course} — {self.group} — {self.date}"
 
     @property
     def topic(self) -> str:
-        """Возвращает фактическую тему, если проведено, иначе плановую."""
+        """Возвращает фактическкую тему, если нет - плановую"""
+
         return self.actual_topic or self.planned_topic
+
+    def clean(self) -> None:
+        errors: dict[str, str] = {}
+
+        if self.started_at and self.ended_at and self.ended_at <= self.started_at:
+            errors["ended_at"] = _("Время окончания должно быть позже времени начала.")
+
+        if self.course_lesson_id and self.course_id:
+            if self.course_lesson.course_id != self.course_id:
+                errors["course_lesson"] = _(
+                    "Плановая тема должна относиться к выбранному курсу."
+                )
+
+        if self.course_id and self.group_id:
+            group_subject = getattr(self.course, "group_subject", None)
+
+            if group_subject is not None and group_subject.group_id != self.group_id:
+                errors["group"] = _(
+                    "Группа занятия должна совпадать с группой учебного курса."
+                )
+
+        if errors:
+            raise ValidationError(errors)
