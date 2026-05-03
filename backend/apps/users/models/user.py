@@ -75,7 +75,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     reset_email = models.EmailField(
         _("Резервная почта для восстановления"),
         blank=True,
-        null=True,
     )
 
     registration_type = models.CharField(

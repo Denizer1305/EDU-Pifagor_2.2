@@ -20,14 +20,14 @@ from .teacher_subject import (
 )
 
 __all__ = [
-    "GroupListView",
+    "GroupCuratorDetailView",
+    "GroupCuratorListView",
     "GroupDetailView",
     "GroupJoinCodeView",
-    "GroupCuratorListView",
-    "GroupCuratorDetailView",
-    "TeacherOrganizationListView",
+    "GroupListView",
     "TeacherOrganizationDetailView",
+    "TeacherOrganizationListView",
     "TeacherOrganizationSetPrimaryView",
-    "TeacherSubjectListView",
     "TeacherSubjectDetailView",
+    "TeacherSubjectListView",
 ]

@@ -12,10 +12,10 @@ from .enrollment import (
 )
 
 __all__ = [
-    "CourseAssignmentListCreateAPIView",
     "CourseAssignmentDetailAPIView",
-    "CourseEnrollmentListAPIView",
-    "CourseEnrollmentDetailAPIView",
+    "CourseAssignmentListCreateAPIView",
     "CourseEnrollmentCancelAPIView",
+    "CourseEnrollmentDetailAPIView",
+    "CourseEnrollmentListAPIView",
     "MyCourseEnrollmentListAPIView",
 ]

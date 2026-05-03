@@ -9,9 +9,9 @@ from .detail import AssignmentDetailAPIView
 from .list_create import AssignmentListCreateAPIView
 
 __all__ = [
-    "AssignmentListCreateAPIView",
-    "AssignmentDetailAPIView",
-    "AssignmentPublishAPIView",
     "AssignmentArchiveAPIView",
+    "AssignmentDetailAPIView",
     "AssignmentDuplicateAPIView",
+    "AssignmentListCreateAPIView",
+    "AssignmentPublishAPIView",
 ]

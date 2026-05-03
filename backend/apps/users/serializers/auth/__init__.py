@@ -14,12 +14,12 @@ from .registration import (
 )
 
 __all__ = [
-    "LoginSerializer",
     "BaseRegistrationSerializer",
-    "StudentRegistrationSerializer",
-    "ParentRegistrationSerializer",
-    "TeacherRegistrationSerializer",
-    "PasswordResetSerializer",
-    "PasswordResetConfirmSerializer",
     "ChangePasswordSerializer",
+    "LoginSerializer",
+    "ParentRegistrationSerializer",
+    "PasswordResetConfirmSerializer",
+    "PasswordResetSerializer",
+    "StudentRegistrationSerializer",
+    "TeacherRegistrationSerializer",
 ]

@@ -113,9 +113,8 @@ class RoleModelTestCase(TestCase):
 
         UserRole.objects.create(user=user, role=roles["teacher"])
 
-        with self.assertRaises(IntegrityError):
-            with transaction.atomic():
-                UserRole.objects.create(user=user, role=roles["teacher"])
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            UserRole.objects.create(user=user, role=roles["teacher"])
 
 
 class ParentStudentModelTestCase(TestCase):

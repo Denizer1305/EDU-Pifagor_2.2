@@ -20,14 +20,14 @@ from .teacher import (
 )
 
 __all__ = [
-    "OrganizationTypeSerializer",
-    "OrganizationShortSerializer",
-    "OrganizationSerializer",
-    "OrganizationTeacherRegistrationCodeSerializer",
     "DepartmentSerializer",
-    "GroupSerializer",
-    "GroupJoinCodeSerializer",
     "GroupCuratorSerializer",
+    "GroupJoinCodeSerializer",
+    "GroupSerializer",
+    "OrganizationSerializer",
+    "OrganizationShortSerializer",
+    "OrganizationTeacherRegistrationCodeSerializer",
+    "OrganizationTypeSerializer",
     "SubjectCategorySerializer",
     "SubjectSerializer",
     "TeacherOrganizationSerializer",

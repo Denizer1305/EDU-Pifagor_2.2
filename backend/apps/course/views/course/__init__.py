@@ -19,13 +19,13 @@ from .teachers import (
 )
 
 __all__ = [
-    "CourseListCreateAPIView",
-    "CourseDetailAPIView",
-    "CoursePublishAPIView",
     "CourseArchiveAPIView",
+    "CourseDetailAPIView",
     "CourseDuplicateAPIView",
-    "CourseTeacherListCreateAPIView",
-    "CourseTeacherDetailAPIView",
-    "CoursePublicListAPIView",
+    "CourseListCreateAPIView",
     "CoursePublicDetailAPIView",
+    "CoursePublicListAPIView",
+    "CoursePublishAPIView",
+    "CourseTeacherDetailAPIView",
+    "CourseTeacherListCreateAPIView",
 ]

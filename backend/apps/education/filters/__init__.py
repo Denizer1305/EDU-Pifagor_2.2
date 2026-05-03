@@ -9,10 +9,10 @@ from .teacher_group_subject_filter import TeacherGroupSubjectFilter
 
 __all__ = [
     "AcademicYearFilter",
-    "EducationPeriodFilter",
-    "StudentGroupEnrollmentFilter",
-    "GroupSubjectFilter",
-    "TeacherGroupSubjectFilter",
     "CurriculumFilter",
     "CurriculumItemFilter",
+    "EducationPeriodFilter",
+    "GroupSubjectFilter",
+    "StudentGroupEnrollmentFilter",
+    "TeacherGroupSubjectFilter",
 ]

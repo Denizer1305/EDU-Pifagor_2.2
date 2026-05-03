@@ -8,13 +8,13 @@ from .user import User, UserManager
 from .user_role import UserRole
 
 __all__ = [
+    "ParentProfile",
+    "ParentStudent",
+    "Profile",
+    "Role",
+    "StudentProfile",
+    "TeacherProfile",
     "User",
     "UserManager",
     "UserRole",
-    "Role",
-    "Profile",
-    "TeacherProfile",
-    "StudentProfile",
-    "ParentProfile",
-    "ParentStudent",
 ]

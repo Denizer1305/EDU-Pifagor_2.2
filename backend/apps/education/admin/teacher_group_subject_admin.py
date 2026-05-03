@@ -123,15 +123,9 @@ class TeacherGroupSubjectAdmin(admin.ModelAdmin):
 
     @admin.display(description=_("Текущее"), boolean=True)
     def is_current_display(self, obj: TeacherGroupSubject) -> bool:
-        if not obj.is_active:
-            return False
-
         today = timezone.localdate()
 
-        if obj.starts_at and obj.starts_at > today:
-            return False
+        has_started = not obj.starts_at or obj.starts_at <= today
+        has_not_ended = not obj.ends_at or obj.ends_at >= today
 
-        if obj.ends_at and obj.ends_at < today:
-            return False
-
-        return True
+        return obj.is_active and has_started and has_not_ended

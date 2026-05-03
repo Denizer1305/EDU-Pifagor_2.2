@@ -1,3 +1,4 @@
+from contextlib import suppress
 from importlib import import_module
 
 from django.apps import AppConfig
@@ -12,7 +13,5 @@ class EducationConfig(AppConfig):
 
     def ready(self) -> None:
         """Инициализирует обработчики приложения при запуске."""
-        try:
+        with suppress(ModuleNotFoundError):
             import_module("apps.education.signals")
-        except ModuleNotFoundError:
-            pass

@@ -108,26 +108,40 @@ class GroupSubject(models.Model):
 
         errors: dict[str, str] = {}
 
-        if self.period_id and self.academic_year_id:
-            if self.period.academic_year_id != self.academic_year_id:
-                errors["period"] = _(
-                    "Учебный период должен принадлежать тому же учебному году."
-                )
+        if (
+            self.period_id
+            and self.academic_year_id
+            and self.period.academic_year_id != self.academic_year_id
+        ):
+            errors["period"] = _(
+                "Учебный период должен принадлежать тому же учебному году."
+            )
+
+        if (
+            self.group_id
+            and hasattr(self.group, "is_active")
+            and not self.group.is_active
+        ):
+            errors["group"] = _("Нельзя назначить предмет неактивной группе.")
 
         if self.group_id:
-            if hasattr(self.group, "is_active") and not self.group.is_active:
-                errors["group"] = _("Нельзя назначить предмет неактивной группе.")
-
             group_academic_year = getattr(self.group, "academic_year", "")
-            if group_academic_year and self.academic_year_id:
-                if group_academic_year != self.academic_year.name:
-                    errors["academic_year"] = _(
-                        "Учебный год предмета группы должен совпадать с учебным годом группы."
-                    )
 
-        if self.subject_id:
-            if hasattr(self.subject, "is_active") and not self.subject.is_active:
-                errors["subject"] = _("Нельзя назначить неактивный предмет.")
+            if (
+                group_academic_year
+                and self.academic_year_id
+                and group_academic_year != self.academic_year.name
+            ):
+                errors["academic_year"] = _(
+                    "Учебный год предмета группы должен совпадать с учебным годом группы."
+                )
+
+        if (
+            self.subject_id
+            and hasattr(self.subject, "is_active")
+            and not self.subject.is_active
+        ):
+            errors["subject"] = _("Нельзя назначить неактивный предмет.")
 
         if self.contact_hours > self.planned_hours:
             errors["contact_hours"] = _(

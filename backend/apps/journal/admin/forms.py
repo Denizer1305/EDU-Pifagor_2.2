@@ -13,7 +13,7 @@ class JournalGradeAdminForm(forms.ModelForm):
 
     class Meta:
         model = JournalGrade
-        fields = "__all__"
+        fields = "__all__"  # noqa: DJ007
 
     def clean(self) -> dict:
         cleaned_data = super().clean()

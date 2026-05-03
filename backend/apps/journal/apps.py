@@ -1,3 +1,4 @@
+from contextlib import suppress
 from importlib import import_module
 
 from django.apps import AppConfig
@@ -14,7 +15,5 @@ class JournalConfig(AppConfig):
 
     def ready(self) -> None:
         """Инициализирует обработчики приложения при запуске."""
-        try:
+        with suppress(ModuleNotFoundError):
             import_module("apps.journal.signals")
-        except ModuleNotFoundError:
-            pass

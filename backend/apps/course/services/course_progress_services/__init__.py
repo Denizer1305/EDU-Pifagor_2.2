@@ -16,8 +16,8 @@ __all__ = [
     "_get_trackable_lessons_queryset",
     "ensure_course_progress",
     "ensure_lesson_progress",
-    "start_course_enrollment",
-    "mark_lesson_in_progress",
     "mark_lesson_completed",
+    "mark_lesson_in_progress",
     "recalculate_course_progress",
+    "start_course_enrollment",
 ]

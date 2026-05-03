@@ -7,9 +7,9 @@ from .lesson_progress_filter import LessonProgressFilter
 from .progress_filter import CourseProgressFilter
 
 __all__ = [
-    "CourseFilter",
     "CourseAssignmentFilter",
     "CourseEnrollmentFilter",
+    "CourseFilter",
     "CourseProgressFilter",
     "LessonProgressFilter",
 ]

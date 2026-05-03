@@ -18,12 +18,12 @@ from .variants import (
 )
 
 __all__ = [
-    "AssignmentVariantSerializer",
-    "AssignmentVariantWriteSerializer",
-    "AssignmentSectionSerializer",
-    "AssignmentSectionWriteSerializer",
-    "AssignmentQuestionSerializer",
-    "AssignmentQuestionWriteSerializer",
     "AssignmentAttachmentSerializer",
     "AssignmentAttachmentWriteSerializer",
+    "AssignmentQuestionSerializer",
+    "AssignmentQuestionWriteSerializer",
+    "AssignmentSectionSerializer",
+    "AssignmentSectionWriteSerializer",
+    "AssignmentVariantSerializer",
+    "AssignmentVariantWriteSerializer",
 ]

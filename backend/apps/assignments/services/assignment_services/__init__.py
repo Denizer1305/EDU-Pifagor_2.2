@@ -6,10 +6,10 @@ from .duplicate import duplicate_assignment
 from .status import archive_assignment, publish_assignment
 
 __all__ = [
-    "get_or_create_assignment_policy",
-    "create_assignment",
-    "update_assignment",
-    "publish_assignment",
     "archive_assignment",
+    "create_assignment",
     "duplicate_assignment",
+    "get_or_create_assignment_policy",
+    "publish_assignment",
+    "update_assignment",
 ]

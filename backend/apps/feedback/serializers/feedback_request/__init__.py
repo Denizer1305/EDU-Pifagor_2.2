@@ -18,14 +18,14 @@ from .related import (
 )
 
 __all__ = [
-    "FeedbackRequestContactSerializer",
-    "FeedbackRequestTechnicalSerializer",
-    "FeedbackRequestProcessingSerializer",
-    "FeedbackStatusHistorySerializer",
-    "FeedbackRequestBaseSerializer",
-    "FeedbackRequestListSerializer",
-    "FeedbackRequestDetailSerializer",
-    "FeedbackRequestCreateSerializer",
-    "FeedbackRequestErrorCreateSerializer",
     "FeedbackRequestAdminUpdateSerializer",
+    "FeedbackRequestBaseSerializer",
+    "FeedbackRequestContactSerializer",
+    "FeedbackRequestCreateSerializer",
+    "FeedbackRequestDetailSerializer",
+    "FeedbackRequestErrorCreateSerializer",
+    "FeedbackRequestListSerializer",
+    "FeedbackRequestProcessingSerializer",
+    "FeedbackRequestTechnicalSerializer",
+    "FeedbackStatusHistorySerializer",
 ]

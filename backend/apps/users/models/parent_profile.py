@@ -38,7 +38,6 @@ class ParentProfile(models.Model):
     notes = models.TextField(
         _("Служебные заметки"),
         blank=True,
-        null=True,
     )
     created_at = models.DateTimeField(
         _("Дата создания"),

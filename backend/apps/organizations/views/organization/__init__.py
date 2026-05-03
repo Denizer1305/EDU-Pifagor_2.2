@@ -18,12 +18,12 @@ from .teacher_registration_code import (
 )
 
 __all__ = [
-    "OrganizationTypeListView",
-    "OrganizationTypeDetailView",
-    "OrganizationListView",
-    "OrganizationDetailView",
-    "OrganizationTeacherRegistrationCodeView",
-    "OrganizationTeacherRegistrationCodeDisableView",
-    "DepartmentListView",
     "DepartmentDetailView",
+    "DepartmentListView",
+    "OrganizationDetailView",
+    "OrganizationListView",
+    "OrganizationTeacherRegistrationCodeDisableView",
+    "OrganizationTeacherRegistrationCodeView",
+    "OrganizationTypeDetailView",
+    "OrganizationTypeListView",
 ]

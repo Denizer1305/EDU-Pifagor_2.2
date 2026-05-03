@@ -17,13 +17,13 @@ from .modules import (
 )
 
 __all__ = [
-    "CourseModuleListCreateAPIView",
-    "CourseModuleDetailAPIView",
-    "CourseModuleReorderAPIView",
-    "CourseLessonListCreateAPIView",
     "CourseLessonDetailAPIView",
+    "CourseLessonListCreateAPIView",
     "CourseLessonMoveAPIView",
     "CourseLessonReorderAPIView",
-    "CourseMaterialListCreateAPIView",
     "CourseMaterialDetailAPIView",
+    "CourseMaterialListCreateAPIView",
+    "CourseModuleDetailAPIView",
+    "CourseModuleListCreateAPIView",
+    "CourseModuleReorderAPIView",
 ]

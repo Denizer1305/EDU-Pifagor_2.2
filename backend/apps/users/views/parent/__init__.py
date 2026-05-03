@@ -13,9 +13,9 @@ from .review import ParentStudentReviewAPIView
 
 __all__ = [
     "MyParentProfileAPIView",
+    "MyParentStudentLinksAPIView",
     "ParentProfileViewSet",
     "ParentStudentRequestAPIView",
-    "MyParentStudentLinksAPIView",
-    "ParentStudentViewSet",
     "ParentStudentReviewAPIView",
+    "ParentStudentViewSet",
 ]

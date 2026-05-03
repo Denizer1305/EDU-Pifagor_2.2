@@ -16,14 +16,14 @@ from .materials import (
 )
 
 __all__ = [
-    "CourseMaterialListSerializer",
-    "CourseMaterialDetailSerializer",
-    "CourseMaterialCreateSerializer",
-    "CourseMaterialUpdateSerializer",
-    "CourseLessonListSerializer",
-    "CourseLessonDetailSerializer",
     "CourseLessonCreateSerializer",
-    "CourseLessonUpdateSerializer",
+    "CourseLessonDetailSerializer",
+    "CourseLessonListSerializer",
     "CourseLessonMoveSerializer",
     "CourseLessonReorderSerializer",
+    "CourseLessonUpdateSerializer",
+    "CourseMaterialCreateSerializer",
+    "CourseMaterialDetailSerializer",
+    "CourseMaterialListSerializer",
+    "CourseMaterialUpdateSerializer",
 ]

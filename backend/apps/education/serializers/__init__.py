@@ -5,10 +5,10 @@ from .load import GroupSubjectSerializer, TeacherGroupSubjectSerializer
 
 __all__ = [
     "AcademicYearSerializer",
-    "EducationPeriodSerializer",
-    "StudentGroupEnrollmentSerializer",
-    "GroupSubjectSerializer",
-    "TeacherGroupSubjectSerializer",
-    "CurriculumSerializer",
     "CurriculumItemSerializer",
+    "CurriculumSerializer",
+    "EducationPeriodSerializer",
+    "GroupSubjectSerializer",
+    "StudentGroupEnrollmentSerializer",
+    "TeacherGroupSubjectSerializer",
 ]

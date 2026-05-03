@@ -22,18 +22,18 @@ from .load_services import (
 )
 
 __all__ = [
-    "create_academic_year",
-    "update_academic_year",
-    "create_education_period",
-    "update_education_period",
-    "create_student_group_enrollment",
-    "update_student_group_enrollment",
-    "create_group_subject",
-    "update_group_subject",
     "assign_teacher_group_subject",
-    "remove_teacher_group_subject",
+    "create_academic_year",
     "create_curriculum",
-    "update_curriculum",
     "create_curriculum_item",
+    "create_education_period",
+    "create_group_subject",
+    "create_student_group_enrollment",
+    "remove_teacher_group_subject",
+    "update_academic_year",
+    "update_curriculum",
     "update_curriculum_item",
+    "update_education_period",
+    "update_group_subject",
+    "update_student_group_enrollment",
 ]

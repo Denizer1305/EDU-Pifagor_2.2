@@ -58,55 +58,67 @@ def validate_student_profile_request(student_profile) -> None:
     requested_department = getattr(student_profile, "requested_department", None)
     requested_group = getattr(student_profile, "requested_group", None)
 
-    if requested_department and requested_organization:
-        if requested_department.organization_id != requested_organization.id:
-            raise ValidationError(
-                {
-                    "requested_department": _(
-                        "Отделение должно принадлежать выбранной образовательной организации."
-                    )
-                }
-            )
+    if (
+        requested_department
+        and requested_organization
+        and requested_department.organization_id != requested_organization.id
+    ):
+        raise ValidationError(
+            {
+                "requested_department": _(
+                    "Отделение должно принадлежать выбранной образовательной организации."
+                )
+            }
+        )
 
-    if requested_group and requested_organization:
-        if requested_group.organization_id != requested_organization.id:
-            raise ValidationError(
-                {
-                    "requested_group": _(
-                        "Группа должна принадлежать выбранной образовательной организации."
-                    )
-                }
-            )
+    if (
+        requested_group
+        and requested_organization
+        and requested_group.organization_id != requested_organization.id
+    ):
+        raise ValidationError(
+            {
+                "requested_group": _(
+                    "Группа должна принадлежать выбранной образовательной организации."
+                )
+            }
+        )
 
-    if requested_group and requested_department and requested_group.department_id:
-        if requested_group.department_id != requested_department.id:
-            raise ValidationError(
-                {
-                    "requested_group": _(
-                        "Группа должна принадлежать выбранному отделению."
-                    )
-                }
-            )
+    if (
+        requested_group
+        and requested_department
+        and requested_group.department_id
+        and requested_group.department_id != requested_department.id
+    ):
+        raise ValidationError(
+            {"requested_group": _("Группа должна принадлежать выбранному отделению.")}
+        )
 
 
 def validate_teacher_profile_request(teacher_profile) -> None:
     requested_organization = getattr(teacher_profile, "requested_organization", None)
     requested_department = getattr(teacher_profile, "requested_department", None)
 
-    if requested_department and requested_organization:
-        if requested_department.organization_id != requested_organization.id:
-            raise ValidationError(
-                {
-                    "requested_department": _(
-                        "Подразделение должно принадлежать выбранной образовательной организации."
-                    )
-                }
-            )
+    if (
+        requested_department
+        and requested_organization
+        and requested_department.organization_id != requested_organization.id
+    ):
+        raise ValidationError(
+            {
+                "requested_department": _(
+                    "Подразделение должно принадлежать выбранной образовательной организации."
+                )
+            }
+        )
 
 
 def validate_parent_student_link(link) -> None:
-    if getattr(link, "parent_id", None) and getattr(link, "student_id", None):
-        if link.parent_id == link.student_id:
-            raise ValidationError(
-                {"student": _("Нельзя создать связь пользователя с самим собой.")}
-            )
+    if (
+        getattr(link, "parent_id", None)
+        and getattr(link, "student_id", None)
+        and link.parent_id == link.student_id
+    ):
+        raise ValidationError(
+            {"student": _("Нельзя создать связь пользователя с самим собой.")}
+        )

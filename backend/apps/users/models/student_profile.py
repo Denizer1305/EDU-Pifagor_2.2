@@ -69,7 +69,6 @@ class StudentProfile(models.Model):
     notes = models.TextField(
         _("Служебные заметки"),
         blank=True,
-        null=True,
     )
 
     requested_organization = models.ForeignKey(

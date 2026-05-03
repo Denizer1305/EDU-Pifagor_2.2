@@ -14,14 +14,14 @@ from .teacher_admin import CourseTeacherAdmin
 
 __all__ = [
     "CourseAdmin",
-    "CourseTeacherInline",
-    "CourseModuleInline",
-    "CourseTeacherAdmin",
-    "CourseModuleAdmin",
-    "CourseLessonAdmin",
-    "CourseMaterialAdmin",
     "CourseAssignmentAdmin",
     "CourseEnrollmentAdmin",
+    "CourseLessonAdmin",
+    "CourseMaterialAdmin",
+    "CourseModuleAdmin",
+    "CourseModuleInline",
     "CourseProgressAdmin",
+    "CourseTeacherAdmin",
+    "CourseTeacherInline",
     "LessonProgressAdmin",
 ]

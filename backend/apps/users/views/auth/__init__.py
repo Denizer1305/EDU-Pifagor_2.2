@@ -13,11 +13,11 @@ from .session import (
 )
 
 __all__ = [
-    "RegisterAPIView",
+    "ChangePasswordAPIView",
     "LoginAPIView",
     "LogoutAPIView",
-    "VerifyEmailAPIView",
-    "PasswordResetRequestAPIView",
     "PasswordResetConfirmAPIView",
-    "ChangePasswordAPIView",
+    "PasswordResetRequestAPIView",
+    "RegisterAPIView",
+    "VerifyEmailAPIView",
 ]
