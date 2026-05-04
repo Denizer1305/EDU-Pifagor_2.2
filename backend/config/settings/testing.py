@@ -6,7 +6,7 @@ from .base import *
 
 DEBUG = False
 
-SECRET_KEY = "test-secret-key"
+SECRET_KEY = "test-secret-key"  # nosec B105
 
 ALLOWED_HOSTS = [
     "testserver",

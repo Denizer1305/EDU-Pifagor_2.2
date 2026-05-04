@@ -6,6 +6,7 @@ MANAGE := $(PYTHON) manage.py
 DJANGO_SETTINGS ?= config.settings.dev
 TEST_SETTINGS ?= config.settings.testing
 
+COVERAGE_FAIL_UNDER ?= 70
 APP ?=
 
 .PHONY: help \
@@ -15,7 +16,9 @@ APP ?=
 	test test-keepdb test-app test-users test-assignments test-course test-education \
 	coverage coverage-html \
 	clean clean-pyc clean-cache \
-	ci
+	ci \
+	check-prod audit audit-deps audit-code \
+	coverage-xml \
 
 help: ## Show this help message
 	@echo "Pifagor backend commands"
@@ -60,6 +63,11 @@ help: ## Show this help message
 	@echo ""
 	@echo "CI:"
 	@echo "  make ci                   Run checks used in CI"
+	@echo "  make check-prod           Run production deployment checks"
+	@echo "  make audit                Run dependency and code security audits"
+	@echo "  make audit-deps           Run dependency vulnerability audit"
+	@echo "  make audit-code           Run Bandit code security audit"
+	@echo "  make coverage-xml         Generate XML coverage report"
 
 install: ## Install production dependencies
 	$(PYTHON) -m pip install --upgrade pip
@@ -111,6 +119,22 @@ precommit: ## Run all pre-commit hooks
 check: ## Run Django system check
 	$(MANAGE) check --settings=$(TEST_SETTINGS)
 
+check-prod: ## Run Django deployment check with production settings
+	DJANGO_SETTINGS_MODULE=config.settings.prod \
+	DJANGO_SECRET_KEY=ci-production-secret-key-for-deploy-check-only-please-do-not-use-in-real-prod-123456789 \
+	DJANGO_ALLOWED_HOSTS=example.com \
+	DJANGO_SECURE_HSTS_PRELOAD=True \
+	POSTGRES_DB=pifagor_prod \
+	POSTGRES_USER=pifagor \
+	POSTGRES_PASSWORD=pifagor \
+	DB_HOST=localhost \
+	DB_PORT=5432 \
+	EMAIL_HOST=localhost \
+	EMAIL_HOST_USER=noreply@example.com \
+	EMAIL_HOST_PASSWORD=dummy-password \
+	REDIS_URL=redis://127.0.0.1:6379/1 \
+	$(MANAGE) check --deploy --settings=config.settings.prod
+
 test: ## Run all tests
 	$(MANAGE) test --settings=$(TEST_SETTINGS)
 
@@ -135,12 +159,15 @@ test-course: ## Run course tests
 test-education: ## Run education tests
 	$(MANAGE) test apps.education --settings=$(TEST_SETTINGS)
 
-coverage: ## Run tests with coverage
+coverage: ## Run tests with coverage threshold
 	$(PYTHON) -m coverage run manage.py test --settings=$(TEST_SETTINGS)
-	$(PYTHON) -m coverage report
+	$(PYTHON) -m coverage report --fail-under=$(COVERAGE_FAIL_UNDER)
 
 coverage-html: ## Generate HTML coverage report
 	$(PYTHON) -m coverage html
+
+coverage-xml: ## Generate XML coverage report
+	$(PYTHON) -m coverage xml
 
 clean: clean-pyc clean-cache ## Remove Python cache files and tool caches
 
@@ -161,4 +188,14 @@ ci: ## Run checks used in CI
 	$(PYTHON) -m ruff format . --check
 	$(MANAGE) makemigrations --check --dry-run --settings=$(TEST_SETTINGS)
 	$(MANAGE) check --settings=$(TEST_SETTINGS)
-	$(MANAGE) test --settings=$(TEST_SETTINGS)
+	$(MAKE) check-prod
+	$(MAKE) coverage
+	$(MAKE) audit
+
+audit-deps: ## Audit Python dependencies for known vulnerabilities
+	$(PYTHON) -m pip_audit -r requirements/dev.txt
+
+audit-code: ## Run Bandit security checks
+	$(PYTHON) -m bandit -r api apps config -x "*/tests/*,*/migrations/*"
+
+audit: audit-deps audit-code ## Run all security audits

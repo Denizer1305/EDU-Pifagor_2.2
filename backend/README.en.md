@@ -15,7 +15,8 @@ The backend of **EDU-Pifagor** is built with **Django + Django REST Framework** 
 - assignments, publications, audiences, answers, reviews, and grades;
 - journal lessons, attendance, grades, and summaries;
 - user feedback and administrative processing;
-- testing, linting, formatting, and CI infrastructure.
+- testing, linting, formatting, and CI infrastructure;
+- production deploy check, coverage threshold, and security audit.
 
 ---
 
@@ -35,6 +36,8 @@ The backend of **EDU-Pifagor** is built with **Django + Django REST Framework** 
 - Ruff
 - pre-commit
 - coverage
+- pip-audit
+- bandit
 
 ---
 
@@ -179,11 +182,20 @@ make lint-fix
 make format
 make precommit
 make check
+make check-prod
 make test
 make test-keepdb
 make test-app APP=apps.users
+make test-users
+make test-assignments
+make test-course
+make test-education
 make coverage
 make coverage-html
+make coverage-xml
+make audit-deps
+make audit-code
+make audit
 make clean
 make ci
 ```
@@ -204,15 +216,32 @@ Full local check suite:
 make ci
 ```
 
-It runs:
+It runs the main backend pipeline:
 
 ```bash
 python -m ruff check .
 python -m ruff format . --check
 python manage.py makemigrations --check --dry-run --settings=config.settings.testing
 python manage.py check --settings=config.settings.testing
-python manage.py test --settings=config.settings.testing
+make check-prod
+make coverage
 ```
+
+Additional security commands:
+
+```bash
+make audit-deps
+make audit-code
+make audit
+```
+
+`make check-prod` runs Django production deploy checks:
+
+```bash
+python manage.py check --deploy --settings=config.settings.prod
+```
+
+This command uses safe CI placeholder environment values in `Makefile`. Real production secrets are not stored in the repository.
 
 ---
 
@@ -259,6 +288,43 @@ Check that no migrations are missing:
 ```bash
 python manage.py makemigrations --check --dry-run --settings=config.settings.testing
 ```
+
+---
+
+## Auth Security
+
+Security-sensitive auth endpoints use DRF scoped throttling:
+
+| Endpoint group | Scope |
+|---|---|
+| login | `auth_login` |
+| registration | `auth_register` |
+| password reset request | `password_reset` |
+| password reset confirm | `password_reset_confirm` |
+| password change | `password_change` |
+| email verification | `email_verify` |
+
+Tests verify throttling configuration at the view-class level: `ScopedRateThrottle` and correct `throttle_scope` values.
+
+---
+
+## OpenAPI
+
+The project uses `drf-spectacular` to generate an OpenAPI schema.
+
+Local API documentation is usually available at:
+
+```text
+http://127.0.0.1:8000/api/schema/
+http://127.0.0.1:8000/api/docs/
+```
+
+Current status:
+
+- base schema generation is enabled;
+- some `APIView` endpoints still need `serializer_class` or `@extend_schema` annotations;
+- enum naming and operationId collision warnings are tracked in backlog;
+- OpenAPI cleanup is planned as a separate stage.
 
 ---
 
