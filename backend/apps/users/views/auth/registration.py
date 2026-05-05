@@ -7,6 +7,7 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from apps.users.serializers.user import CurrentUserSerializer
@@ -23,6 +24,8 @@ class RegisterAPIView(APIView):
     """Регистрация пользователя."""
 
     permission_classes = (AllowAny,)
+    throttle_classes = (ScopedRateThrottle,)
+    throttle_scope = "auth_register"
 
     def post(self, request, *args, **kwargs):
         serializer_class = get_register_serializer_class(

@@ -50,14 +50,12 @@ class ParentServicesTestCase(BaseUsersServiceTestCase):
         parent = self.create_user(
             "parent-approve@example.com",
             registration_type="parent",
+            is_email_verified=True,
         )
         student = self.create_user(
             "student-approve-link@example.com",
             registration_type="student",
         )
-
-        parent.is_email_verified = True
-        parent.save(update_fields=["is_email_verified"])
 
         link = create_parent_student_link_request(
             parent_user=parent,

@@ -114,19 +114,14 @@ class Organization(models.Model):
         """
         Есть ли у организации активный код регистрации преподавателя.
         """
-        if not self.teacher_registration_code_hash:
-            return False
+        has_code = bool(self.teacher_registration_code_hash)
+        is_enabled = self.teacher_registration_code_is_active
+        is_not_expired = (
+            not self.teacher_registration_code_expires_at
+            or self.teacher_registration_code_expires_at > timezone.now()
+        )
 
-        if not self.teacher_registration_code_is_active:
-            return False
-
-        if (
-            self.teacher_registration_code_expires_at
-            and self.teacher_registration_code_expires_at <= timezone.now()
-        ):
-            return False
-
-        return True
+        return has_code and is_enabled and is_not_expired
 
     def set_teacher_registration_code(
         self,

@@ -80,20 +80,20 @@ def _is_student_owner(user: Any, obj: Any) -> bool:
 class IsJournalAdmin(BasePermission):
     """Полный доступ только администраторам и методистам."""
 
-    def has_permission(self, request, view) -> bool:  # noqa: ANN001
+    def has_permission(self, request, view) -> bool:
         return _is_admin(request.user)
 
-    def has_object_permission(self, request, view, obj) -> bool:  # noqa: ANN001
+    def has_object_permission(self, request, view, obj) -> bool:
         return _is_admin(request.user)
 
 
 class IsJournalTeacherOrAdmin(BasePermission):
     """Доступ преподавателям, администраторам и методистам."""
 
-    def has_permission(self, request, view) -> bool:  # noqa: ANN001
+    def has_permission(self, request, view) -> bool:
         return _is_teacher(request.user)
 
-    def has_object_permission(self, request, view, obj) -> bool:  # noqa: ANN001
+    def has_object_permission(self, request, view, obj) -> bool:
         if _is_admin(request.user):
             return True
 
@@ -106,10 +106,10 @@ class IsJournalTeacherOrAdmin(BasePermission):
 class IsLessonTeacherOrAdmin(BasePermission):
     """Изменять объект может преподаватель занятия или администратор."""
 
-    def has_permission(self, request, view) -> bool:  # noqa: ANN001
+    def has_permission(self, request, view) -> bool:
         return _is_teacher(request.user)
 
-    def has_object_permission(self, request, view, obj) -> bool:  # noqa: ANN001
+    def has_object_permission(self, request, view, obj) -> bool:
         if _is_admin(request.user):
             return True
 
@@ -123,10 +123,10 @@ class IsStudentJournalOwnerOrTeacherOrAdmin(BasePermission):
     Администратор имеет полный доступ.
     """
 
-    def has_permission(self, request, view) -> bool:  # noqa: ANN001
+    def has_permission(self, request, view) -> bool:
         return _is_authenticated(request.user)
 
-    def has_object_permission(self, request, view, obj) -> bool:  # noqa: ANN001
+    def has_object_permission(self, request, view, obj) -> bool:
         if _is_admin(request.user):
             return True
 
@@ -142,8 +142,8 @@ class IsStudentJournalOwnerOrTeacherOrAdmin(BasePermission):
 class IsJournalReadOnly(BasePermission):
     """Только чтение для авторизованных пользователей."""
 
-    def has_permission(self, request, view) -> bool:  # noqa: ANN001
+    def has_permission(self, request, view) -> bool:
         return _is_authenticated(request.user) and request.method in SAFE_METHODS
 
-    def has_object_permission(self, request, view, obj) -> bool:  # noqa: ANN001
+    def has_object_permission(self, request, view, obj) -> bool:
         return _is_authenticated(request.user) and request.method in SAFE_METHODS

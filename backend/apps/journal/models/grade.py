@@ -229,15 +229,19 @@ class JournalGrade(models.Model):
                     "Для шкалы зачёт/незачёт пятибалльная оценка не заполняется."
                 )
 
-        if self.submission_id and self.student_id:
-            if self.submission.student_id != self.student_id:
-                errors["submission"] = _("Сдача задания принадлежит другому студенту.")
+        if (
+            self.submission_id
+            and self.student_id
+            and self.submission.student_id != self.student_id
+        ):
+            errors["submission"] = _("Сдача задания принадлежит другому студенту.")
 
-        if self.grade_record_id and self.student_id:
-            if self.grade_record.student_id != self.student_id:
-                errors["grade_record"] = _(
-                    "Запись оценки принадлежит другому студенту."
-                )
+        if (
+            self.grade_record_id
+            and self.student_id
+            and self.grade_record.student_id != self.student_id
+        ):
+            errors["grade_record"] = _("Запись оценки принадлежит другому студенту.")
 
         if self.submission_id and self.grade_record_id:
             grade_record_submission_id = getattr(

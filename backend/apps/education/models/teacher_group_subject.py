@@ -171,11 +171,15 @@ class TeacherGroupSubject(models.Model):
             teacher_subjects = getattr(self.teacher, "teacher_subjects", None)
             if teacher_subjects is not None:
                 active_teacher_subjects = teacher_subjects.filter(is_active=True)
-                if active_teacher_subjects.exists():
-                    if not active_teacher_subjects.filter(subject=subject).exists():
-                        errors["teacher"] = _(
-                            "Преподаватель не закреплен за этим предметом."
-                        )
+                has_teacher_subjects = active_teacher_subjects.exists()
+                has_required_subject = active_teacher_subjects.filter(
+                    subject=subject
+                ).exists()
+
+                if has_teacher_subjects and not has_required_subject:
+                    errors["teacher"] = _(
+                        "Преподаватель не закреплен за этим предметом."
+                    )
 
         if self.is_primary and self.role == self.RoleChoices.ASSISTANT:
             errors["role"] = _(

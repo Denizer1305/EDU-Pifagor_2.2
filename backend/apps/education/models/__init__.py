@@ -8,10 +8,10 @@ from .teacher_group_subject import TeacherGroupSubject
 
 __all__ = [
     "AcademicYear",
-    "EducationPeriod",
-    "StudentGroupEnrollment",
-    "GroupSubject",
-    "TeacherGroupSubject",
     "Curriculum",
     "CurriculumItem",
+    "EducationPeriod",
+    "GroupSubject",
+    "StudentGroupEnrollment",
+    "TeacherGroupSubject",
 ]

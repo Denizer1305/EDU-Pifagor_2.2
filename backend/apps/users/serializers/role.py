@@ -28,8 +28,5 @@ class UserRoleSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "role",
-            "is_active",
-            "created_at",
-            "updated_at",
         )
         read_only_fields = fields

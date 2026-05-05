@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.core.cache import cache
 from django.test import TestCase
 from django.utils import timezone
 
@@ -57,6 +58,8 @@ class BaseUsersServiceTestCase(TestCase):
     """Базовый класс для сервисных тестов users."""
 
     def setUp(self):
+        cache.clear()
+
         Role.objects.get_or_create(
             code=ROLE_STUDENT,
             defaults={
@@ -83,14 +86,23 @@ class BaseUsersServiceTestCase(TestCase):
         self,
         email: str,
         registration_type: str = "student",
+        *,
+        password: str = "StrongPass123!",
+        is_email_verified: bool = False,
+        onboarding_status: str | None = None,
     ):
         """Создаёт пользователя с базовым и ролевым профилем."""
 
         user = User.objects.create_user(
             email=email,
-            password="StrongPass123!",
+            password=password,
             registration_type=registration_type,
+            is_email_verified=is_email_verified,
         )
+
+        if onboarding_status is not None:
+            user.onboarding_status = onboarding_status
+            user.save(update_fields=("onboarding_status", "updated_at"))
 
         profile = get_or_create_base_profile(user)
         profile.first_name = "Иван"

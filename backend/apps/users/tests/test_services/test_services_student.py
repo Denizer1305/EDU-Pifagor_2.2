@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from django.core.exceptions import ValidationError
+
 from apps.users.constants import (
     ONBOARDING_STATUS_ACTIVE,
     ONBOARDING_STATUS_REJECTED,
@@ -23,11 +25,10 @@ class StudentServicesTestCase(BaseUsersServiceTestCase):
         group_code = self.set_group_code(group)
 
         user = self.create_user(
-            "student-service@example.com",
+            "student-approve@example.com",
             registration_type="student",
+            is_email_verified=True,
         )
-        user.is_email_verified = True
-        user.save(update_fields=["is_email_verified"])
 
         profile = submit_student_group_request(
             student_profile=user.student_profile,
@@ -100,3 +101,22 @@ class StudentServicesTestCase(BaseUsersServiceTestCase):
             user.onboarding_status,
             ONBOARDING_STATUS_REJECTED,
         )
+
+    def test_approve_student_profile_without_verified_email_raises_validation_error(
+        self,
+    ):
+        reviewer = self.create_user(
+            "reviewer-student-email@example.com",
+            registration_type="teacher",
+        )
+        user = self.create_user(
+            "student-unverified@example.com",
+            registration_type="student",
+        )
+
+        with self.assertRaises(ValidationError):
+            approve_student_profile(
+                student_profile=user.student_profile,
+                reviewer=reviewer,
+                comment="Подтверждено",
+            )

@@ -129,7 +129,7 @@ class JournalLesson(models.Model):
 
     @property
     def topic(self) -> str:
-        """Возвращает фактическкую тему, если нет - плановую"""
+        """Возвращает фактическую тему, если она есть, иначе плановую."""
 
         return self.actual_topic or self.planned_topic
 
@@ -139,11 +139,14 @@ class JournalLesson(models.Model):
         if self.started_at and self.ended_at and self.ended_at <= self.started_at:
             errors["ended_at"] = _("Время окончания должно быть позже времени начала.")
 
-        if self.course_lesson_id and self.course_id:
-            if self.course_lesson.course_id != self.course_id:
-                errors["course_lesson"] = _(
-                    "Плановая тема должна относиться к выбранному курсу."
-                )
+        if (
+            self.course_lesson_id
+            and self.course_id
+            and self.course_lesson.course_id != self.course_id
+        ):
+            errors["course_lesson"] = _(
+                "Плановая тема должна относиться к выбранному курсу."
+            )
 
         if self.course_id and self.group_id:
             group_subject = getattr(self.course, "group_subject", None)

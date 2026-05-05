@@ -122,13 +122,8 @@ class StudentGroupEnrollmentAdmin(admin.ModelAdmin):
     def is_current_display(self, obj: StudentGroupEnrollment) -> bool:
         today = timezone.localdate()
 
-        if obj.status != StudentGroupEnrollment.StatusChoices.ACTIVE:
-            return False
+        is_active = obj.status == StudentGroupEnrollment.StatusChoices.ACTIVE
+        has_started = not obj.enrollment_date or obj.enrollment_date <= today
+        has_not_completed = not obj.completion_date or obj.completion_date >= today
 
-        if obj.enrollment_date and obj.enrollment_date > today:
-            return False
-
-        if obj.completion_date and obj.completion_date < today:
-            return False
-
-        return True
+        return is_active and has_started and has_not_completed

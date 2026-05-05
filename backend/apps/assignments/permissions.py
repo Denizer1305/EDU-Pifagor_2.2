@@ -143,10 +143,8 @@ class IsSubmissionOwnerOrReviewerOrAdmin(BasePermission):
             return True
 
         checked_by_id = getattr(submission, "checked_by_id", None)
-        if checked_by_id == request.user.id:
-            return True
 
-        return False
+        return checked_by_id == request.user.id
 
 
 class IsStudentSubmissionOwner(BasePermission):

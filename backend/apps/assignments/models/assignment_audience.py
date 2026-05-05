@@ -83,17 +83,23 @@ class AssignmentAudience(TimeStampedModel):
         ):
             errors["student"] = "Для выбранных студентов нужно указать студента."
 
-        if self.course_enrollment_id and self.publication.course_id:
-            if self.course_enrollment.course_id != self.publication.course_id:
-                errors["course_enrollment"] = (
-                    "Запись на курс должна относиться к курсу публикации."
-                )
+        if (
+            self.course_enrollment_id
+            and self.publication.course_id
+            and self.course_enrollment.course_id != self.publication.course_id
+        ):
+            errors["course_enrollment"] = (
+                "Запись на курс должна относиться к курсу публикации."
+            )
 
-        if self.student_id and self.course_enrollment_id:
-            if self.course_enrollment.student_id != self.student_id:
-                errors["course_enrollment"] = (
-                    "Запись на курс должна принадлежать выбранному студенту."
-                )
+        if (
+            self.student_id
+            and self.course_enrollment_id
+            and self.course_enrollment.student_id != self.student_id
+        ):
+            errors["course_enrollment"] = (
+                "Запись на курс должна принадлежать выбранному студенту."
+            )
 
         if errors:
             raise ValidationError(errors)

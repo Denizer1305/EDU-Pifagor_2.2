@@ -17,17 +17,17 @@ from .teacher_organization_admin import TeacherOrganizationAdmin
 from .teacher_subject_admin import TeacherSubjectAdmin
 
 __all__ = [
-    "disable_teacher_registration_code",
-    "clear_teacher_registration_code",
-    "disable_group_join_code",
-    "clear_group_join_code",
-    "OrganizationTypeAdmin",
-    "OrganizationAdmin",
     "DepartmentAdmin",
     "GroupAdmin",
     "GroupCuratorAdmin",
-    "SubjectCategoryAdmin",
+    "OrganizationAdmin",
+    "OrganizationTypeAdmin",
     "SubjectAdmin",
+    "SubjectCategoryAdmin",
     "TeacherOrganizationAdmin",
     "TeacherSubjectAdmin",
+    "clear_group_join_code",
+    "clear_teacher_registration_code",
+    "disable_group_join_code",
+    "disable_teacher_registration_code",
 ]

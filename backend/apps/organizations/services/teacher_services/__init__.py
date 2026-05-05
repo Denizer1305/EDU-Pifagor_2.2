@@ -17,9 +17,9 @@ from .subject_links import (
 __all__ = [
     "_clean_str",
     "_user_has_teacher_role",
+    "assign_teacher_subject",
     "assign_teacher_to_organization",
     "remove_teacher_from_organization",
-    "set_primary_teacher_organization",
-    "assign_teacher_subject",
     "remove_teacher_subject",
+    "set_primary_teacher_organization",
 ]

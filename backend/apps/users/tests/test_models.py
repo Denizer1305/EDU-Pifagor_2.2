@@ -26,7 +26,7 @@ class UserModelTestCase(TestCase):
             password="TestPass123!",
         )
 
-        self.assertEqual(user.email, "TEST@example.com")
+        self.assertEqual(user.email, "test@example.com")
         self.assertTrue(user.check_password("TestPass123!"))
         self.assertTrue(user.is_active)
         self.assertFalse(user.is_staff)
@@ -60,6 +60,19 @@ class UserModelTestCase(TestCase):
         )
 
         self.assertEqual(user.full_name, "Иванов Иван Петрович")
+
+    def test_create_user_has_empty_reset_email_by_default(self):
+        user = User.objects.create_user(
+            email="reset-default@example.com",
+            password="TestPass123!",
+        )
+
+        self.assertEqual(user.reset_email, "")
+
+    def test_factory_create_user_has_empty_reset_email_by_default(self):
+        user = create_user(email="factory-reset-default@example.com")
+
+        self.assertEqual(user.reset_email, "")
 
 
 class ProfileModelTestCase(TestCase):
@@ -113,9 +126,8 @@ class RoleModelTestCase(TestCase):
 
         UserRole.objects.create(user=user, role=roles["teacher"])
 
-        with self.assertRaises(IntegrityError):
-            with transaction.atomic():
-                UserRole.objects.create(user=user, role=roles["teacher"])
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            UserRole.objects.create(user=user, role=roles["teacher"])
 
 
 class ParentStudentModelTestCase(TestCase):

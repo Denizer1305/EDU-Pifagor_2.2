@@ -10,12 +10,12 @@ from .user_admin import UserAdmin
 from .user_role_admin import UserRoleAdmin
 
 __all__ = [
-    "UserAdmin",
-    "ProfileAdmin",
-    "RoleAdmin",
-    "UserRoleAdmin",
-    "TeacherProfileAdmin",
-    "StudentProfileAdmin",
     "ParentProfileAdmin",
     "ParentStudentAdmin",
+    "ProfileAdmin",
+    "RoleAdmin",
+    "StudentProfileAdmin",
+    "TeacherProfileAdmin",
+    "UserAdmin",
+    "UserRoleAdmin",
 ]

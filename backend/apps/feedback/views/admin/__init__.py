@@ -5,7 +5,7 @@ from .list import FeedbackRequestAdminListAPIView
 from .permissions import IsAdminOrSuperuser
 
 __all__ = [
-    "IsAdminOrSuperuser",
-    "FeedbackRequestAdminListAPIView",
     "FeedbackRequestAdminDetailAPIView",
+    "FeedbackRequestAdminListAPIView",
+    "IsAdminOrSuperuser",
 ]

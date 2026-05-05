@@ -90,6 +90,9 @@ class ParentStudentViewSet(viewsets.ModelViewSet):
             "approved_by",
         )
 
+        if getattr(self, "swagger_fake_view", False):
+            return ParentStudent.objects.none()
+
         user = self.request.user
 
         if user_is_admin(user):

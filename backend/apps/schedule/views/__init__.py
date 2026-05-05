@@ -1,1 +1,111 @@
-"""Views package for apps.schedule."""
+from apps.schedule.views.calendar import (
+    ScheduleCalendarDetailAPIView,
+    ScheduleCalendarListCreateAPIView,
+    ScheduleCalendarMarkHolidayAPIView,
+    ScheduleCalendarMarkPracticeAPIView,
+    ScheduleCalendarMarkVacationAPIView,
+    ScheduleWeekTemplateDetailAPIView,
+    ScheduleWeekTemplateListCreateAPIView,
+)
+from apps.schedule.views.change import (
+    ScheduleChangeDetailAPIView,
+    ScheduleChangeListAPIView,
+)
+from apps.schedule.views.conflict import (
+    ScheduleConflictDetailAPIView,
+    ScheduleConflictIgnoreAPIView,
+    ScheduleConflictListAPIView,
+    ScheduleConflictResolveAPIView,
+)
+from apps.schedule.views.import_export import (
+    ScheduleExportGroupAPIView,
+    ScheduleExportPeriodAPIView,
+    ScheduleExportRoomAPIView,
+    ScheduleExportTeacherAPIView,
+    ScheduleGenerationBatchDetailAPIView,
+    ScheduleGenerationBatchListCreateAPIView,
+    ScheduleImportApplyAPIView,
+    ScheduleImportBatchDetailAPIView,
+    ScheduleImportBatchListAPIView,
+    ScheduleImportParseAPIView,
+)
+from apps.schedule.views.lesson import (
+    ScheduledLessonCancelAPIView,
+    ScheduledLessonChangeRoomAPIView,
+    ScheduledLessonDetailAPIView,
+    ScheduledLessonListCreateAPIView,
+    ScheduledLessonLockAPIView,
+    ScheduledLessonPublishAPIView,
+    ScheduledLessonReplaceTeacherAPIView,
+    ScheduledLessonRescheduleAPIView,
+    ScheduledLessonUnlockAPIView,
+)
+from apps.schedule.views.pattern import (
+    SchedulePatternCopyAPIView,
+    SchedulePatternDeactivateAPIView,
+    SchedulePatternDetailAPIView,
+    SchedulePatternListCreateAPIView,
+)
+from apps.schedule.views.reports import (
+    ScheduleGroupReportAPIView,
+    ScheduleRoomReportAPIView,
+    ScheduleTeacherReportAPIView,
+)
+from apps.schedule.views.room import (
+    ScheduleRoomArchiveAPIView,
+    ScheduleRoomDetailAPIView,
+    ScheduleRoomListCreateAPIView,
+)
+from apps.schedule.views.time_slot import (
+    ScheduleTimeSlotBulkCreateAPIView,
+    ScheduleTimeSlotDetailAPIView,
+    ScheduleTimeSlotListCreateAPIView,
+)
+
+__all__ = [
+    "ScheduleCalendarDetailAPIView",
+    "ScheduleCalendarListCreateAPIView",
+    "ScheduleCalendarMarkHolidayAPIView",
+    "ScheduleCalendarMarkPracticeAPIView",
+    "ScheduleCalendarMarkVacationAPIView",
+    "ScheduleChangeDetailAPIView",
+    "ScheduleChangeListAPIView",
+    "ScheduleConflictDetailAPIView",
+    "ScheduleConflictIgnoreAPIView",
+    "ScheduleConflictListAPIView",
+    "ScheduleConflictResolveAPIView",
+    "ScheduleExportGroupAPIView",
+    "ScheduleExportPeriodAPIView",
+    "ScheduleExportRoomAPIView",
+    "ScheduleExportTeacherAPIView",
+    "ScheduleGenerationBatchDetailAPIView",
+    "ScheduleGenerationBatchListCreateAPIView",
+    "ScheduleGroupReportAPIView",
+    "ScheduleImportApplyAPIView",
+    "ScheduleImportBatchDetailAPIView",
+    "ScheduleImportBatchListAPIView",
+    "ScheduleImportParseAPIView",
+    "SchedulePatternCopyAPIView",
+    "SchedulePatternDeactivateAPIView",
+    "SchedulePatternDetailAPIView",
+    "SchedulePatternListCreateAPIView",
+    "ScheduleRoomArchiveAPIView",
+    "ScheduleRoomDetailAPIView",
+    "ScheduleRoomListCreateAPIView",
+    "ScheduleRoomReportAPIView",
+    "ScheduleTeacherReportAPIView",
+    "ScheduleTimeSlotBulkCreateAPIView",
+    "ScheduleTimeSlotDetailAPIView",
+    "ScheduleTimeSlotListCreateAPIView",
+    "ScheduleWeekTemplateDetailAPIView",
+    "ScheduleWeekTemplateListCreateAPIView",
+    "ScheduledLessonCancelAPIView",
+    "ScheduledLessonChangeRoomAPIView",
+    "ScheduledLessonDetailAPIView",
+    "ScheduledLessonListCreateAPIView",
+    "ScheduledLessonLockAPIView",
+    "ScheduledLessonPublishAPIView",
+    "ScheduledLessonReplaceTeacherAPIView",
+    "ScheduledLessonRescheduleAPIView",
+    "ScheduledLessonUnlockAPIView",
+]

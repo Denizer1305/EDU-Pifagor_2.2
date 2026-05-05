@@ -7,11 +7,11 @@ from .common import get_assignment_policy, get_next_attempt_number
 from .lifecycle import start_submission, submit_submission
 
 __all__ = [
+    "attach_file_to_submission",
+    "create_new_submission_attempt",
     "get_assignment_policy",
     "get_next_attempt_number",
-    "start_submission",
     "save_submission_answer",
-    "attach_file_to_submission",
+    "start_submission",
     "submit_submission",
-    "create_new_submission_attempt",
 ]

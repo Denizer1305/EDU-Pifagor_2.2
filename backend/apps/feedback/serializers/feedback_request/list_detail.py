@@ -46,7 +46,8 @@ class FeedbackRequestDetailSerializer(FeedbackRequestBaseSerializer):
     status_history = FeedbackStatusHistorySerializer(many=True, read_only=True)
 
     class Meta(FeedbackRequestBaseSerializer.Meta):
-        fields = FeedbackRequestBaseSerializer.Meta.fields + (
+        fields = (
+            *FeedbackRequestBaseSerializer.Meta.fields,
             "attachments",
             "contact",
             "technical",

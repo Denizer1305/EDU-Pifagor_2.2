@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-# ruff: noqa: F403, F405
 from .base import *
 
 DEBUG = False
@@ -41,8 +40,15 @@ SECURE_HSTS_SECONDS = env_int(
     "DJANGO_SECURE_HSTS_SECONDS",
     60 * 60 * 24 * 365,
 )
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool(
+    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS",
+    True,
+)
+
+SECURE_HSTS_PRELOAD = env_bool(
+    "DJANGO_SECURE_HSTS_PRELOAD",
+    False,
+)
 
 SECURE_PROXY_SSL_HEADER = (
     "HTTP_X_FORWARDED_PROTO",

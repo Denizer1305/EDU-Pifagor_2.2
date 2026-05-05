@@ -8,12 +8,12 @@ from .progress import CourseProgress, LessonProgress
 
 __all__ = [
     "Course",
-    "CourseTeacher",
-    "CourseModule",
-    "CourseLesson",
-    "CourseMaterial",
     "CourseAssignment",
     "CourseEnrollment",
+    "CourseLesson",
+    "CourseMaterial",
+    "CourseModule",
     "CourseProgress",
+    "CourseTeacher",
     "LessonProgress",
 ]

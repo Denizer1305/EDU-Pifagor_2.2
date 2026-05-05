@@ -8,16 +8,6 @@ from apps.feedback.models.feedback_request import FeedbackRequest
 
 
 class FeedbackStatusHistory(models.Model):
-    class Meta:
-        db_table = "feedback_status_history"
-        verbose_name = "История статуса обращения"
-        verbose_name_plural = "История статусов обращений"
-        ordering = ("-created_at",)
-        indexes = [
-            models.Index(fields=("feedback_request", "created_at")),
-            models.Index(fields=("to_status", "created_at")),
-        ]
-
     feedback_request = models.ForeignKey(
         FeedbackRequest,
         on_delete=models.CASCADE,
@@ -52,10 +42,20 @@ class FeedbackStatusHistory(models.Model):
         db_index=True,
     )
 
+    class Meta:
+        db_table = "feedback_status_history"
+        verbose_name = "История статуса обращения"
+        verbose_name_plural = "История статусов обращений"
+        ordering = ("-created_at",)
+        indexes = [
+            models.Index(fields=("feedback_request", "created_at")),
+            models.Index(fields=("to_status", "created_at")),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.feedback_request_id}: {self.from_status} -> {self.to_status}"
+
     def save(self, *args, **kwargs):
         self.from_status = normalize_text(self.from_status)
         self.comment = normalize_text(self.comment)
         super().save(*args, **kwargs)
-
-    def __str__(self) -> str:
-        return f"{self.feedback_request_id}: {self.from_status} -> {self.to_status}"

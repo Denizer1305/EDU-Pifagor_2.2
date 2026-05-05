@@ -9,13 +9,13 @@ from .teacher_organization import TeacherOrganization
 from .teacher_subject import TeacherSubject
 
 __all__ = [
-    "OrganizationType",
-    "Organization",
     "Department",
-    "SubjectCategory",
-    "Subject",
     "Group",
     "GroupCurator",
+    "Organization",
+    "OrganizationType",
+    "Subject",
+    "SubjectCategory",
     "TeacherOrganization",
     "TeacherSubject",
 ]

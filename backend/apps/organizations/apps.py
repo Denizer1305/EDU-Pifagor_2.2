@@ -1,3 +1,4 @@
+from contextlib import suppress
 from importlib import import_module
 
 from django.apps import AppConfig
@@ -14,7 +15,5 @@ class OrganizationsConfig(AppConfig):
 
     def ready(self) -> None:
         """Инициализирует обработчики приложения при запуске."""
-        try:
+        with suppress(ModuleNotFoundError):
             import_module("apps.organizations.signals")
-        except ModuleNotFoundError:
-            pass

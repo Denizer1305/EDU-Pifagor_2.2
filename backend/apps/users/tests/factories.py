@@ -19,13 +19,15 @@ def create_user(
     *,
     email: str = "user@example.com",
     password: str = "TestPass123!",
-    reset_email: str | None = None,
+    reset_email: str = "",
     registration_type: str = "student",
     is_active: bool = True,
     is_staff: bool = False,
     is_superuser: bool = False,
+    is_email_verified: bool = False,
+    onboarding_status: str | None = None,
 ):
-    return User.objects.create_user(
+    user = User.objects.create_user(
         email=email,
         password=password,
         reset_email=reset_email,
@@ -33,7 +35,14 @@ def create_user(
         is_active=is_active,
         is_staff=is_staff,
         is_superuser=is_superuser,
+        is_email_verified=is_email_verified,
     )
+
+    if onboarding_status is not None:
+        user.onboarding_status = onboarding_status
+        user.save(update_fields=("onboarding_status", "updated_at"))
+
+    return user
 
 
 def create_profile(

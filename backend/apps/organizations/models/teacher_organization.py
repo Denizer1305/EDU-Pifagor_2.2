@@ -97,18 +97,12 @@ class TeacherOrganization(models.Model):
         """
         Является ли связь действующей на текущую дату.
         """
-        if not self.is_active:
-            return False
-
         today = timezone.localdate()
 
-        if self.starts_at and self.starts_at > today:
-            return False
+        has_started = not self.starts_at or self.starts_at <= today
+        has_not_ended = not self.ends_at or self.ends_at >= today
 
-        if self.ends_at and self.ends_at < today:
-            return False
-
-        return True
+        return self.is_active and has_started and has_not_ended
 
     def clean(self) -> None:
         super().clean()
@@ -118,15 +112,18 @@ class TeacherOrganization(models.Model):
                 {"ends_at": _("Дата окончания не может быть раньше даты начала.")}
             )
 
-        if self.teacher_id and hasattr(self.teacher, "registration_type"):
-            if self.teacher.registration_type != "teacher":
-                raise ValidationError(
-                    {
-                        "teacher": _(
-                            "Связь с организацией может быть создана только для пользователя с типом регистрации teacher."
-                        )
-                    }
-                )
+        if (
+            self.teacher_id
+            and hasattr(self.teacher, "registration_type")
+            and self.teacher.registration_type != "teacher"
+        ):
+            raise ValidationError(
+                {
+                    "teacher": _(
+                        "Связь с организацией может быть создана только для пользователя с типом регистрации teacher."
+                    )
+                }
+            )
 
         if self.is_primary and not self.is_active:
             raise ValidationError(

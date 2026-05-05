@@ -117,11 +117,12 @@ class TopicProgress(models.Model):
     def clean(self) -> None:
         errors: dict[str, str] = {}
 
-        if self.lesson_id and self.course_id:
-            if self.lesson.course_id != self.course_id:
-                errors["lesson"] = _(
-                    "Плановая тема должна относиться к выбранному курсу."
-                )
+        if (
+            self.lesson_id
+            and self.course_id
+            and self.lesson.course_id != self.course_id
+        ):
+            errors["lesson"] = _("Плановая тема должна относиться к выбранному курсу.")
 
         if self.journal_lesson_id:
             if self.course_id and self.journal_lesson.course_id != self.course_id:

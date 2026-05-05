@@ -42,7 +42,7 @@ class JournalLessonFilter(django_filters.FilterSet):
             "search",
         )
 
-    def filter_search(self, queryset, name, value):  # noqa: ANN001
+    def filter_search(self, queryset, name, value):
         value = value.strip()
 
         if not value:
@@ -116,7 +116,7 @@ class JournalGradeFilter(django_filters.FilterSet):
             "search",
         )
 
-    def filter_search(self, queryset, name, value):  # noqa: ANN001
+    def filter_search(self, queryset, name, value):
         value = value.strip()
 
         if not value:
@@ -177,7 +177,7 @@ class TopicProgressFilter(django_filters.FilterSet):
             "actual_date_to",
         )
 
-    def filter_only_behind(self, queryset, name, value):  # noqa: ANN001
+    def filter_only_behind(self, queryset, name, value):
         if value:
             return queryset.filter(days_behind__gt=0)
 
@@ -206,13 +206,13 @@ class JournalSummaryFilter(django_filters.FilterSet):
             "only_student_summary",
         )
 
-    def filter_only_group_summary(self, queryset, name, value):  # noqa: ANN001
+    def filter_only_group_summary(self, queryset, name, value):
         if value:
             return queryset.filter(student__isnull=True)
 
         return queryset
 
-    def filter_only_student_summary(self, queryset, name, value):  # noqa: ANN001
+    def filter_only_student_summary(self, queryset, name, value):
         if value:
             return queryset.filter(student__isnull=False)
 

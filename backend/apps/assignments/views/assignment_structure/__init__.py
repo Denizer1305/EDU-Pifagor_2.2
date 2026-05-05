@@ -21,15 +21,15 @@ from .variants import (
 )
 
 __all__ = [
-    "AssignmentVariantListCreateAPIView",
-    "AssignmentVariantDetailAPIView",
-    "AssignmentVariantReorderAPIView",
-    "AssignmentSectionListCreateAPIView",
-    "AssignmentSectionDetailAPIView",
-    "AssignmentSectionReorderAPIView",
-    "AssignmentQuestionListCreateAPIView",
-    "AssignmentQuestionDetailAPIView",
-    "AssignmentQuestionReorderAPIView",
-    "AssignmentAttachmentListCreateAPIView",
     "AssignmentAttachmentDetailAPIView",
+    "AssignmentAttachmentListCreateAPIView",
+    "AssignmentQuestionDetailAPIView",
+    "AssignmentQuestionListCreateAPIView",
+    "AssignmentQuestionReorderAPIView",
+    "AssignmentSectionDetailAPIView",
+    "AssignmentSectionListCreateAPIView",
+    "AssignmentSectionReorderAPIView",
+    "AssignmentVariantDetailAPIView",
+    "AssignmentVariantListCreateAPIView",
+    "AssignmentVariantReorderAPIView",
 ]

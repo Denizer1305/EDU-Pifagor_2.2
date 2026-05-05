@@ -10,11 +10,11 @@ from .teacher_group_subject_admin import TeacherGroupSubjectAdmin
 
 __all__ = [
     "AcademicYearAdmin",
-    "EducationPeriodAdmin",
-    "StudentGroupEnrollmentAdmin",
-    "GroupSubjectAdmin",
-    "TeacherGroupSubjectAdmin",
-    "CurriculumItemInline",
     "CurriculumAdmin",
     "CurriculumItemAdmin",
+    "CurriculumItemInline",
+    "EducationPeriodAdmin",
+    "GroupSubjectAdmin",
+    "StudentGroupEnrollmentAdmin",
+    "TeacherGroupSubjectAdmin",
 ]

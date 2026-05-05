@@ -8,13 +8,13 @@ from .teachers import add_teacher_to_course, remove_teacher_from_course
 from .validation import _validate_course_can_be_published
 
 __all__ = [
-    "create_course",
-    "update_course",
-    "publish_course",
-    "archive_course",
-    "add_teacher_to_course",
-    "remove_teacher_from_course",
-    "duplicate_course",
-    "_validate_course_can_be_published",
     "_recalculate_course_estimated_minutes",
+    "_validate_course_can_be_published",
+    "add_teacher_to_course",
+    "archive_course",
+    "create_course",
+    "duplicate_course",
+    "publish_course",
+    "remove_teacher_from_course",
+    "update_course",
 ]

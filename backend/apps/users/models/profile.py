@@ -62,12 +62,12 @@ class Profile(models.Model):
     social_link_max = models.URLField(
         _("Ссылка на профиль в мессенджере MAX"),
         blank=True,
-        null=True,
+        default="",
     )
     social_link_vk = models.URLField(
         _("Ссылка на профиль во ВКонтакте"),
         blank=True,
-        null=True,
+        default="",
     )
 
     created_at = models.DateTimeField(_("Дата создания"), auto_now_add=True)

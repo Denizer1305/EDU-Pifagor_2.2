@@ -20,16 +20,16 @@ from .registration import register_user
 from .teacher_code import _verify_teacher_registration_code
 
 __all__ = [
-    "VERIFY_EMAIL_SALT",
     "RESET_PASSWORD_SALT",
+    "VERIFY_EMAIL_SALT",
     "_verify_teacher_registration_code",
-    "register_user",
     "authenticate_user",
-    "build_verify_email_token",
-    "read_verify_email_token",
-    "verify_user_email_by_token",
     "build_password_reset_token",
-    "read_password_reset_token",
-    "reset_password_by_token",
+    "build_verify_email_token",
     "change_user_password",
+    "read_password_reset_token",
+    "read_verify_email_token",
+    "register_user",
+    "reset_password_by_token",
+    "verify_user_email_by_token",
 ]

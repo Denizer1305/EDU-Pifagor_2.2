@@ -91,12 +91,13 @@ INSTALLED_APPS = [
     "apps.assignments.apps.AssignmentsConfig",
     "apps.feedback.apps.FeedbackConfig",
     "apps.journal.apps.JournalConfig",
+    "apps.schedule.apps.ScheduleConfig",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -164,7 +165,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -175,6 +175,21 @@ REST_FRAMEWORK = {
         "rest_framework.filters.OrderingFilter",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.ScopedRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": env("DRF_THROTTLE_ANON", "100/day"),
+        "user": env("DRF_THROTTLE_USER", "1000/day"),
+        "auth_login": env("DRF_THROTTLE_AUTH_LOGIN", "5/min"),
+        "auth_register": env("DRF_THROTTLE_AUTH_REGISTER", "10/hour"),
+        "password_reset": env("DRF_THROTTLE_PASSWORD_RESET", "3/hour"),
+        "password_reset_confirm": env("DRF_THROTTLE_PASSWORD_RESET_CONFIRM", "5/hour"),
+        "password_change": env("DRF_THROTTLE_PASSWORD_CHANGE", "10/hour"),
+        "email_verify": env("DRF_THROTTLE_EMAIL_VERIFY", "10/hour"),
+    },
 }
 
 SPECTACULAR_SETTINGS = {

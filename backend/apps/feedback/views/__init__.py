@@ -10,10 +10,10 @@ from .public import (
 )
 
 __all__ = [
-    "FeedbackRequestCreateAPIView",
     "FeedbackErrorCreateAPIView",
-    "MyFeedbackRequestListAPIView",
-    "MyFeedbackRequestDetailAPIView",
-    "FeedbackRequestAdminListAPIView",
     "FeedbackRequestAdminDetailAPIView",
+    "FeedbackRequestAdminListAPIView",
+    "FeedbackRequestCreateAPIView",
+    "MyFeedbackRequestDetailAPIView",
+    "MyFeedbackRequestListAPIView",
 ]

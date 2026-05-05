@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import os
 
-# ruff: noqa: F403, F405
 from .base import *
 
 DEBUG = False
 
-SECRET_KEY = "test-secret-key"
+SECRET_KEY = "test-secret-key"  # nosec B105
 
 ALLOWED_HOSTS = [
     "testserver",
@@ -66,3 +65,14 @@ LOGGING["loggers"]["django"]["level"] = "ERROR"
 LOGGING["loggers"]["django.request"]["level"] = "ERROR"
 LOGGING["loggers"]["django.db.backends"]["level"] = "WARNING"
 LOGGING["loggers"]["apps"]["level"] = "ERROR"
+
+REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"].update(
+    {
+        "auth_login": "2/min",
+        "auth_register": "2/min",
+        "password_reset": "2/min",
+        "password_reset_confirm": "2/min",
+        "password_change": "2/min",
+        "email_verify": "2/min",
+    }
+)

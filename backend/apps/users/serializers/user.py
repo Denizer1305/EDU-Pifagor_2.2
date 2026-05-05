@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
@@ -101,30 +103,30 @@ class CurrentUserSerializer(serializers.ModelSerializer):
         )
         read_only_fields = fields
 
-    def get_is_email_verified(self, obj):
+    def get_is_email_verified(self, obj) -> bool:
         if hasattr(obj, "is_email_verified"):
             return obj.is_email_verified
         return False
 
-    def get_profile(self, obj):
+    def get_profile(self, obj) -> list[str]:
         if hasattr(obj, "profile"):
             return ProfileDetailSerializer(obj.profile).data
         return None
 
-    def get_roles(self, obj):
+    def get_roles(self, obj) -> list[dict[str, Any]]:
         return UserRoleSerializer(_user_role_queryset(obj), many=True).data
 
-    def get_teacher_profile(self, obj):
+    def get_teacher_profile(self, obj) -> dict[str, Any] | None:
         if hasattr(obj, "teacher_profile"):
             return TeacherProfileShortSerializer(obj.teacher_profile).data
         return None
 
-    def get_student_profile(self, obj):
+    def get_student_profile(self, obj) -> dict[str, Any] | None:
         if hasattr(obj, "student_profile"):
             return StudentProfileShortSerializer(obj.student_profile).data
         return None
 
-    def get_parent_profile(self, obj):
+    def get_parent_profile(self, obj) -> dict[str, Any] | None:
         if hasattr(obj, "parent_profile"):
             return ParentProfileShortSerializer(obj.parent_profile).data
         return None

@@ -155,16 +155,13 @@ class Group(models.Model):
         """
         Есть ли у группы активный код присоединения.
         """
-        if not self.join_code_hash:
-            return False
+        has_code = bool(self.join_code_hash)
+        is_enabled = self.join_code_is_active
+        is_not_expired = (
+            not self.join_code_expires_at or self.join_code_expires_at > timezone.now()
+        )
 
-        if not self.join_code_is_active:
-            return False
-
-        if self.join_code_expires_at and self.join_code_expires_at <= timezone.now():
-            return False
-
-        return True
+        return has_code and is_enabled and is_not_expired
 
     def set_join_code(
         self,

@@ -15,15 +15,15 @@ from .status_history_admin import FeedbackStatusHistoryAdmin
 from .technical_admin import FeedbackRequestTechnicalAdmin
 
 __all__ = [
-    "FeedbackRequestContactInline",
-    "FeedbackRequestTechnicalInline",
-    "FeedbackRequestProcessingInline",
+    "FeedbackAttachmentAdmin",
     "FeedbackAttachmentInline",
-    "FeedbackStatusHistoryInline",
     "FeedbackRequestAdmin",
     "FeedbackRequestContactAdmin",
-    "FeedbackRequestTechnicalAdmin",
+    "FeedbackRequestContactInline",
     "FeedbackRequestProcessingAdmin",
+    "FeedbackRequestProcessingInline",
+    "FeedbackRequestTechnicalAdmin",
+    "FeedbackRequestTechnicalInline",
     "FeedbackStatusHistoryAdmin",
-    "FeedbackAttachmentAdmin",
+    "FeedbackStatusHistoryInline",
 ]

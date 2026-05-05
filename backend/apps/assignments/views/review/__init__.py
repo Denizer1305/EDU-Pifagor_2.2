@@ -15,13 +15,13 @@ from .list_detail import (
 from .start import SubmissionReviewStartAPIView
 
 __all__ = [
-    "SubmissionReviewListAPIView",
-    "SubmissionReviewDetailAPIView",
-    "SubmissionReviewStartAPIView",
-    "SubmissionAnswerReviewAPIView",
     "ReviewCommentCreateAPIView",
-    "SubmissionReviewSubmitAPIView",
-    "SubmissionReviewReturnForRevisionAPIView",
+    "SubmissionAnswerReviewAPIView",
     "SubmissionReviewApproveAPIView",
+    "SubmissionReviewDetailAPIView",
+    "SubmissionReviewListAPIView",
     "SubmissionReviewRejectAPIView",
+    "SubmissionReviewReturnForRevisionAPIView",
+    "SubmissionReviewStartAPIView",
+    "SubmissionReviewSubmitAPIView",
 ]

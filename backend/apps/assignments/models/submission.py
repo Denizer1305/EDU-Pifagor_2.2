@@ -170,11 +170,14 @@ class Submission(TimeStampedModel):
             raise ValidationError(errors)
 
     def save(self, *args, **kwargs):
-        if self.submitted_at and self.publication.due_at:
-            if self.submitted_at > self.publication.due_at:
-                self.is_late = True
-                delta = self.submitted_at - self.publication.due_at
-                self.late_minutes = max(int(delta.total_seconds() // 60), 0)
+        if (
+            self.submitted_at
+            and self.publication.due_at
+            and self.submitted_at > self.publication.due_at
+        ):
+            self.is_late = True
+            delta = self.submitted_at - self.publication.due_at
+            self.late_minutes = max(int(delta.total_seconds() // 60), 0)
 
         if (
             self.status

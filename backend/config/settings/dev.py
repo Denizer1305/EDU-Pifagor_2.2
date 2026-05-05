@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-# ruff: noqa: F403, F405
 from .base import *
 
 DEBUG = True
@@ -50,6 +49,10 @@ CORS_ALLOWED_ORIGINS = env_list(
     ),
 )
 
+REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] += [
+    "rest_framework.authentication.BasicAuthentication",
+]
+
 CSRF_TRUSTED_ORIGINS = env_list(
     "CSRF_TRUSTED_ORIGINS",
     ",".join(
@@ -84,7 +87,7 @@ LOGGING["loggers"]["django"]["level"] = "INFO"
 LOGGING["loggers"]["django.db.backends"]["level"] = "WARNING"
 LOGGING["loggers"]["apps"]["level"] = "DEBUG"
 
-ENABLE_DEBUG_TOOLBAR = env_bool("ENABLE_DEBUG_TOOLBAR", True)
+ENABLE_DEBUG_TOOLBAR = env_bool("ENABLE_DEBUG_TOOLBAR", False)
 
 if ENABLE_DEBUG_TOOLBAR:
     INSTALLED_APPS += [
