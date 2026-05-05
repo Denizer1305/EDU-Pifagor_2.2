@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     "apps.assignments.apps.AssignmentsConfig",
     "apps.feedback.apps.FeedbackConfig",
     "apps.journal.apps.JournalConfig",
+    "apps.schedule.apps.ScheduleConfig",
 ]
 
 MIDDLEWARE = [

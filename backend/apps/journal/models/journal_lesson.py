@@ -129,7 +129,7 @@ class JournalLesson(models.Model):
 
     @property
     def topic(self) -> str:
-        """Возвращает фактическкую тему, если нет - плановую"""
+        """Возвращает фактическую тему, если она есть, иначе плановую."""
 
         return self.actual_topic or self.planned_topic
 

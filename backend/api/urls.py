@@ -10,6 +10,7 @@ urlpatterns = [
     path("assignments/", include("apps.assignments.urls")),
     path("feedback/", include("apps.feedback.urls")),
     path("journal/", include("apps.journal.urls")),
+    path("schedule/", include("apps.schedule.urls")),
 ]
 
 if env_bool("ENABLE_CONTENT_API", False):
@@ -17,9 +18,6 @@ if env_bool("ENABLE_CONTENT_API", False):
 
 if env_bool("ENABLE_TESTING_API", False):
     urlpatterns += [path("testing/", include("apps.testing.urls"))]
-
-if env_bool("ENABLE_SCHEDULE_API", False):
-    urlpatterns += [path("schedule/", include("apps.schedule.urls"))]
 
 if env_bool("ENABLE_NOTIFICATIONS_API", False):
     urlpatterns += [path("notifications/", include("apps.notifications.urls"))]
