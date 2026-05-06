@@ -20,9 +20,12 @@
 - [Makefile и проверки качества](#makefile-и-проверки-качества)
 - [Тесты](#тесты)
 - [Миграции](#миграции)
+- [CI / Security / DX](#ci--security--dx)
 - [GitHub Actions](#github-actions)
 - [Pre-commit](#pre-commit)
-- [Безопасность](#безопасность)
+- [Backend security](#backend-security)
+- [OpenAPI и документация API](#openapi-и-документация-api)
+- [Текущий backlog](#текущий-backlog)
 
 ---
 
@@ -43,6 +46,8 @@
 - Ruff
 - pre-commit
 - coverage
+- pip-audit
+- bandit
 
 ### Frontend
 
@@ -62,14 +67,19 @@
 
 ## Текущий статус
 
-На текущем этапе backend уже имеет рабочую инфраструктуру качества:
+На текущем этапе backend имеет рабочую инфраструктуру качества:
 
 - настроены отдельные Django settings: `base.py`, `dev.py`, `prod.py`, `testing.py`;
-- настроен `Makefile` для локальных команд разработки;
+- настроен `Makefile` для локальных команд разработки и CI;
 - настроен `pre-commit`;
 - настроен GitHub Actions workflow для backend;
 - миграции проверяются через `makemigrations --check --dry-run`;
-- backend проходит `ruff check`, `ruff format --check`, `manage.py check` и полный набор тестов.
+- backend проходит `ruff check`, `ruff format --check`, `manage.py check` и тесты;
+- добавлен production deploy check через `manage.py check --deploy`;
+- добавлен coverage threshold через `coverage report --fail-under`;
+- добавлен dependency audit через `pip-audit`;
+- добавлен статический security-анализ через `bandit`;
+- добавлен scoped throttling для чувствительных auth endpoints.
 
 Основные backend-модули:
 
@@ -281,14 +291,19 @@ make lint-fix             # Ruff lint с автоисправлениями
 make format               # Ruff format
 make precommit            # все pre-commit hooks
 make check                # Django system check
+make check-prod           # production deploy check
 make test                 # все тесты
 make test-app APP=apps.users
 make test-users
 make test-assignments
 make test-course
 make test-education
-make coverage
-make coverage-html
+make coverage             # тесты с coverage threshold
+make coverage-html        # HTML coverage report
+make coverage-xml         # XML coverage report
+make audit-deps           # dependency audit через pip-audit
+make audit-code           # static security audit через bandit
+make audit                # полный security audit
 make ci                   # полный набор проверок как в CI
 ```
 
@@ -348,6 +363,42 @@ make ci
 
 ---
 
+## CI / Security / DX
+
+Backend-проверки автоматизированы через `Makefile` и GitHub Actions.
+
+Локально основной набор проверок запускается командой:
+
+```bash
+cd backend
+make ci
+```
+
+В состав backend CI входят:
+
+- `ruff check .`;
+- `ruff format . --check`;
+- проверка отсутствия незакоммиченных миграций;
+- `manage.py check` на testing settings;
+- production deploy check через `manage.py check --deploy`;
+- запуск тестов с coverage threshold;
+- security audit зависимостей через `pip-audit`;
+- статический security-анализ Python-кода через `bandit`, если включен в текущий CI-профиль.
+
+Отдельные команды:
+
+```bash
+make check-prod
+make coverage
+make audit-deps
+make audit-code
+make audit
+```
+
+Production check использует безопасные CI-placeholder значения окружения и не требует настоящих production-секретов.
+
+---
+
 ## GitHub Actions
 
 Backend workflow находится в:
@@ -363,7 +414,10 @@ CI запускает:
 - Ruff format check;
 - проверку миграций;
 - Django system check;
-- тесты backend.
+- production deploy check;
+- тесты backend;
+- coverage threshold;
+- security audit, если включен в workflow.
 
 Перед pull request локально запускайте:
 
@@ -396,6 +450,66 @@ git add .
 python -m pre_commit run --all-files
 git commit -m "chore(backend): update documentation and env examples"
 ```
+
+---
+
+## Backend security
+
+В backend реализованы базовые меры безопасности:
+
+- отдельные настройки для dev/testing/prod;
+- обязательные production env-переменные для секретов, базы данных, Redis и SMTP;
+- secure cookies и HSTS-настройки в production;
+- CORS/CSRF origins через env;
+- `SECURE_CONTENT_TYPE_NOSNIFF`;
+- `X_FRAME_OPTIONS = "DENY"`;
+- session-based authentication через Django/DRF;
+- scoped throttling для auth endpoints:
+  - login;
+  - registration;
+  - password reset request;
+  - password reset confirm;
+  - password change;
+  - email verification;
+- dependency audit через `pip-audit`;
+- статический security-анализ через `bandit`.
+
+Файл `.env` не должен попадать в Git. Для примера используется только `.env.example`.
+
+---
+
+## OpenAPI и документация API
+
+Проект использует `drf-spectacular` для генерации OpenAPI-схемы.
+
+Локально документация API обычно доступна по адресам:
+
+```text
+http://127.0.0.1:8000/api/schema/
+http://127.0.0.1:8000/api/docs/
+```
+
+Текущий статус OpenAPI:
+
+- базовая генерация схемы подключена;
+- часть APIView endpoints требует дополнительной аннотации через `serializer_class` или `@extend_schema`;
+- часть operationId и enum naming warnings вынесена в backlog;
+- OpenAPI cleanup планируется отдельным этапом, чтобы не смешивать его с бизнес-разработкой приложений.
+
+---
+
+## Текущий backlog
+
+Перед production-ready состоянием остаются задачи:
+
+- вычистить предупреждения `drf-spectacular`;
+- добавить `serializer_class` / `@extend_schema` для APIView endpoints;
+- настроить `ENUM_NAME_OVERRIDES` для повторяющихся enum names;
+- проверить operationId collisions в OpenAPI;
+- расширить coverage threshold по мере роста тестов;
+- добавить Docker build check в CI, если используется контейнерный запуск;
+- обновлять `.env.example` при добавлении новых env-переменных;
+- поддерживать README и backend README синхронными с Makefile и CI.
 
 ---
 

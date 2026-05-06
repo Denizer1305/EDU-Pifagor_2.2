@@ -26,6 +26,9 @@ on:
       - ".pre-commit-config.yaml"
       - ".editorconfig"
       - ".gitignore"
+      - "docker-compose.dev.yml"
+      - "docker-compose.yml"
+      - "deploy/**"
 
   workflow_dispatch:
 
@@ -104,3 +107,15 @@ jobs:
 
       - name: Run backend checks
         run: make ci
+
+  docker-build:
+    name: Docker build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+        -   name: Checkout repository
+            uses: actions/checkout@v6
+
+        -   name: Build backend Docker image
+            run: docker compose -f docker-compose.dev.yml build backend
