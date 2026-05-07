@@ -20,9 +20,12 @@ The project focuses on maintainable backend architecture: domain logic is split 
 - [Makefile and Quality Checks](#makefile-and-quality-checks)
 - [Tests](#tests)
 - [Migrations](#migrations)
+- [CI / Security / DX](#ci--security--dx)
 - [GitHub Actions](#github-actions)
 - [Pre-commit](#pre-commit)
-- [Security](#security)
+- [Backend Security](#backend-security)
+- [OpenAPI and API Documentation](#openapi-and-api-documentation)
+- [Current Backlog](#current-backlog)
 
 ---
 
@@ -43,6 +46,8 @@ The project focuses on maintainable backend architecture: domain logic is split 
 - Ruff
 - pre-commit
 - coverage
+- pip-audit
+- bandit
 
 ### Frontend
 
@@ -65,11 +70,16 @@ The project focuses on maintainable backend architecture: domain logic is split 
 The backend currently has a working quality-control infrastructure:
 
 - separate Django settings: `base.py`, `dev.py`, `prod.py`, `testing.py`;
-- `Makefile` for local development commands;
+- `Makefile` for local development and CI commands;
 - `pre-commit` hooks;
 - GitHub Actions backend workflow;
 - migration checks through `makemigrations --check --dry-run`;
-- backend checks with `ruff check`, `ruff format --check`, `manage.py check`, and the full test suite.
+- backend checks with `ruff check`, `ruff format --check`, `manage.py check`, and tests;
+- production deploy check through `manage.py check --deploy`;
+- coverage threshold through `coverage report --fail-under`;
+- dependency audit through `pip-audit`;
+- static security analysis through `bandit`;
+- scoped throttling for security-sensitive auth endpoints.
 
 Main backend modules:
 
@@ -281,6 +291,7 @@ make lint-fix
 make format
 make precommit
 make check
+make check-prod
 make test
 make test-app APP=apps.users
 make test-users
@@ -289,6 +300,10 @@ make test-course
 make test-education
 make coverage
 make coverage-html
+make coverage-xml
+make audit-deps
+make audit-code
+make audit
 make ci
 ```
 
@@ -348,6 +363,42 @@ make ci
 
 ---
 
+## CI / Security / DX
+
+Backend checks are automated through `Makefile` and GitHub Actions.
+
+The main local check command is:
+
+```bash
+cd backend
+make ci
+```
+
+The backend CI pipeline includes:
+
+- `ruff check .`;
+- `ruff format . --check`;
+- migration check;
+- `manage.py check` with testing settings;
+- production deploy check through `manage.py check --deploy`;
+- tests with coverage threshold;
+- dependency security audit through `pip-audit`;
+- static Python code security analysis through `bandit`, if enabled in the current CI profile.
+
+Additional commands:
+
+```bash
+make check-prod
+make coverage
+make audit-deps
+make audit-code
+make audit
+```
+
+Production check uses safe CI placeholder environment values and does not require real production secrets.
+
+---
+
 ## GitHub Actions
 
 The backend workflow is located at:
@@ -363,7 +414,10 @@ CI runs:
 - Ruff format check;
 - migration check;
 - Django system check;
-- backend tests.
+- production deploy check;
+- backend tests;
+- coverage threshold;
+- security audit, if enabled in the workflow.
 
 Before opening a pull request, run locally:
 
@@ -396,6 +450,66 @@ git add .
 python -m pre_commit run --all-files
 git commit -m "chore(backend): update documentation and env examples"
 ```
+
+---
+
+## Backend Security
+
+The backend includes baseline security measures:
+
+- separate settings for dev/testing/prod;
+- required production environment variables for secrets, database, Redis, and SMTP;
+- secure cookies and HSTS settings in production;
+- CORS/CSRF origins configured through environment variables;
+- `SECURE_CONTENT_TYPE_NOSNIFF`;
+- `X_FRAME_OPTIONS = "DENY"`;
+- session-based authentication through Django/DRF;
+- scoped throttling for auth endpoints:
+  - login;
+  - registration;
+  - password reset request;
+  - password reset confirm;
+  - password change;
+  - email verification;
+- dependency audit through `pip-audit`;
+- static security analysis through `bandit`.
+
+The `.env` file must not be committed. Only `.env.example` with safe placeholder values is tracked.
+
+---
+
+## OpenAPI and API Documentation
+
+The project uses `drf-spectacular` to generate an OpenAPI schema.
+
+Local API documentation is usually available at:
+
+```text
+http://127.0.0.1:8000/api/schema/
+http://127.0.0.1:8000/api/docs/
+```
+
+Current OpenAPI status:
+
+- base schema generation is enabled;
+- some APIView endpoints still need `serializer_class` or `@extend_schema` annotations;
+- some operationId and enum naming warnings are tracked in backlog;
+- OpenAPI cleanup is planned as a separate stage to avoid mixing documentation cleanup with business feature development.
+
+---
+
+## Current Backlog
+
+Before production-ready state, the following tasks remain:
+
+- clean up `drf-spectacular` warnings;
+- add `serializer_class` / `@extend_schema` to APIView endpoints;
+- configure `ENUM_NAME_OVERRIDES` for repeated enum names;
+- check operationId collisions in OpenAPI;
+- increase coverage threshold as tests grow;
+- add Docker build check to CI if containerized deployment is used;
+- update `.env.example` whenever new environment variables are added;
+- keep root README and backend README synchronized with Makefile and CI.
 
 ---
 

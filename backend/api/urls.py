@@ -11,6 +11,7 @@ urlpatterns = [
     path("feedback/", include("apps.feedback.urls")),
     path("journal/", include("apps.journal.urls")),
     path("schedule/", include("apps.schedule.urls")),
+    path("notifications/", include("apps.notifications.urls")),
 ]
 
 if env_bool("ENABLE_CONTENT_API", False):
@@ -18,9 +19,6 @@ if env_bool("ENABLE_CONTENT_API", False):
 
 if env_bool("ENABLE_TESTING_API", False):
     urlpatterns += [path("testing/", include("apps.testing.urls"))]
-
-if env_bool("ENABLE_NOTIFICATIONS_API", False):
-    urlpatterns += [path("notifications/", include("apps.notifications.urls"))]
 
 if env_bool("ENABLE_ANALYTICS_API", False):
     urlpatterns += [path("analytics/", include("apps.analytics.urls"))]
