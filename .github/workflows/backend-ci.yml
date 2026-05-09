@@ -6,7 +6,6 @@ on:
       - main
       - dev
       - dev-backend
-      - dev-frontend
     paths:
       - "backend/**"
       - ".github/workflows/backend-ci.yml"
@@ -19,7 +18,6 @@ on:
       - main
       - dev
       - dev-backend
-      - dev-frontend
     paths:
       - "backend/**"
       - ".github/workflows/backend-ci.yml"
