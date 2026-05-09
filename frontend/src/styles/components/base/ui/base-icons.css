@@ -1,0 +1,45 @@
+.base-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: var(--base-icon-size, 24px);
+    height: var(--base-icon-size, 24px);
+    color: currentColor;
+    line-height: 1;
+    vertical-align: -0.14em;
+}
+
+.base-icon__svg {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+}
+
+.base-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    flex: 0 0 auto;
+}
+
+.base-icon--monochrome svg [stroke]:not([stroke="none"]) {
+    stroke: currentColor;
+}
+
+.base-icon--monochrome svg [fill]:not([fill="none"]) {
+    fill: currentColor;
+}
+
+.base-icon__fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 1.8px dashed currentColor;
+    border-radius: 30%;
+    opacity: 0.45;
+}
+
+.base-icon--missing {
+    color: var(--secondary);
+}

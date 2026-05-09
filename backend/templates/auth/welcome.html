@@ -1,13 +1,87 @@
-{% extends "emails/shared/base_email.html" %}
-{% block content %}
-<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Здравствуйте, {{ first_name|default:"пользователь" }}!</p>
-<p style="margin:0 0 16px 0;font-size:16px;line-height:1.7;">Добро пожаловать в образовательную платформу <b>«Пифагор»</b>. Ваш аккаунт успешно создан, и теперь вам доступны курсы, задания, расписание, уведомления и аналитика.</p>
-<table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0;">
-  <tr>
-    <td style="border-radius:12px;background:#4A6FA5;">
-      <a href="{{ login_url }}" style="display:inline-block;padding:14px 24px;color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:700;">Перейти в платформу</a>
-    </td>
-  </tr>
-</table>
-<p style="margin:0;font-size:15px;line-height:1.7;">Если вы не создавали этот аккаунт, свяжитесь с администратором платформы.</p>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Добро пожаловать в Пифагор</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0;padding:0;background-color:#EEF1F6;font-family:'PT Sans',Arial,sans-serif;color:#2F2F2F;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#EEF1F6;margin:0;padding:32px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:680px;background:#FFFFFF;border-radius:28px;overflow:hidden;border:1px solid rgba(57,68,88,0.08);box-shadow:0 18px 44px rgba(57,68,88,0.10);">
+                    <tr>
+                        <td style="padding:0;background:linear-gradient(180deg,#fcfcfd 0%,#f4f6fa 46%,#ffffff 100%);">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="padding:28px 36px 18px 36px;text-align:center;">
+                                        <img src="{{ site_url }}/assets/image/logo/logo.svg" alt="Пифагор" width="82" style="display:block;margin:0 auto 18px auto;border:0;outline:none;text-decoration:none;" />
+                                        <div style="font-family:'Forum',Georgia,serif;font-size:34px;line-height:1;color:#394458;letter-spacing:0.08em;">
+                                            ПИФАГОР
+                                        </div>
+                                        <div style="margin-top:12px;display:inline-block;padding:8px 16px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(57,68,88,0.08);color:#4A6FA5;font-size:13px;font-weight:700;">
+                                            Добро пожаловать в платформу
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:8px 36px 36px 36px;">
+                                        <div style="font-family:'Forum',Georgia,serif;font-size:42px;line-height:0.98;color:#394458;text-align:center;margin-bottom:18px;">
+                                            Ваш аккаунт создан
+                                        </div>
+
+                                        <p style="margin:0 0 16px 0;font-size:17px;line-height:1.8;color:#8A8A9F;text-align:center;">
+                                            Здравствуйте, <strong style="color:#394458;">{{ user_name }}</strong>!
+                                        </p>
+
+                                        <p style="margin:0 0 22px 0;font-size:16px;line-height:1.85;color:#2F2F2F;text-align:center;">
+                                            Добро пожаловать в <strong>Пифагор</strong> — отечественную образовательную платформу,
+                                            где обучение, задания, курсы и цифровая среда объединены в одном пространстве.
+                                        </p>
+
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 24px 0;">
+                                            <tr>
+                                                <td style="padding:18px;border-radius:22px;background:rgba(57,68,88,0.04);border:1px solid rgba(57,68,88,0.08);">
+                                                    <div style="font-size:15px;line-height:1.8;color:#2F2F2F;">
+                                                        <strong style="color:#394458;">Что дальше?</strong><br />
+                                                        Подтвердите электронную почту, войдите в кабинет и начните работу с платформой.
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 28px 0;">
+                                            <tr>
+                                                <td align="center">
+                                                    <a href="{{ login_url }}" style="display:inline-block;padding:16px 32px;border-radius:999px;background:#394458;color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:700;">
+                                                        Войти в кабинет
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <p style="margin:0 0 12px 0;font-size:14px;line-height:1.75;color:#8A8A9F;text-align:center;">
+                                            Если вы не создавали аккаунт, просто проигнорируйте это письмо.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding:24px 36px;background:#FFFFFF;border-top:1px solid rgba(57,68,88,0.08);text-align:center;">
+                            <p style="margin:0 0 8px 0;font-size:13px;line-height:1.7;color:#8A8A9F;">
+                                Пифагор — современная цифровая образовательная среда
+                            </p>
+                            <p style="margin:0;font-size:12px;line-height:1.7;color:#8A8A9F;">
+                                © {{ year }} Пифагор. Все права защищены.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
