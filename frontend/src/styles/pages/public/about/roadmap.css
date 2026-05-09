@@ -86,8 +86,7 @@
     line-height: 1.55;
 }
 
-.about-roadmap-card li i {
+.about-roadmap-card li .base-icon {
     margin-top: 3px;
     color: var(--accent);
-    font-size: 0.86rem;
 }

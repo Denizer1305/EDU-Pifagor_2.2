@@ -79,7 +79,7 @@
     background: var(--white-72);
 }
 
-.platform-story-point > i {
+.platform-story-point-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -246,7 +246,7 @@
     box-shadow: var(--shadow-xs);
 }
 
-.origin-highlight i {
+.origin-highlight .base-icon {
     color: var(--accent);
 }
 

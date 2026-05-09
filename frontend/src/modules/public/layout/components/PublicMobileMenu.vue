@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, useRoute } from "vue-router";
 
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
 import PublicThemeToggle from "./PublicThemeToggle.vue";
 
 defineProps({
@@ -77,7 +78,10 @@ function isActiveNavigationItem(item) {
                     aria-label="Закрыть меню"
                     @click="$emit('close')"
                 >
-                    <i class="fas fa-times"></i>
+                    <BaseIcon
+                        name="close"
+                        size="18"
+                    />
                 </button>
             </div>
         </div>
@@ -99,7 +103,10 @@ function isActiveNavigationItem(item) {
                             @click="$emit('close')"
                         >
                             <span class="mobile-nav-icon">
-                                <i :class="item.icon"></i>
+                                <BaseIcon
+                                    :name="item.icon"
+                                    size="22"
+                                />
                             </span>
 
                             <span class="mobile-nav-content">
@@ -112,7 +119,11 @@ function isActiveNavigationItem(item) {
                                 </span>
                             </span>
 
-                            <i class="fas fa-arrow-right mobile-nav-arrow"></i>
+                            <BaseIcon
+                                name="arrow-right"
+                                size="18"
+                                class="mobile-nav-arrow"
+                            />
                         </RouterLink>
                     </li>
                 </ul>
@@ -124,7 +135,10 @@ function isActiveNavigationItem(item) {
                     class="mobile-login-btn"
                     @click="$emit('close')"
                 >
-                    <i class="fas fa-sign-in-alt"></i>
+                    <BaseIcon
+                        name="login"
+                        size="18"
+                    />
                     Вход в кабинет
                 </RouterLink>
             </div>

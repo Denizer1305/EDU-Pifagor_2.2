@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     content: {
         type: Object,
@@ -35,10 +37,11 @@ function getActionClass(action) {
                     >
                         {{ action.label }}
 
-                        <i
+                        <BaseIcon
                             v-if="action.icon"
-                            :class="action.icon"
-                        ></i>
+                            :name="action.icon"
+                            size="16"
+                        />
                     </RouterLink>
                 </div>
 

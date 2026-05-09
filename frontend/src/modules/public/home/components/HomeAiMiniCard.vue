@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     item: {
         type: Object,
@@ -11,7 +13,10 @@ defineProps({
     <article class="ai-mini-card">
         <div class="ai-mini-top">
             <div class="ai-mini-icon">
-                <i :class="item.icon"></i>
+                <BaseIcon
+                    :name="item.icon"
+                    size="22"
+                />
             </div>
 
             <div class="ai-mini-title">

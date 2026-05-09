@@ -1,6 +1,8 @@
 <script setup>
 import { RouterLink } from "vue-router";
 
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     footer: {
         type: Object,
@@ -41,16 +43,9 @@ defineProps({
                             class="footer-social-link"
                             :aria-label="social.ariaLabel"
                         >
-                            <i
-                                v-if="social.icon"
-                                :class="social.icon"
-                            ></i>
-
-                            <img
-                                v-if="social.image"
-                                :src="social.image.src"
-                                :alt="social.image.alt"
-                                aria-hidden="true"
+                            <BaseIcon
+                                :name="social.icon"
+                                size="18"
                             />
 
                             <span>

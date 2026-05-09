@@ -1,5 +1,6 @@
 <script setup>
-import PublicSectionHead from "../../home/shared/components/PublicSectionHead.vue";
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+import PublicSectionHead from "../../shared/components/PublicSectionHead.vue";
 
 defineProps({
     content: {
@@ -38,7 +39,12 @@ defineProps({
                             :key="point.title"
                             class="platform-story-point"
                         >
-                            <i :class="point.icon"></i>
+                            <div class="platform-story-point-icon">
+                                <BaseIcon
+                                    :name="point.icon"
+                                    size="24"
+                                />
+                            </div>
 
                             <div>
                                 <strong>{{ point.title }}</strong>
@@ -78,7 +84,10 @@ defineProps({
 
                         <div class="origin-text-col">
                             <div class="origin-icon-badge">
-                                <i :class="content.origin.badge.icon"></i>
+                                <BaseIcon
+                                    :name="content.origin.badge.icon"
+                                    size="15"
+                                />
                                 <span>{{ content.origin.badge.text }}</span>
                             </div>
 
@@ -91,7 +100,10 @@ defineProps({
                             </p>
 
                             <div class="origin-highlight">
-                                <i :class="content.origin.highlight.icon"></i>
+                                <BaseIcon
+                                    :name="content.origin.highlight.icon"
+                                    size="16"
+                                />
                                 <span>{{ content.origin.highlight.text }}</span>
                             </div>
                         </div>

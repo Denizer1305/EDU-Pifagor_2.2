@@ -1,5 +1,5 @@
 <script setup>
-import PublicSectionHead from "../shared/components/PublicSectionHead.vue";
+import PublicSectionHead from "../../shared/components/PublicSectionHead.vue";
 import HomeAiCard from "./HomeAiCard.vue";
 import HomeAiMiniCard from "./HomeAiMiniCard.vue";
 import HomeAiOrbitCard from "./HomeAiOrbitCard.vue";

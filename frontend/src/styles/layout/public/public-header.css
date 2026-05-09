@@ -139,7 +139,7 @@
     background: rgba(255,255,255,0.65);
 }
 
-.theme-toggle i {
+.theme-toggle .base-icon {
     position: absolute;
     font-size: 1.05rem;
     color: var(--primary);

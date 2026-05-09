@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     buttonClass: {
         type: String,
@@ -18,7 +20,14 @@ defineEmits({
         aria-label="Переключить тему"
         @click="$emit('toggle')"
     >
-        <i class="fas fa-sun"></i>
-        <i class="fas fa-moon"></i>
+        <BaseIcon
+            name="sun"
+            size="18"
+        />
+
+        <BaseIcon
+            name="moon"
+            size="18"
+        />
     </button>
 </template>

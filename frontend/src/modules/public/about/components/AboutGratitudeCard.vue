@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     card: {
         type: Object,
@@ -11,7 +13,10 @@ defineProps({
     <article class="gratitude-card fade-in">
         <div class="gratitude-card-inner">
             <div class="gratitude-card-icon">
-                <i :class="card.icon"></i>
+                <BaseIcon
+                    :name="card.icon"
+                    size="26"
+                />
             </div>
 
             <h3>
@@ -37,7 +42,10 @@ defineProps({
                     v-for="point in card.points"
                     :key="point"
                 >
-                    <i class="fas fa-check-circle"></i>
+                    <BaseIcon
+                        name="check-circle"
+                        size="15"
+                    />
                     <span>{{ point }}</span>
                 </li>
             </ul>

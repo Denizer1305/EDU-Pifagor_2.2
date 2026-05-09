@@ -13,22 +13,19 @@ export const publicFooter = {
             label: "VK",
             href: "#",
             ariaLabel: "Пифагор во ВКонтакте",
-            icon: "fab fa-vk",
+            icon: "vk",
         },
         {
             label: "Telegram",
             href: "#",
             ariaLabel: "Пифагор в Telegram",
-            icon: "fab fa-telegram",
+            icon: "telegram",
         },
         {
             label: "MAX",
             href: "#",
             ariaLabel: "Пифагор в MAX",
-            image: {
-                src: "/assets/icons/max.svg",
-                alt: "",
-            },
+            icon: "max",
         },
     ],
     navigation: [

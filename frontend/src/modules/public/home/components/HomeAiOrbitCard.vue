@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     avatar: {
         type: Object,
@@ -11,23 +13,23 @@ const orbitRings = ["one", "two", "three"];
 const orbitNodes = [
     {
         className: "n1",
-        icon: "fas fa-book",
+        icon: "book",
     },
     {
         className: "n2",
-        icon: "fas fa-check-double",
+        icon: "check-double",
     },
     {
         className: "n3",
-        icon: "fas fa-chart-pie",
+        icon: "chart-pie",
     },
     {
         className: "n4",
-        icon: "fas fa-comments",
+        icon: "comments",
     },
     {
         className: "n5",
-        icon: "fas fa-lightbulb",
+        icon: "lightbulb",
     },
 ];
 </script>
@@ -49,7 +51,10 @@ const orbitNodes = [
                     class="ai-orbit-node"
                     :class="node.className"
                 >
-                    <i :class="node.icon"></i>
+                    <BaseIcon
+                        :name="node.icon"
+                        size="22"
+                    />
                 </div>
 
                 <div class="ai-core-avatar">

@@ -291,10 +291,12 @@
     line-height: 1.6;
 }
 
-.about-hero-highlight-item i {
-    margin-top: 8px;
-    color: var(--accent);
-    font-size: 0.38rem;
+.about-hero-highlight-dot {
+    width: 6px;
+    height: 6px;
+    margin-top: 9px;
+    border-radius: var(--radius-round);
+    background: var(--accent);
 }
 
 .about-hero-actions {

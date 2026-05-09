@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
 import { useFloatingCanvas } from "../../shared/composables/useFloatingCanvas";
 
 defineProps({
@@ -101,7 +102,10 @@ function getActionClass(action) {
                         :key="badge.text"
                         class="teachers-hero-badge"
                     >
-                        <i :class="badge.icon"></i>
+                        <BaseIcon
+                            :name="badge.icon"
+                            size="15"
+                        />
                         {{ badge.text }}
                     </span>
                 </div>
@@ -124,7 +128,7 @@ function getActionClass(action) {
                         :key="highlight"
                         class="teachers-hero-highlight-item"
                     >
-                        <i class="fas fa-circle"></i>
+                        <span class="teachers-hero-highlight-dot"></span>
                         <span>{{ highlight }}</span>
                     </div>
                 </div>
@@ -140,10 +144,11 @@ function getActionClass(action) {
                     >
                         {{ action.label }}
 
-                        <i
+                        <BaseIcon
                             v-if="action.icon"
-                            :class="action.icon"
-                        ></i>
+                            :name="action.icon"
+                            size="16"
+                        />
                     </component>
                 </div>
             </div>

@@ -116,10 +116,12 @@
     line-height: 1.65;
 }
 
-.feature-points li i {
-    color: var(--accent);
-    margin-top: 3px;
-    font-size: 0.78rem;
+.feature-point-dot {
+    width: 6px;
+    height: 6px;
+    margin-top: 9px;
+    border-radius: var(--radius-round);
+    background: var(--accent);
 }
 
 .feature-visual {
@@ -300,4 +302,3 @@
     border: 1px solid var(--primary-08);
     color: var(--accent);
 }
-

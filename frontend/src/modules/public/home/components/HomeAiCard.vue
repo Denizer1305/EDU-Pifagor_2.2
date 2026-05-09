@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     card: {
         type: Object,
@@ -14,7 +16,10 @@ defineProps({
     >
         <div class="ai-card-inner">
             <div class="ai-pill">
-                <i :class="card.icon"></i>
+                <BaseIcon
+                    :name="card.icon"
+                    size="16"
+                />
                 {{ card.label }}
             </div>
 
@@ -34,7 +39,7 @@ defineProps({
                     v-for="point in card.points"
                     :key="point"
                 >
-                    <i class="fas fa-circle"></i>
+                    <span class="ai-list-dot"></span>
                     <span>{{ point }}</span>
                 </li>
             </ul>

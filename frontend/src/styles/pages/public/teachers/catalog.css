@@ -261,3 +261,33 @@
     font-size: 0.92rem;
     line-height: 1.7;
 }
+
+.teachers-api-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-18);
+    color: var(--primary);
+    background: var(--white-76);
+    font-size: 0.86rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.55;
+}
+
+.teachers-api-status .base-icon {
+    margin-top: 3px;
+    color: var(--accent);
+}
+
+.teachers-api-status.warning {
+    color: var(--primary);
+    background: var(--warning-12);
+    border-color: var(--warning-20);
+}
+
+.teachers-loading-icon {
+    animation: teachersIconSpin 0.9s linear infinite;
+}

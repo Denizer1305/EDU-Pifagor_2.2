@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
 import { useFloatingCanvas } from "../../shared/composables/useFloatingCanvas";
 
 defineProps({
@@ -44,7 +45,6 @@ function getActionClass(action) {
         </div>
 
         <canvas
-            id="heroCanvas"
             ref="heroCanvasRef"
             class="hero-canvas"
             aria-hidden="true"
@@ -98,7 +98,10 @@ function getActionClass(action) {
                         :key="badge.text"
                         class="hero-badge"
                     >
-                        <i :class="badge.icon"></i>
+                        <BaseIcon
+                            :name="badge.icon"
+                            size="16"
+                        />
                         {{ badge.text }}
                     </span>
                 </div>
@@ -121,7 +124,7 @@ function getActionClass(action) {
                         :key="highlight"
                         class="hero-highlight-item"
                     >
-                        <i class="fas fa-circle"></i>
+                        <span class="hero-highlight-dot"></span>
                         <span>{{ highlight }}</span>
                     </div>
                 </div>
@@ -135,10 +138,11 @@ function getActionClass(action) {
                     >
                         {{ action.label }}
 
-                        <i
+                        <BaseIcon
                             v-if="action.icon"
-                            :class="action.icon"
-                        ></i>
+                            :name="action.icon"
+                            size="16"
+                        />
                     </RouterLink>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 <script setup>
-import PublicSectionHead from "../../home/shared/components/PublicSectionHead.vue";
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+import PublicSectionHead from "../../shared/components/PublicSectionHead.vue";
 
 defineProps({
     content: {
@@ -57,7 +58,10 @@ defineProps({
                             class="about-mission-side-card"
                         >
                             <div class="about-mission-side-icon">
-                                <i :class="card.icon"></i>
+                                <BaseIcon
+                                    :name="card.icon"
+                                    size="25"
+                                />
                             </div>
 
                             <h4>

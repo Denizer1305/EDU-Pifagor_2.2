@@ -1,5 +1,5 @@
 <script setup>
-import PublicSectionHead from "../../home/shared/components/PublicSectionHead.vue";
+import PublicSectionHead from "../../shared/components/PublicSectionHead.vue";
 import AboutTeamMemberCard from "./AboutTeamMemberCard.vue";
 
 defineProps({

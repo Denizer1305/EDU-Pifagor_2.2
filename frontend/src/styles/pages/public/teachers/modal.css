@@ -166,7 +166,7 @@
     line-height: 1.6;
 }
 
-.teacher-modal-awards i {
+.teacher-modal-awards .base-icon {
     margin-top: 4px;
     color: var(--accent);
 }

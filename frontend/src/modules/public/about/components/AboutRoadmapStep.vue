@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     step: {
         type: Object,
@@ -23,7 +25,10 @@ defineProps({
                     v-for="point in step.points"
                     :key="point"
                 >
-                    <i class="fas fa-check-circle"></i>
+                    <BaseIcon
+                        name="check-circle"
+                        size="15"
+                    />
                     <span>{{ point }}</span>
                 </li>
             </ul>

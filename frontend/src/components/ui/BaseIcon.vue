@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
-import { getIconSvg } from "../../assets/brand/icons/rounded/icons.registry";
+import { loadIconSvg } from "../../assets/brand/icons/rounded/icons.registry";
 
 const props = defineProps({
     name: {
@@ -26,9 +26,8 @@ const props = defineProps({
     },
 });
 
-const iconSvg = computed(() => {
-    return getIconSvg(props.name);
-});
+const iconSvg = ref("");
+const isLoading = ref(false);
 
 const iconSize = computed(() => {
     if (typeof props.size === "number") {
@@ -48,7 +47,8 @@ const iconClasses = computed(() => {
     return [
         "base-icon",
         {
-            "base-icon--missing": !iconSvg.value,
+            "base-icon--missing": !iconSvg.value && !isLoading.value,
+            "base-icon--loading": isLoading.value,
             "base-icon--monochrome": props.monochrome,
         },
     ];
@@ -72,6 +72,26 @@ const accessibilityAttributes = computed(() => {
         "aria-label": props.title || props.name,
     };
 });
+
+watch(
+    () => props.name,
+    async (iconName) => {
+        const currentName = iconName;
+
+        iconSvg.value = "";
+        isLoading.value = true;
+
+        const svg = await loadIconSvg(currentName);
+
+        if (props.name === currentName) {
+            iconSvg.value = svg;
+            isLoading.value = false;
+        }
+    },
+    {
+        immediate: true,
+    },
+);
 </script>
 
 <template>

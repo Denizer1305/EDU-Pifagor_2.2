@@ -91,11 +91,8 @@
     background: var(--white-96);
 }
 
-.footer-social-link i,
-.footer-social-link img {
-    width: 18px;
-    height: 18px;
-    flex: 0 0 18px;
+.footer-social-link .base-icon {
+    color: currentColor;
 }
 
 .footer-bottom {

@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 defineProps({
     card: {
         type: Object,
@@ -16,7 +18,10 @@ const diagramBars = ["h1", "h2", "h3", "h4", "h5"];
     >
         <div class="feature-content">
             <div class="feature-topline">
-                <i :class="card.icon"></i>
+                <BaseIcon
+                    :name="card.icon"
+                    size="16"
+                />
                 {{ card.label }}
             </div>
 
@@ -36,7 +41,7 @@ const diagramBars = ["h1", "h2", "h3", "h4", "h5"];
                     v-for="point in card.points"
                     :key="point"
                 >
-                    <i class="fas fa-circle"></i>
+                    <span class="feature-point-dot"></span>
                     <span>{{ point }}</span>
                 </li>
             </ul>
@@ -50,7 +55,10 @@ const diagramBars = ["h1", "h2", "h3", "h4", "h5"];
                     :key="icon"
                     class="feature-icon-pill"
                 >
-                    <i :class="icon"></i>
+                    <BaseIcon
+                        :name="icon"
+                        size="22"
+                    />
                 </div>
             </div>
 

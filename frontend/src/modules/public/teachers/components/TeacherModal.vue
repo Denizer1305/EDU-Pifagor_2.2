@@ -1,6 +1,8 @@
 <script setup>
 import { onBeforeUnmount, watch } from "vue";
 
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+
 const props = defineProps({
     teacher: {
         type: Object,
@@ -66,7 +68,10 @@ onBeforeUnmount(() => {
                     aria-label="Закрыть окно"
                     @click="closeModal"
                 >
-                    <i class="fas fa-times"></i>
+                    <BaseIcon
+                        name="close"
+                        size="18"
+                    />
                 </button>
 
                 <div class="teacher-modal-content">
@@ -120,7 +125,10 @@ onBeforeUnmount(() => {
                                     v-for="award in teacher.awards"
                                     :key="award"
                                 >
-                                    <i class="fas fa-award"></i>
+                                    <BaseIcon
+                                        name="award"
+                                        size="17"
+                                    />
                                     <span>{{ award }}</span>
                                 </li>
                             </ul>

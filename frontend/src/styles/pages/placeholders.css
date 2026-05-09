@@ -1,0 +1,59 @@
+.page-placeholder {
+    min-height: 100vh;
+    padding: 120px 24px 64px;
+    background:
+        radial-gradient(circle at 16% 18%, var(--accent-08) 0%, transparent 28%),
+        linear-gradient(180deg, var(--color-bg-200) 0%, var(--color-bg-600) 100%);
+}
+
+.page-placeholder__section {
+    display: grid;
+    gap: 18px;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-34);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-sm);
+}
+
+.page-placeholder__badge {
+    width: fit-content;
+    margin: 0;
+    padding: 8px 14px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-pill);
+    color: var(--accent);
+    background: var(--accent-08);
+    font-size: 0.82rem;
+    font-weight: var(--font-weight-bold);
+}
+
+.page-placeholder__title {
+    margin: 0;
+    color: var(--primary);
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 5vw, 4.6rem);
+    font-weight: var(--font-heading-strong-weight);
+    line-height: var(--line-height-heading);
+}
+
+.page-placeholder__text {
+    max-width: 680px;
+    margin: 0;
+    color: var(--secondary);
+    font-size: 1rem;
+    line-height: var(--line-height-text);
+}
+
+@media (max-width: 640px) {
+    .page-placeholder {
+        padding-top: 96px;
+    }
+
+    .page-placeholder__section {
+        padding: 28px;
+        border-radius: var(--radius-24);
+    }
+}

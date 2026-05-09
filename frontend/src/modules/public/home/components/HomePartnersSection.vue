@@ -1,5 +1,6 @@
 <script setup>
-import PublicSectionHead from "../shared/components/PublicSectionHead.vue";
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+import PublicSectionHead from "../../shared/components/PublicSectionHead.vue";
 import HomePartnerCard from "./HomePartnerCard.vue";
 
 defineProps({
@@ -53,7 +54,10 @@ defineProps({
                         aria-hidden="true"
                     >
                         <div class="partners-accent-mark">
-                            <i :class="content.accent.icon"></i>
+                            <BaseIcon
+                                :name="content.accent.icon"
+                                size="28"
+                            />
                         </div>
 
                         <h4>

@@ -1,5 +1,6 @@
 <script setup>
-import PublicSectionHead from "../../home/shared/components/PublicSectionHead.vue";
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+import PublicSectionHead from "../../shared/components/PublicSectionHead.vue";
 import AboutGratitudeCard from "./AboutGratitudeCard.vue";
 
 defineProps({
@@ -34,7 +35,10 @@ defineProps({
                 <article class="gratitude-center fade-in">
                     <div class="gratitude-center-inner">
                         <div class="gratitude-center-mark">
-                            <i :class="content.center.icon"></i>
+                            <BaseIcon
+                                :name="content.center.icon"
+                                size="30"
+                            />
                         </div>
 
                         <h3 class="gratitude-center-title">

@@ -6,8 +6,8 @@ import PublicFooter from "../modules/public/layout/components/PublicFooter.vue";
 import PublicHeader from "../modules/public/layout/components/PublicHeader.vue";
 import PublicMobileMenu from "../modules/public/layout/components/PublicMobileMenu.vue";
 
-import { useMobileMenu } from "../modules/public/home/composables/useMobileMenu";
-import { usePublicTheme } from "../modules/public/home/composables/usePublicTheme";
+import { useMobileMenu } from "../modules/public/shared/composables/useMobileMenu";
+import { usePublicTheme } from "../modules/public/shared/composables/usePublicTheme";
 
 import {
     publicNavigationItems,

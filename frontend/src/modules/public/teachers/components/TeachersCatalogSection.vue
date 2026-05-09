@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from "vue";
 
-import PublicSectionHead from "../../home/shared/components/PublicSectionHead.vue";
+import BaseIcon from "../../../../components/ui/BaseIcon.vue";
+import PublicSectionHead from "../../shared/components/PublicSectionHead.vue";
 import TeacherCard from "./TeacherCard.vue";
 import TeachersOrganizationFilter from "./TeachersOrganizationFilter.vue";
 
@@ -22,6 +23,14 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    isLoading: {
+        type: Boolean,
+        default: false,
+    },
+    errorMessage: {
+        type: String,
+        default: "",
+    },
 });
 
 const emit = defineEmits({
@@ -36,10 +45,16 @@ const selectedOrganization = computed(() => {
 });
 
 const filteredTeachers = computed(() => {
+    if (!props.selectedOrganizationSlug) {
+        return [];
+    }
+
     return props.teachers.filter((teacher) => {
         return teacher.organizationSlug === props.selectedOrganizationSlug;
     });
 });
+
+const hasOrganizations = computed(() => props.organizations.length > 0);
 
 function updateSelectedOrganization(slug) {
     emit("update:selectedOrganizationSlug", slug);
@@ -64,10 +79,22 @@ function openTeacher(teacher) {
 
             <div class="teachers-shell fade-in">
                 <TeachersOrganizationFilter
+                    v-if="hasOrganizations"
                     :model-value="selectedOrganizationSlug"
                     :organizations="organizations"
                     @update:model-value="updateSelectedOrganization"
                 />
+
+                <div
+                    v-if="errorMessage"
+                    class="teachers-api-status warning"
+                >
+                    <BaseIcon
+                        name="info"
+                        size="17"
+                    />
+                    <span>{{ errorMessage }}</span>
+                </div>
 
                 <div
                     v-if="selectedOrganization"
@@ -89,7 +116,28 @@ function openTeacher(teacher) {
                 </div>
 
                 <div
-                    v-if="filteredTeachers.length"
+                    v-if="isLoading"
+                    class="teachers-empty-state"
+                >
+                    <div class="teachers-empty-icon">
+                        <BaseIcon
+                            name="spinner"
+                            size="32"
+                            class="teachers-loading-icon"
+                        />
+                    </div>
+
+                    <h3>
+                        Загружаем преподавателей
+                    </h3>
+
+                    <p>
+                        Получаем актуальный список преподавателей выбранной образовательной организации.
+                    </p>
+                </div>
+
+                <div
+                    v-else-if="filteredTeachers.length"
                     class="teachers-grid"
                 >
                     <TeacherCard
@@ -101,11 +149,34 @@ function openTeacher(teacher) {
                 </div>
 
                 <div
+                    v-else-if="!hasOrganizations"
+                    class="teachers-empty-state"
+                >
+                    <div class="teachers-empty-icon">
+                        <BaseIcon
+                            name="building-columns"
+                            size="32"
+                        />
+                    </div>
+
+                    <h3>
+                        {{ content.emptyOrganizationsTitle }}
+                    </h3>
+
+                    <p>
+                        {{ content.emptyOrganizationsText }}
+                    </p>
+                </div>
+
+                <div
                     v-else
                     class="teachers-empty-state"
                 >
                     <div class="teachers-empty-icon">
-                        <i class="fas fa-chalkboard-user"></i>
+                        <BaseIcon
+                            name="teacher"
+                            size="32"
+                        />
                     </div>
 
                     <h3>
