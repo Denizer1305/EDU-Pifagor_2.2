@@ -1,0 +1,445 @@
+@media (max-width: 1280px) {
+    .teachers-hero-container {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 56px;
+    }
+
+    .teachers-hero-content {
+        max-width: 920px;
+        margin-inline: auto;
+        text-align: center;
+    }
+
+    .teachers-hero-top-badges,
+    .teachers-hero-actions {
+        justify-content: center;
+    }
+
+    .teachers-hero-description {
+        margin-inline: auto;
+    }
+
+    .teachers-hero-highlight {
+        max-width: 780px;
+        margin-inline: auto;
+        text-align: left;
+    }
+
+    .teachers-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .teacher-card-media {
+        height: 280px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .teachers-hero {
+        min-height: auto;
+        padding: 132px 0 82px;
+    }
+
+    .teachers-hero-title {
+        font-size: clamp(2.8rem, 8vw, 4.4rem);
+    }
+
+    .teachers-hero-subtitle {
+        font-size: 1.04rem;
+    }
+
+    .teachers-hero-description {
+        font-size: 0.96rem;
+    }
+
+    .teachers-hero-grid-line.vertical.center,
+    .teachers-hero-grid-line.vertical.left,
+    .teachers-hero-grid-line.vertical.right {
+        opacity: 0.34;
+    }
+
+    .teachers-shell {
+        padding: 28px;
+        border-radius: var(--radius-34);
+    }
+
+    .teachers-organization-filter-head,
+    .teachers-current-organization {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .teachers-organization-filter-hint {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .teacher-modal-content {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .teacher-modal-media {
+        height: 360px;
+    }
+
+    .teacher-modal-panel {
+        padding: 34px;
+    }
+
+    .teachers-page-cta {
+        padding: 86px 0 78px;
+    }
+
+    .teachers-page-cta-shell {
+        padding: 34px;
+        border-radius: var(--radius-30);
+    }
+}
+
+@media (max-width: 900px) {
+    .teachers-hero {
+        padding-top: 122px;
+    }
+
+    .teachers-hero-title {
+        font-size: clamp(2.45rem, 10vw, 3.8rem);
+    }
+
+    .teachers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .teacher-card-media {
+        height: 340px;
+    }
+
+    .teachers-shell {
+        border-radius: var(--radius-30);
+    }
+}
+
+@media (max-width: 768px) {
+    .teachers-hero {
+        padding: 116px 0 68px;
+    }
+
+    .teachers-hero-content {
+        gap: 20px;
+    }
+
+    .teachers-hero-top-badges {
+        gap: 8px;
+    }
+
+    .teachers-hero-badge {
+        min-height: 36px;
+        font-size: 0.78rem;
+    }
+
+    .teachers-hero-title {
+        font-size: clamp(2.35rem, 11vw, 3.4rem);
+    }
+
+    .teachers-hero-subtitle {
+        font-size: 0.98rem;
+        line-height: 1.58;
+    }
+
+    .teachers-hero-description {
+        font-size: 0.92rem;
+        line-height: 1.72;
+    }
+
+    .teachers-hero-highlight {
+        padding: 16px;
+        border-radius: var(--radius-22);
+    }
+
+    .teachers-hero-highlight-item {
+        font-size: 0.86rem;
+    }
+
+    .teachers-hero-circle.one,
+    .teachers-hero-circle.two,
+    .teachers-hero-moving-line.four {
+        display: none;
+    }
+
+    .teachers-shell {
+        padding: 24px;
+    }
+
+    .teachers-organization-filter {
+        padding: 20px;
+        border-radius: var(--radius-24);
+    }
+
+    .teachers-current-organization {
+        padding: 16px;
+        border-radius: var(--radius-22);
+    }
+
+    .teacher-card {
+        border-radius: var(--radius-26);
+    }
+
+    .teacher-card-media {
+        height: 300px;
+    }
+
+    .teacher-card-body {
+        padding: 20px;
+    }
+
+    .teacher-modal-overlay {
+        padding: 16px;
+    }
+
+    .teacher-modal-window {
+        width: min(100%, calc(100vw - 24px));
+        max-height: calc(100vh - 24px);
+        border-radius: var(--radius-28);
+    }
+
+    .teacher-modal-content {
+        max-height: calc(100vh - 24px);
+    }
+
+    .teacher-modal-media {
+        height: 280px;
+    }
+
+    .teacher-modal-panel {
+        padding: 28px;
+    }
+
+    .teacher-modal-name {
+        font-size: clamp(1.8rem, 8vw, 2.8rem);
+    }
+
+    .teachers-page-cta {
+        padding: 76px 0 68px;
+    }
+
+    .teachers-page-cta-shell {
+        padding: 28px;
+        border-radius: var(--radius-28);
+    }
+
+    .teachers-page-cta-shell h2 {
+        font-size: clamp(1.85rem, 8vw, 2.8rem);
+    }
+
+    .teachers-page-cta-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .teachers-page-cta-actions .cta-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .teachers-hero {
+        padding-top: 108px;
+    }
+
+    .teachers-hero-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .teachers-hero-actions .btn {
+        width: 100%;
+    }
+
+    .teachers-hero-badge {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .teachers-shell {
+        padding: 22px;
+    }
+
+    .teachers-organization-filter-label {
+        font-size: clamp(1.35rem, 7vw, 1.9rem);
+    }
+
+    .teacher-card-media {
+        height: 260px;
+    }
+
+    .teacher-modal-media {
+        height: 240px;
+    }
+
+    .teacher-modal-panel {
+        padding: 24px;
+    }
+
+    .teacher-modal-section {
+        padding: 18px;
+        border-radius: var(--radius-22);
+    }
+}
+
+@media (max-width: 480px) {
+    .teachers-hero {
+        padding: 102px 0 58px;
+    }
+
+    .teachers-hero-title {
+        font-size: clamp(2.1rem, 12vw, 3rem);
+    }
+
+    .teachers-hero-subtitle {
+        font-size: 0.92rem;
+    }
+
+    .teachers-hero-description,
+    .teachers-hero-highlight-item {
+        font-size: 0.86rem;
+    }
+
+    .teachers-hero-highlight {
+        padding: 14px;
+        border-radius: var(--radius-20);
+    }
+
+    .teachers-shell,
+    .teachers-page-cta-shell {
+        padding: 18px;
+        border-radius: var(--radius-24);
+    }
+
+    .teachers-organization-filter {
+        padding: 16px;
+        border-radius: var(--radius-22);
+    }
+
+    .teachers-organization-option {
+        min-height: auto;
+        padding: 16px;
+        border-radius: var(--radius-18);
+    }
+
+    .teachers-current-count {
+        width: 100%;
+    }
+
+    .teacher-card {
+        border-radius: var(--radius-22);
+    }
+
+    .teacher-card-media {
+        height: 220px;
+    }
+
+    .teacher-card-body {
+        padding: 18px;
+    }
+
+    .teacher-card-name {
+        font-size: clamp(1.25rem, 7vw, 1.75rem);
+    }
+
+    .teacher-card-subject,
+    .teacher-modal-description,
+    .teacher-modal-awards li {
+        font-size: 0.82rem;
+        line-height: 1.58;
+    }
+
+    .teacher-card-role,
+    .teacher-card-tag,
+    .teacher-modal-topline,
+    .teacher-modal-tag {
+        font-size: 0.7rem;
+    }
+
+    .teacher-modal-overlay {
+        padding: 10px;
+    }
+
+    .teacher-modal-window {
+        width: calc(100vw - 20px);
+        max-height: calc(100vh - 20px);
+        border-radius: var(--radius-24);
+    }
+
+    .teacher-modal-close {
+        top: 12px;
+        right: 12px;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-14);
+    }
+
+    .teacher-modal-media {
+        height: 210px;
+    }
+
+    .teacher-modal-panel {
+        padding: 20px;
+    }
+
+    .teacher-modal-section {
+        padding: 16px;
+        border-radius: var(--radius-20);
+    }
+
+    .teachers-empty-state {
+        min-height: 260px;
+        padding: 28px 18px;
+        border-radius: var(--radius-22);
+    }
+
+    .teachers-page-cta {
+        padding: 66px 0 58px;
+    }
+
+    .teachers-page-cta-shell h2 {
+        font-size: clamp(1.65rem, 9vw, 2.35rem);
+    }
+
+    .teachers-page-cta-shell p,
+    .teachers-page-cta-note {
+        font-size: 0.82rem;
+        line-height: 1.6;
+    }
+
+    .teachers-page-cta-note {
+        padding: 14px;
+        border-radius: var(--radius-18);
+    }
+}
+
+@media (max-width: 380px) {
+    .teachers-hero-title {
+        font-size: 2rem;
+    }
+
+    .teachers-hero-subtitle,
+    .teachers-hero-description {
+        font-size: 0.84rem;
+    }
+
+    .teachers-shell,
+    .teachers-organization-filter,
+    .teachers-page-cta-shell {
+        padding: 16px;
+    }
+
+    .teacher-card-media,
+    .teacher-modal-media {
+        height: 190px;
+    }
+
+    .teacher-modal-panel {
+        padding: 18px;
+    }
+}

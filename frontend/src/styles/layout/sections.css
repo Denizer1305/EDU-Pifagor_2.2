@@ -1,0 +1,77 @@
+.section {
+    position: relative;
+    padding: var(--section-padding-y) 0;
+}
+
+.section-sm {
+    padding: var(--section-padding-y-sm) 0;
+}
+
+.section-lg {
+    padding: var(--section-padding-y-lg) 0;
+}
+
+.section-head {
+    position: relative;
+    z-index: 2;
+    max-width: 880px;
+    margin: 0 auto 56px;
+    text-align: center;
+}
+
+.section-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 16px;
+    margin-bottom: 18px;
+    border: 1px solid var(--primary-10);
+    border-radius: var(--radius-pill);
+    color: var(--primary);
+    background: var(--white-78);
+    box-shadow: var(--shadow-sm);
+    font-size: 0.88rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    transition: var(--transition-soft);
+}
+
+.section-title {
+    margin: 0 0 16px;
+    color: var(--primary);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-section-title);
+    font-weight: var(--font-heading-weight);
+    line-height: 0.98;
+    font-synthesis-weight: auto;
+}
+
+.section-description {
+    max-width: 760px;
+    margin: 0 auto;
+    color: var(--secondary);
+    font-size: 1.04rem;
+    line-height: 1.9;
+}
+
+.section-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-7);
+}
+
+.section-divider {
+    border-top: 1px solid var(--primary-08);
+}
+
+.section-soft {
+    background: var(--gradient-section-soft);
+}
+
+.section-white {
+    background: var(--white);
+}

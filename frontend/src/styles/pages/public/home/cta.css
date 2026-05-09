@@ -1,0 +1,197 @@
+
+.cta-section {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid var(--primary-08);
+    background: linear-gradient(135deg, var(--primary-solid) 0%, var(--accent-solid) 55%, var(--primary-solid) 100%);
+    color: var(--white);
+}
+
+.cta-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.cta-line {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--white-22), transparent);
+    animation: movingLine 12s linear infinite;
+}
+
+.cta-line.one {
+    top: 18%;
+    left: -260px;
+    width: 260px;
+}
+
+.cta-line.two {
+    top: 48%;
+    left: -220px;
+    width: 220px;
+    animation-delay: 4s;
+}
+
+.cta-line.three {
+    bottom: 16%;
+    left: -300px;
+    width: 300px;
+    animation-delay: 8s;
+}
+
+.cta-circle {
+    position: absolute;
+    border-radius: var(--radius-round);
+    border: 1px solid var(--white-10);
+    animation: circleDrift 18s ease-in-out infinite;
+}
+
+.cta-circle.one {
+    width: 420px;
+    height: 420px;
+    right: -120px;
+    top: -80px;
+}
+
+.cta-circle.two {
+    width: 260px;
+    height: 260px;
+    left: -60px;
+    bottom: -40px;
+    animation-delay: 3s;
+}
+
+.cta-glow {
+    position: absolute;
+    border-radius: var(--radius-round);
+    filter: blur(28px);
+    background: var(--white-10);
+    animation: glowMove 16s ease-in-out infinite;
+}
+
+.cta-glow.one {
+    width: 220px;
+    height: 220px;
+    top: 16%;
+    right: 18%;
+}
+
+.cta-glow.two {
+    width: 180px;
+    height: 180px;
+    bottom: 12%;
+    left: 16%;
+    animation-delay: 6s;
+}
+
+.cta-particle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-round);
+    background: var(--white-32);
+    box-shadow: 0 0 0 10px var(--white-05);
+    animation: ctaParticleFloat 12s ease-in-out infinite;
+}
+
+.cta-particle.one {
+    top: 24%;
+    left: 22%;
+}
+
+.cta-particle.two {
+    top: 62%;
+    right: 18%;
+    width: 10px;
+    height: 10px;
+    animation-delay: 3.5s;
+}
+
+.cta-particle.three {
+    bottom: 18%;
+    left: 36%;
+    width: 8px;
+    height: 8px;
+    animation-delay: 6s;
+}
+
+.cta-ripple {
+    position: absolute;
+    border-radius: var(--radius-round);
+    border: 1px solid var(--white-14);
+    animation: ctaRipplePulse 10s ease-out infinite;
+}
+
+.cta-ripple.one {
+    width: 180px;
+    height: 180px;
+    right: 22%;
+    top: 18%;
+}
+
+.cta-ripple.two {
+    width: 140px;
+    height: 140px;
+    left: 14%;
+    bottom: 18%;
+    animation-delay: 4.5s;
+}
+
+.cta-shell {
+    position: relative;
+    z-index: 2;
+    max-width: 1080px;
+    margin: 0 auto;
+    border-radius: var(--radius-38);
+    padding: 48px;
+    background: var(--white-08);
+    border: 1px solid var(--white-14);
+    backdrop-filter: var(--blur-lg);
+    box-shadow: 0 18px 44px var(--black-10);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 28px;
+    align-items: center;
+}
+
+.cta-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--white-10), transparent 50%, var(--white-04));
+    pointer-events: none;
+}
+
+.cta-shell .cta-content,
+.cta-shell .cta-actions {
+    position: relative;
+    z-index: 1;
+}
+
+
+.cta-content h2 {
+    font-family: var(--font-forum);
+    font-size: clamp(2.4rem, 4.8vw, 4.2rem);
+    line-height: 0.98;
+    margin-bottom: 16px;
+    color: var(--white);
+}
+
+.cta-content p {
+    max-width: 720px;
+    font-size: 1.04rem;
+    line-height: 1.9;
+    color: var(--white-86);
+}
+
+.cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: flex-end;
+}
+

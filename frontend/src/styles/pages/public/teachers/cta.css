@@ -1,0 +1,76 @@
+.teachers-page-cta {
+    position: relative;
+    overflow: hidden;
+    padding: 104px 0 92px;
+    background: var(--primary);
+}
+
+.teachers-page-cta-shell {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    justify-items: center;
+    gap: 20px;
+    max-width: 960px;
+    margin-inline: auto;
+    padding: 42px;
+    border: 1px solid var(--white-12);
+    border-radius: var(--radius-34);
+    color: var(--white);
+    background:
+        radial-gradient(circle at top right, var(--white-12) 0%, transparent 34%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+    box-shadow: 0 28px 64px var(--black-20);
+    backdrop-filter: var(--backdrop-glass);
+    text-align: center;
+}
+
+.teachers-page-cta-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 70% 20%, var(--white-10) 0%, transparent 30%),
+        linear-gradient(135deg, var(--white-08), transparent 62%);
+    pointer-events: none;
+}
+
+.teachers-page-cta-shell > * {
+    position: relative;
+    z-index: 1;
+}
+
+.teachers-page-cta-shell h2 {
+    max-width: 760px;
+    margin: 0;
+    color: var(--white);
+    font-size: clamp(2rem, 3.6vw, 3.7rem);
+    line-height: var(--line-height-heading);
+}
+
+.teachers-page-cta-shell p {
+    max-width: 760px;
+    margin: 0;
+    color: var(--white-76);
+    font-size: 0.96rem;
+    line-height: var(--line-height-text);
+}
+
+.teachers-page-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.teachers-page-cta-note {
+    max-width: 720px;
+    padding: 16px 18px;
+    border: 1px solid var(--white-12);
+    border-radius: var(--radius-22);
+    color: var(--white-72);
+    background: var(--white-06);
+    font-size: 0.86rem;
+    line-height: 1.6;
+}

@@ -1,0 +1,652 @@
+@media (max-width: 1280px) {
+    .about-hero-container {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 56px;
+    }
+
+    .about-hero-content {
+        max-width: 920px;
+        margin-inline: auto;
+        text-align: center;
+    }
+
+    .about-hero-top-badges,
+    .about-hero-actions {
+        justify-content: center;
+    }
+
+    .about-hero-description {
+        margin-inline: auto;
+    }
+
+    .about-hero-highlight {
+        max-width: 780px;
+        margin-inline: auto;
+        text-align: left;
+    }
+
+    .platform-story-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "main"
+            "side"
+            "bottom";
+    }
+
+    .platform-story-side {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .origin-showcase {
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 0.82fr);
+    }
+
+    .about-mission-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .about-mission-side {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .about-roadmap-track {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .about-roadmap-track::before {
+        display: none;
+    }
+
+    .team-intro-card {
+        grid-template-columns: 1fr;
+    }
+
+    .team-intro-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gratitude-architecture {
+        grid-template-columns: 1fr;
+    }
+
+    .gratitude-column {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1024px) {
+    .about-hero {
+        min-height: auto;
+        padding: 132px 0 82px;
+    }
+
+    .about-hero-title {
+        font-size: clamp(2.8rem, 8vw, 4.4rem);
+    }
+
+    .about-hero-subtitle {
+        font-size: 1.04rem;
+    }
+
+    .about-hero-description {
+        font-size: 0.96rem;
+    }
+
+    .about-hero-grid-line.vertical.center,
+    .about-hero-grid-line.vertical.left,
+    .about-hero-grid-line.vertical.right {
+        opacity: 0.34;
+    }
+
+    .platform-story-main,
+    .about-mission-shell,
+    .team-shell {
+        padding: 28px;
+        border-radius: var(--radius-34);
+    }
+
+    .platform-story-side {
+        grid-template-columns: 1fr;
+    }
+
+    .platform-story-side-card {
+        padding: 24px;
+    }
+
+    .origin-showcase {
+        grid-template-columns: 1fr;
+    }
+
+    .origin-media-wrapper {
+        min-height: 360px;
+    }
+
+    .about-mission-values {
+        grid-template-columns: 1fr;
+    }
+
+    .about-mission-side {
+        grid-template-columns: 1fr;
+    }
+
+    .about-roadmap-intro {
+        margin-top: -12px;
+        margin-bottom: 34px;
+    }
+
+    .about-roadmap-card {
+        padding: 24px;
+    }
+
+    .team-intro-card {
+        padding: 26px;
+    }
+
+    .team-member-media {
+        height: 230px;
+    }
+
+    .gratitude-center-inner {
+        padding: 30px;
+    }
+
+    .about-page-cta {
+        padding: 86px 0 78px;
+    }
+
+    .about-page-cta-shell {
+        padding: 34px;
+        border-radius: var(--radius-30);
+    }
+}
+
+@media (max-width: 900px) {
+    .about-hero {
+        padding-top: 122px;
+    }
+
+    .about-hero-title {
+        font-size: clamp(2.45rem, 10vw, 3.8rem);
+    }
+
+    .about-hero-subtitle,
+    .about-hero-description {
+        max-width: 720px;
+    }
+
+    .platform-story-main,
+    .platform-story-side-card,
+    .origin-showcase,
+    .about-mission-shell,
+    .team-shell {
+        border-radius: var(--radius-30);
+    }
+
+    .platform-story-title,
+    .origin-text-col h3,
+    .about-mission-panel h3,
+    .team-intro-title {
+        font-size: clamp(1.85rem, 6vw, 2.9rem);
+    }
+
+    .origin-media-wrapper {
+        min-height: 320px;
+    }
+
+    .about-roadmap-track {
+        grid-template-columns: 1fr;
+    }
+
+    .team-intro-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .gratitude-column {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        padding: 116px 0 68px;
+    }
+
+    .about-hero-content {
+        gap: 20px;
+    }
+
+    .about-hero-top-badges {
+        gap: 8px;
+    }
+
+    .about-hero-badge {
+        min-height: 36px;
+        font-size: 0.78rem;
+    }
+
+    .about-hero-title {
+        font-size: clamp(2.35rem, 11vw, 3.4rem);
+    }
+
+    .about-hero-subtitle {
+        font-size: 0.98rem;
+        line-height: 1.58;
+    }
+
+    .about-hero-description {
+        font-size: 0.92rem;
+        line-height: 1.72;
+    }
+
+    .about-hero-highlight {
+        padding: 16px;
+        border-radius: var(--radius-22);
+    }
+
+    .about-hero-highlight-item {
+        font-size: 0.86rem;
+    }
+
+    .about-hero-circle.one,
+    .about-hero-circle.two,
+    .about-hero-circle.five,
+    .about-hero-moving-line.four {
+        display: none;
+    }
+
+    .platform-story-main {
+        padding: 24px;
+    }
+
+    .platform-story-text,
+    .origin-text-col p,
+    .about-mission-panel p,
+    .team-intro-text,
+    .about-page-cta-shell p {
+        font-size: 0.9rem;
+        line-height: 1.7;
+    }
+
+    .platform-story-point {
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 14px;
+        padding: 16px;
+        border-radius: var(--radius-22);
+    }
+
+    .platform-story-point > i {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-16);
+    }
+
+    .origin-showcase {
+        padding: 24px;
+        gap: 22px;
+    }
+
+    .origin-media-wrapper {
+        min-height: 280px;
+        border-radius: var(--radius-26);
+    }
+
+    .origin-media-overlay {
+        right: 14px;
+        bottom: 14px;
+        left: 14px;
+        padding: 14px;
+        border-radius: var(--radius-18);
+    }
+
+    .about-mission-shell {
+        padding: 24px;
+    }
+
+    .about-mission-panel {
+        padding: 24px;
+        border-radius: var(--radius-26);
+    }
+
+    .about-mission-value,
+    .about-mission-side-card {
+        padding: 18px;
+        border-radius: var(--radius-22);
+    }
+
+    .about-roadmap-intro {
+        font-size: 0.92rem;
+        line-height: 1.72;
+    }
+
+    .about-roadmap-card {
+        padding: 22px;
+        border-radius: var(--radius-26);
+    }
+
+    .team-shell {
+        padding: 24px;
+    }
+
+    .team-intro-card {
+        padding: 22px;
+        border-radius: var(--radius-26);
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-member {
+        border-radius: var(--radius-24);
+    }
+
+    .team-member-media {
+        height: 260px;
+    }
+
+    .gratitude-architecture {
+        gap: 16px;
+    }
+
+    .gratitude-card,
+    .gratitude-center {
+        border-radius: var(--radius-26);
+    }
+
+    .gratitude-card-inner,
+    .gratitude-center-inner {
+        padding: 24px;
+    }
+
+    .gratitude-center-mark {
+        width: 64px;
+        height: 64px;
+        border-radius: var(--radius-22);
+    }
+
+    .about-page-cta {
+        padding: 76px 0 68px;
+    }
+
+    .about-page-cta-shell {
+        padding: 28px;
+        border-radius: var(--radius-28);
+    }
+
+    .about-page-cta-shell h2 {
+        font-size: clamp(1.85rem, 8vw, 2.8rem);
+    }
+
+    .about-page-cta-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .about-page-cta-actions .cta-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .about-hero {
+        padding-top: 108px;
+    }
+
+    .about-hero-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .about-hero-actions .btn {
+        width: 100%;
+    }
+
+    .about-hero-badge {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .platform-story-main,
+    .origin-showcase,
+    .about-mission-shell,
+    .team-shell {
+        padding: 22px;
+    }
+
+    .platform-story-title,
+    .origin-text-col h3,
+    .about-mission-panel h3,
+    .team-intro-title {
+        font-size: clamp(1.65rem, 8vw, 2.4rem);
+    }
+
+    .platform-story-side-card h4,
+    .about-mission-side-card h4,
+    .gratitude-card h3,
+    .gratitude-center-title {
+        font-size: clamp(1.25rem, 6vw, 1.8rem);
+    }
+
+    .origin-media-wrapper {
+        min-height: 240px;
+    }
+
+    .origin-media-overlay {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        margin-top: -76px;
+        margin-inline: 12px;
+        background: rgba(47, 57, 75, 0.82);
+    }
+
+    .about-mission-panel,
+    .about-roadmap-card,
+    .team-intro-card,
+    .gratitude-card-inner,
+    .gratitude-center-inner {
+        padding: 22px;
+    }
+
+    .team-member-media {
+        height: 230px;
+    }
+
+    .team-member-body {
+        padding: 18px;
+    }
+
+    .gratitude-center-note {
+        padding: 16px;
+        border-radius: var(--radius-18);
+    }
+}
+
+@media (max-width: 480px) {
+    .about-hero {
+        padding: 102px 0 58px;
+    }
+
+    .about-hero-title {
+        font-size: clamp(2.1rem, 12vw, 3rem);
+    }
+
+    .about-hero-subtitle {
+        font-size: 0.92rem;
+    }
+
+    .about-hero-description,
+    .about-hero-highlight-item {
+        font-size: 0.86rem;
+    }
+
+    .about-hero-highlight {
+        padding: 14px;
+        border-radius: var(--radius-20);
+    }
+
+    .platform-story-main,
+    .platform-story-side-card,
+    .origin-showcase,
+    .about-mission-shell,
+    .team-shell,
+    .about-page-cta-shell {
+        padding: 18px;
+        border-radius: var(--radius-24);
+    }
+
+    .platform-story-point {
+        grid-template-columns: 1fr;
+    }
+
+    .platform-story-point > i {
+        width: 44px;
+        height: 44px;
+    }
+
+    .origin-icon-badge,
+    .origin-highlight {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .origin-media-wrapper {
+        min-height: 210px;
+        border-radius: var(--radius-22);
+    }
+
+    .origin-media-overlay {
+        margin-top: -64px;
+        padding: 13px;
+    }
+
+    .origin-media-overlay strong {
+        font-size: 0.9rem;
+    }
+
+    .origin-media-overlay span {
+        font-size: 0.76rem;
+    }
+
+    .about-mission-panel,
+    .about-mission-value,
+    .about-mission-side-card,
+    .about-roadmap-card,
+    .team-intro-card,
+    .gratitude-card-inner,
+    .gratitude-center-inner {
+        padding: 18px;
+        border-radius: var(--radius-22);
+    }
+
+    .about-mission-side-icon,
+    .gratitude-card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: var(--radius-16);
+    }
+
+    .about-roadmap-card h3 {
+        font-size: clamp(1.25rem, 7vw, 1.75rem);
+    }
+
+    .about-roadmap-card p,
+    .about-roadmap-card li,
+    .team-member-body p,
+    .gratitude-card p,
+    .gratitude-center-text,
+    .gratitude-list li {
+        font-size: 0.8rem;
+        line-height: 1.58;
+    }
+
+    .team-member-media {
+        height: 190px;
+    }
+
+    .team-member-body h3 {
+        font-size: clamp(1.15rem, 7vw, 1.55rem);
+    }
+
+    .team-member-role,
+    .gratitude-person-tag {
+        font-size: 0.7rem;
+    }
+
+    .gratitude-center-mark {
+        width: 58px;
+        height: 58px;
+        border-radius: var(--radius-20);
+    }
+
+    .about-page-cta {
+        padding: 66px 0 58px;
+    }
+
+    .about-page-cta-shell h2 {
+        font-size: clamp(1.65rem, 9vw, 2.35rem);
+    }
+
+    .about-page-cta-shell p,
+    .about-page-cta-note {
+        font-size: 0.82rem;
+        line-height: 1.6;
+    }
+
+    .about-page-cta-note {
+        padding: 14px;
+        border-radius: var(--radius-18);
+    }
+}
+
+@media (max-width: 380px) {
+    .about-hero-title {
+        font-size: 2rem;
+    }
+
+    .about-hero-subtitle,
+    .about-hero-description {
+        font-size: 0.84rem;
+    }
+
+    .platform-story-title,
+    .origin-text-col h3,
+    .about-mission-panel h3,
+    .team-intro-title {
+        font-size: 1.58rem;
+    }
+
+    .platform-story-main,
+    .platform-story-side-card,
+    .origin-showcase,
+    .about-mission-shell,
+    .team-shell,
+    .about-page-cta-shell {
+        padding: 16px;
+    }
+
+    .origin-media-wrapper {
+        min-height: 190px;
+    }
+
+    .origin-media-overlay {
+        margin-top: -56px;
+        margin-inline: 8px;
+    }
+
+    .team-member-media {
+        height: 170px;
+    }
+
+    .gratitude-card-inner,
+    .gratitude-center-inner {
+        padding: 16px;
+    }
+}

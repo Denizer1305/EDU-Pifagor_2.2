@@ -1,0 +1,27 @@
+:root {
+    /*
+     * Blur tokens
+     */
+    --blur-xs: blur(4px);
+    --blur-sm: blur(8px);
+    --blur-base: blur(10px);
+    --blur-md: blur(12px);
+    --blur-lg: blur(16px);
+    --blur-xl: blur(20px);
+    --blur-2xl: blur(24px);
+    --blur-3xl: blur(28px);
+    --blur-4xl: blur(30px);
+
+    /*
+     * Backdrop presets
+     */
+    --backdrop-glass-soft: saturate(140%) blur(8px);
+    --backdrop-glass: saturate(150%) blur(12px);
+    --backdrop-glass-strong: saturate(160%) blur(16px);
+
+    /*
+     * Filters
+     */
+    --filter-logo-soft: drop-shadow(0 18px 34px rgba(57, 68, 88, 0.14));
+    --filter-avatar-soft: drop-shadow(0 10px 18px rgba(57, 68, 88, 0.14));
+}

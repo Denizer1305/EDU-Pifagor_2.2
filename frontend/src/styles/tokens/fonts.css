@@ -1,0 +1,67 @@
+:root {
+    /*
+     * Font families
+     */
+    --font-forum: "Forum", serif;
+    --font-pt-sans: "PT Sans", sans-serif;
+
+    --font-heading: var(--font-forum);
+    --font-body: var(--font-pt-sans);
+
+    /*
+     * Font weights
+     */
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extra-bold: 800;
+
+    /*
+     * Heading font weights
+     *
+     * Forum подключён как тонкий декоративный шрифт.
+     * Чтобы заголовки не выглядели слишком хрупкими,
+     * используем усиленный вес через отдельные токены.
+     */
+    --font-heading-weight: 600;
+    --font-heading-strong-weight: 700;
+
+    /*
+     * Line heights
+     */
+    --line-height-tight: 0.94;
+    --line-height-heading: 0.98;
+    --line-height-title: 1.05;
+    --line-height-base: 1.6;
+    --line-height-text: 1.75;
+    --line-height-loose: 1.85;
+
+    /*
+     * Letter spacing
+     */
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-base: 0;
+    --letter-spacing-soft: 0.01em;
+    --letter-spacing-wide: 0.04em;
+    --letter-spacing-uppercase: 0.06em;
+
+    /*
+     * Fluid heading sizes
+     */
+    --font-size-hero: clamp(2.9rem, 5.5vw, 5.2rem);
+    --font-size-page-title: clamp(2.8rem, 4.2vw, 4.6rem);
+    --font-size-section-title: clamp(2.4rem, 4.8vw, 4.2rem);
+    --font-size-card-title: clamp(1.55rem, 2.5vw, 2.4rem);
+
+    /*
+     * Body sizes
+     */
+    --font-size-xs: 0.72rem;
+    --font-size-sm: 0.8rem;
+    --font-size-base-sm: 0.88rem;
+    --font-size-base: 0.94rem;
+    --font-size-md: 0.98rem;
+    --font-size-lg: 1.04rem;
+    --font-size-xl: 1.12rem;
+}

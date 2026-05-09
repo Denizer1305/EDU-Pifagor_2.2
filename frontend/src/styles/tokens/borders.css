@@ -1,0 +1,38 @@
+:root {
+    /*
+     * Border colors
+     */
+    --border-color-subtle: rgba(57, 68, 88, 0.08);
+    --border-color-soft: rgba(57, 68, 88, 0.14);
+    --border-color-strong: rgba(57, 68, 88, 0.18);
+
+    --border-color-accent-subtle: rgba(74, 111, 165, 0.16);
+    --border-color-accent-soft: rgba(74, 111, 165, 0.22);
+    --border-color-accent-strong: rgba(74, 111, 165, 0.34);
+
+    --border-color-white-subtle: rgba(255, 255, 255, 0.12);
+    --border-color-white-soft: rgba(255, 255, 255, 0.18);
+
+    /*
+     * Ready-to-use borders
+     */
+    --border-subtle: 1px solid var(--border-color-subtle);
+    --border-soft: 1px solid var(--border-color-soft);
+    --border-strong: 1px solid var(--border-color-strong);
+
+    --border-accent-subtle: 1px solid var(--border-color-accent-subtle);
+    --border-accent-soft: 1px solid var(--border-color-accent-soft);
+
+    --border-white-subtle: 1px solid var(--border-color-white-subtle);
+    --border-white-soft: 1px solid var(--border-color-white-soft);
+
+    /*
+     * Focus
+     */
+    --border-focus-accent: rgba(74, 111, 165, 0.34);
+
+    /*
+     * Legacy alias
+     */
+    --border-default: var(--border-subtle);
+}

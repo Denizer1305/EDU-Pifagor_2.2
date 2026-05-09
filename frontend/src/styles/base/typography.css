@@ -1,0 +1,117 @@
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-base);
+    color: var(--primary-text);
+    background: var(--color-page-background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    font-weight: var(--font-heading-weight);
+    color: var(--primary);
+    text-wrap: balance;
+    font-synthesis-weight: auto;
+}
+
+h1 {
+    font-size: var(--font-size-hero);
+    font-weight: var(--font-heading-strong-weight);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-soft);
+}
+
+h2 {
+    font-size: var(--font-size-section-title);
+    font-weight: var(--font-heading-weight);
+    line-height: var(--line-height-heading);
+}
+
+h3 {
+    font-size: var(--font-size-card-title);
+    font-weight: var(--font-heading-weight);
+    line-height: var(--line-height-title);
+}
+
+p {
+    color: inherit;
+}
+
+strong,
+b {
+    font-weight: var(--font-weight-bold);
+}
+
+small {
+    font-size: var(--font-size-sm);
+}
+
+::selection {
+    color: var(--white);
+    background: var(--accent);
+}
+
+.text-muted {
+    color: var(--secondary);
+}
+
+.text-primary {
+    color: var(--primary);
+}
+
+.text-accent {
+    color: var(--accent);
+}
+
+.font-heading {
+    font-family: var(--font-heading);
+    font-weight: var(--font-heading-weight);
+    font-synthesis-weight: auto;
+}
+
+.font-body {
+    font-family: var(--font-body);
+}
+
+.hero-title,
+.about-hero-title,
+.teachers-hero-title,
+.contact-hero-title,
+.section-title,
+.card-title,
+.feature-title,
+.ai-card-title,
+.partners-intro-card h3,
+.partners-accent h4,
+.cta-content h2,
+.about-page-cta-shell h2,
+.teachers-page-cta-shell h2,
+.team-intro-title,
+.platform-story-title,
+.origin-text-col h3,
+.about-mission-panel h3,
+.teacher-card-name,
+.teacher-modal-name,
+.mobile-logo-text,
+.mobile-quote-text,
+.hero-greek-mark {
+    font-weight: var(--font-heading-weight);
+    font-synthesis-weight: auto;
+}
+
+.hero-title,
+.about-hero-title,
+.teachers-hero-title,
+.contact-hero-title,
+.cta-content h2,
+.about-page-cta-shell h2,
+.teachers-page-cta-shell h2,
+.teacher-modal-name {
+    font-weight: var(--font-heading-strong-weight);
+}

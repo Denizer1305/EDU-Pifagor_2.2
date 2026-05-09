@@ -1,0 +1,237 @@
+.custom-select,
+.custom-multiselect {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.custom-select-trigger,
+.custom-multiselect-trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--control-height-lg);
+    padding: 0 48px 0 16px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-18);
+    color: var(--primary-text);
+    background: var(--primary-04);
+    box-shadow: var(--shadow-inner-subtle);
+    font-size: 0.94rem;
+    line-height: 1.4;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    transition: var(--transition-soft);
+}
+
+.custom-select-trigger:hover,
+.custom-multiselect-trigger:hover {
+    background: var(--white-82);
+    border-color: var(--accent-16);
+}
+
+.custom-select.is-open .custom-select-trigger,
+.custom-multiselect.is-open .custom-multiselect-trigger {
+    border-color: var(--accent-22);
+    background: var(--white-88);
+    box-shadow: var(--shadow-focus-accent);
+}
+
+.custom-select-trigger i,
+.custom-multiselect-trigger i {
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    color: var(--secondary);
+    font-size: 0.86rem;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: transform 0.25s ease;
+}
+
+.custom-select.is-open .custom-select-trigger i,
+.custom-multiselect.is-open .custom-multiselect-trigger i {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select-trigger-text,
+.custom-multiselect-trigger-text {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding-right: 8px;
+    overflow: hidden;
+    color: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.custom-select-trigger.is-placeholder .custom-select-trigger-text,
+.custom-multiselect-trigger.is-placeholder .custom-multiselect-trigger-text {
+    color: var(--secondary);
+}
+
+.custom-select-dropdown,
+.custom-multiselect-dropdown {
+    position: absolute;
+    z-index: var(--z-dropdown);
+    top: calc(100% + 12px);
+    right: 0;
+    left: 0;
+    min-width: 100%;
+    max-height: 280px;
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-24);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 24px 48px var(--primary-18);
+    backdrop-filter: var(--blur-lg);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        visibility 0.22s ease;
+}
+
+.custom-select.is-open .custom-select-dropdown,
+.custom-multiselect.is-open .custom-multiselect-dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.custom-select-dropdown::-webkit-scrollbar,
+.custom-multiselect-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb,
+.custom-multiselect-dropdown::-webkit-scrollbar-thumb {
+    border-radius: var(--radius-pill);
+    background: var(--primary-18);
+}
+
+.custom-select-option,
+.custom-multiselect-option {
+    width: 100%;
+    min-height: 56px;
+    padding: 14px 16px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-18);
+    color: var(--primary);
+    background: var(--primary-03);
+    font-size: 0.94rem;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition-soft);
+}
+
+.custom-select-option + .custom-select-option,
+.custom-multiselect-option + .custom-multiselect-option {
+    margin-top: 8px;
+}
+
+.custom-select-option:hover,
+.custom-multiselect-option:hover {
+    color: var(--accent);
+    background: var(--accent-08);
+    border-color: var(--accent-12);
+}
+
+.custom-select-option.is-selected {
+    color: var(--accent);
+    background: var(--accent-10);
+    border-color: var(--accent-16);
+    font-weight: var(--font-weight-bold);
+}
+
+.custom-multiselect-option {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    align-items: center;
+    gap: 12px;
+}
+
+.custom-multiselect-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.custom-multiselect-option span {
+    min-width: 0;
+    color: inherit;
+}
+
+.custom-multiselect-option.is-selected {
+    color: var(--accent);
+    background: var(--accent-10);
+    border-color: var(--accent-16);
+}
+
+body.dark-theme .custom-select-trigger,
+body.dark-theme .custom-multiselect-trigger {
+    color: var(--white);
+    background: var(--white-06);
+    border-color: var(--white-08);
+    box-shadow: inset 0 0 0 4px var(--white-02);
+}
+
+body.dark-theme .custom-select-trigger:hover,
+body.dark-theme .custom-multiselect-trigger:hover {
+    background: var(--white-08);
+}
+
+body.dark-theme .custom-select.is-open .custom-select-trigger,
+body.dark-theme .custom-multiselect.is-open .custom-multiselect-trigger {
+    border-color: var(--white-32);
+    box-shadow: none;
+}
+
+body.dark-theme .custom-select-trigger i,
+body.dark-theme .custom-multiselect-trigger i {
+    color: var(--white-62);
+}
+
+body.dark-theme .custom-select-trigger.is-placeholder .custom-select-trigger-text,
+body.dark-theme .custom-multiselect-trigger.is-placeholder .custom-multiselect-trigger-text {
+    color: var(--white-62);
+}
+
+body.dark-theme .custom-select-dropdown,
+body.dark-theme .custom-multiselect-dropdown {
+    background: rgba(47, 57, 75, 0.98);
+    border-color: var(--white-08);
+    box-shadow: 0 24px 48px var(--black-28);
+}
+
+body.dark-theme .custom-select-dropdown::-webkit-scrollbar-thumb,
+body.dark-theme .custom-multiselect-dropdown::-webkit-scrollbar-thumb {
+    background: var(--white-18);
+}
+
+body.dark-theme .custom-select-option,
+body.dark-theme .custom-multiselect-option {
+    color: var(--white-84);
+    background: var(--white-04);
+}
+
+body.dark-theme .custom-select-option:hover,
+body.dark-theme .custom-multiselect-option:hover,
+body.dark-theme .custom-select-option.is-selected,
+body.dark-theme .custom-multiselect-option.is-selected {
+    color: var(--white);
+    background: var(--white-10);
+    border-color: var(--white-12);
+}

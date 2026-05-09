@@ -1,0 +1,14 @@
+:root {
+    --z-negative: -1;
+    --z-base: 0;
+    --z-content: 1;
+    --z-raised: 2;
+    --z-dropdown: 50;
+    --z-sticky: 100;
+    --z-header: 500;
+    --z-overlay: 1000;
+    --z-mobile-menu: 1100;
+    --z-modal: 1500;
+    --z-toast: 1700;
+    --z-tooltip: 1800;
+}

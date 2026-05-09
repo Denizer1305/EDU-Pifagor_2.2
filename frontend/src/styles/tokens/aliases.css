@@ -1,0 +1,43 @@
+:root {
+    /*
+     * Legacy aliases from old static CSS.
+     * Оставляем их, чтобы старые классы спокойно работали во время миграции.
+     */
+    --primary: var(--color-primary-800);
+    --primary-light: var(--color-bg-600);
+    --secondary: var(--color-secondary-500);
+    --primary-text: var(--color-text-primary);
+    --light-bg: var(--color-bg-600);
+    --white: var(--color-white);
+    --accent: rgb(74, 111, 165);
+    --accent-light: var(--color-primary-600);
+
+    --ai-gradient: var(--gradient-ai);
+
+    /*
+     * Theme aliases
+     */
+    --theme-accent: var(--accent);
+    --theme-accent-strong: var(--primary);
+    --theme-text-primary: var(--primary-text);
+    --theme-text-muted: var(--secondary);
+    --theme-btn-primary-bg: var(--accent);
+    --theme-btn-primary-text: var(--white);
+    --theme-link: var(--accent);
+    --theme-focus-ring: var(--accent-34);
+
+    /*
+     * App aliases
+     */
+    --color-page-background: var(--color-bg-600);
+    --color-card-background: var(--surface-card);
+    --color-border: var(--border-color-subtle);
+    --color-link: var(--theme-link);
+
+    /*
+     * Safe defaults for dynamic custom properties used in some old components.
+     */
+    --toast-accent: var(--accent);
+    --panel-shift-x: 0px;
+    --i: 0;
+}

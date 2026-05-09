@@ -1,0 +1,305 @@
+.about-hero {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    padding: 170px 0 96px;
+    background:
+        radial-gradient(circle at 16% 18%, var(--accent-08) 0%, transparent 28%),
+        radial-gradient(circle at 84% 20%, var(--primary-06) 0%, transparent 30%),
+        linear-gradient(180deg, var(--color-bg-200) 0%, var(--color-bg-600) 100%);
+}
+
+.about-hero-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.about-hero-grid-lines,
+.about-hero-decor {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.about-hero-grid-line {
+    position: absolute;
+    opacity: 0.56;
+}
+
+.about-hero-grid-line.vertical {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--gradient-hero-line-v);
+}
+
+.about-hero-grid-line.vertical.left {
+    left: 12%;
+}
+
+.about-hero-grid-line.vertical.center {
+    left: 50%;
+}
+
+.about-hero-grid-line.vertical.right {
+    right: 12%;
+}
+
+.about-hero-grid-line.horizontal {
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: var(--gradient-hero-line-h);
+}
+
+.about-hero-grid-line.horizontal.top {
+    top: 27%;
+}
+
+.about-hero-grid-line.horizontal.bottom {
+    bottom: 18%;
+}
+
+.about-hero-circle,
+.about-hero-glow,
+.about-hero-moving-line,
+.about-hero-floating-dot {
+    position: absolute;
+}
+
+.about-hero-circle {
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-round);
+    animation: circleDrift 18s ease-in-out infinite;
+}
+
+.about-hero-circle.one {
+    width: 260px;
+    height: 260px;
+    top: 13%;
+    left: 4%;
+}
+
+.about-hero-circle.two {
+    width: 180px;
+    height: 180px;
+    top: 24%;
+    right: 8%;
+    animation-delay: 3s;
+}
+
+.about-hero-circle.three {
+    width: 126px;
+    height: 126px;
+    bottom: 21%;
+    left: 12%;
+    animation-delay: 5s;
+}
+
+.about-hero-circle.four {
+    width: 92px;
+    height: 92px;
+    right: 21%;
+    bottom: 14%;
+    animation-delay: 7s;
+}
+
+.about-hero-circle.five {
+    width: 110px;
+    height: 110px;
+    top: 10%;
+    right: 42%;
+    animation-delay: 9s;
+}
+
+.about-hero-glow {
+    border-radius: var(--radius-round);
+    filter: var(--blur-4xl);
+    animation: glowMove 16s ease-in-out infinite;
+}
+
+.about-hero-glow.one {
+    width: 240px;
+    height: 240px;
+    top: 18%;
+    left: 10%;
+    background: var(--accent-10);
+}
+
+.about-hero-glow.two {
+    width: 280px;
+    height: 280px;
+    right: 8%;
+    bottom: 18%;
+    background: var(--primary-08);
+    animation-delay: 5s;
+}
+
+.about-hero-glow.three {
+    width: 170px;
+    height: 170px;
+    top: 55%;
+    left: 46%;
+    background: var(--violet-08);
+    animation-delay: 8s;
+}
+
+.about-hero-moving-line {
+    left: -420px;
+    width: 420px;
+    height: 1px;
+    background: var(--gradient-accent-line);
+    animation: movingLine 16s linear infinite;
+}
+
+.about-hero-moving-line.one {
+    top: 24%;
+}
+
+.about-hero-moving-line.two {
+    top: 42%;
+    animation-delay: 4s;
+}
+
+.about-hero-moving-line.three {
+    top: 64%;
+    animation-delay: 8s;
+}
+
+.about-hero-moving-line.four {
+    top: 78%;
+    animation-delay: 12s;
+}
+
+.about-hero-floating-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-round);
+    background: var(--accent);
+    box-shadow: 0 0 0 8px var(--accent-08);
+    animation: floatingDot 8s ease-in-out infinite;
+}
+
+.about-hero-floating-dot.one {
+    top: 20%;
+    left: 18%;
+}
+
+.about-hero-floating-dot.two {
+    top: 28%;
+    right: 22%;
+    animation-delay: 1.5s;
+}
+
+.about-hero-floating-dot.three {
+    bottom: 24%;
+    left: 22%;
+    animation-delay: 3s;
+}
+
+.about-hero-floating-dot.four {
+    right: 14%;
+    bottom: 18%;
+    animation-delay: 4.5s;
+}
+
+.about-hero-container {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
+    align-items: center;
+    gap: 76px;
+}
+
+.about-hero-content {
+    display: grid;
+    gap: 24px;
+    max-width: 780px;
+}
+
+.about-hero-top-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.about-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 38px;
+    padding: 7px 13px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-pill);
+    color: var(--accent);
+    background: var(--white-82);
+    box-shadow: var(--shadow-xs);
+    font-size: 0.82rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+}
+
+.about-hero-title {
+    max-width: 760px;
+    margin: 0;
+    color: var(--primary);
+    font-size: var(--font-size-hero);
+    line-height: var(--line-height-tight);
+}
+
+.about-hero-subtitle {
+    max-width: 720px;
+    margin: 0;
+    color: var(--accent);
+    font-size: 1.14rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.52;
+}
+
+.about-hero-description {
+    max-width: 740px;
+    margin: 0;
+    color: var(--secondary);
+    font-size: 1rem;
+    line-height: var(--line-height-text);
+}
+
+.about-hero-highlight {
+    display: grid;
+    gap: 10px;
+    padding: 18px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-24);
+    background: var(--white-72);
+    box-shadow: var(--shadow-xs);
+}
+
+.about-hero-highlight-item {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    color: var(--primary);
+    font-size: 0.94rem;
+    line-height: 1.6;
+}
+
+.about-hero-highlight-item i {
+    margin-top: 8px;
+    color: var(--accent);
+    font-size: 0.38rem;
+}
+
+.about-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 4px;
+}

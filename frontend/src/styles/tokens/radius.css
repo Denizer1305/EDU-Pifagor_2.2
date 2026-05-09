@@ -1,0 +1,35 @@
+:root {
+    --radius-4: 4px;
+    --radius-6: 6px;
+    --radius-8: 8px;
+    --radius-10: 10px;
+    --radius-12: 12px;
+    --radius-14: 14px;
+    --radius-16: 16px;
+    --radius-18: 18px;
+    --radius-20: 20px;
+    --radius-22: 22px;
+    --radius-24: 24px;
+    --radius-26: 26px;
+    --radius-28: 28px;
+    --radius-30: 30px;
+    --radius-32: 32px;
+    --radius-34: 34px;
+    --radius-36: 36px;
+    --radius-38: 38px;
+    --radius-40: 40px;
+    --radius-42: 42px;
+    --radius-44: 44px;
+
+    --radius-pill: 999px;
+    --radius-round: 50%;
+
+    /*
+     * Semantic aliases
+     */
+    --radius-sm: var(--radius-14);
+    --radius: var(--radius-22);
+    --radius-md: var(--radius-24);
+    --radius-lg: var(--radius-32);
+    --radius-xl: var(--radius-44);
+}

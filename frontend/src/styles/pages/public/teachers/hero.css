@@ -1,0 +1,297 @@
+.teachers-hero {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    padding: 170px 0 96px;
+    background:
+        radial-gradient(circle at 16% 18%, var(--accent-08) 0%, transparent 28%),
+        radial-gradient(circle at 84% 20%, var(--primary-06) 0%, transparent 30%),
+        linear-gradient(180deg, var(--color-bg-200) 0%, var(--color-bg-600) 100%);
+}
+
+.teachers-hero-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.teachers-hero-grid-lines,
+.teachers-hero-decor {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.teachers-hero-grid-line {
+    position: absolute;
+    opacity: 0.56;
+}
+
+.teachers-hero-grid-line.vertical {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--gradient-hero-line-v);
+}
+
+.teachers-hero-grid-line.vertical.left {
+    left: 12%;
+}
+
+.teachers-hero-grid-line.vertical.center {
+    left: 50%;
+}
+
+.teachers-hero-grid-line.vertical.right {
+    right: 12%;
+}
+
+.teachers-hero-grid-line.horizontal {
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: var(--gradient-hero-line-h);
+}
+
+.teachers-hero-grid-line.horizontal.top {
+    top: 27%;
+}
+
+.teachers-hero-grid-line.horizontal.bottom {
+    bottom: 18%;
+}
+
+.teachers-hero-circle,
+.teachers-hero-glow,
+.teachers-hero-moving-line,
+.teachers-hero-floating-dot {
+    position: absolute;
+}
+
+.teachers-hero-circle {
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-round);
+    animation: circleDrift 18s ease-in-out infinite;
+}
+
+.teachers-hero-circle.one {
+    width: 260px;
+    height: 260px;
+    top: 13%;
+    left: 4%;
+}
+
+.teachers-hero-circle.two {
+    width: 180px;
+    height: 180px;
+    top: 24%;
+    right: 8%;
+    animation-delay: 3s;
+}
+
+.teachers-hero-circle.three {
+    width: 126px;
+    height: 126px;
+    bottom: 21%;
+    left: 12%;
+    animation-delay: 5s;
+}
+
+.teachers-hero-circle.four {
+    width: 92px;
+    height: 92px;
+    right: 21%;
+    bottom: 14%;
+    animation-delay: 7s;
+}
+
+.teachers-hero-glow {
+    border-radius: var(--radius-round);
+    filter: var(--blur-4xl);
+    animation: glowMove 16s ease-in-out infinite;
+}
+
+.teachers-hero-glow.one {
+    width: 240px;
+    height: 240px;
+    top: 18%;
+    left: 10%;
+    background: var(--accent-10);
+}
+
+.teachers-hero-glow.two {
+    width: 280px;
+    height: 280px;
+    right: 8%;
+    bottom: 18%;
+    background: var(--primary-08);
+    animation-delay: 5s;
+}
+
+.teachers-hero-glow.three {
+    width: 170px;
+    height: 170px;
+    top: 55%;
+    left: 46%;
+    background: var(--violet-08);
+    animation-delay: 8s;
+}
+
+.teachers-hero-moving-line {
+    left: -420px;
+    width: 420px;
+    height: 1px;
+    background: var(--gradient-accent-line);
+    animation: movingLine 16s linear infinite;
+}
+
+.teachers-hero-moving-line.one {
+    top: 24%;
+}
+
+.teachers-hero-moving-line.two {
+    top: 42%;
+    animation-delay: 4s;
+}
+
+.teachers-hero-moving-line.three {
+    top: 64%;
+    animation-delay: 8s;
+}
+
+.teachers-hero-moving-line.four {
+    top: 78%;
+    animation-delay: 12s;
+}
+
+.teachers-hero-floating-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-round);
+    background: var(--accent);
+    box-shadow: 0 0 0 8px var(--accent-08);
+    animation: floatingDot 8s ease-in-out infinite;
+}
+
+.teachers-hero-floating-dot.one {
+    top: 20%;
+    left: 18%;
+}
+
+.teachers-hero-floating-dot.two {
+    top: 28%;
+    right: 22%;
+    animation-delay: 1.5s;
+}
+
+.teachers-hero-floating-dot.three {
+    bottom: 24%;
+    left: 22%;
+    animation-delay: 3s;
+}
+
+.teachers-hero-floating-dot.four {
+    right: 14%;
+    bottom: 18%;
+    animation-delay: 4.5s;
+}
+
+.teachers-hero-container {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
+    align-items: center;
+    gap: 76px;
+}
+
+.teachers-hero-content {
+    display: grid;
+    gap: 24px;
+    max-width: 780px;
+}
+
+.teachers-hero-top-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.teachers-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 38px;
+    padding: 7px 13px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-pill);
+    color: var(--accent);
+    background: var(--white-82);
+    box-shadow: var(--shadow-xs);
+    font-size: 0.82rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+}
+
+.teachers-hero-title {
+    max-width: 760px;
+    margin: 0;
+    color: var(--primary);
+    font-size: var(--font-size-hero);
+    line-height: var(--line-height-tight);
+}
+
+.teachers-hero-subtitle {
+    max-width: 720px;
+    margin: 0;
+    color: var(--accent);
+    font-size: 1.14rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.52;
+}
+
+.teachers-hero-description {
+    max-width: 740px;
+    margin: 0;
+    color: var(--secondary);
+    font-size: 1rem;
+    line-height: var(--line-height-text);
+}
+
+.teachers-hero-highlight {
+    display: grid;
+    gap: 10px;
+    padding: 18px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-24);
+    background: var(--white-72);
+    box-shadow: var(--shadow-xs);
+}
+
+.teachers-hero-highlight-item {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    color: var(--primary);
+    font-size: 0.94rem;
+    line-height: 1.6;
+}
+
+.teachers-hero-highlight-item i {
+    margin-top: 8px;
+    color: var(--accent);
+    font-size: 0.38rem;
+}
+
+.teachers-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 4px;
+}

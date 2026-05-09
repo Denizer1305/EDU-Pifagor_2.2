@@ -1,0 +1,172 @@
+.teacher-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(19, 25, 35, 0.58);
+    backdrop-filter: var(--blur-sm);
+}
+
+.teacher-modal-window {
+    position: relative;
+    width: min(1120px, calc(100vw - 32px));
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
+    border: 1px solid var(--white-14);
+    border-radius: var(--radius-36);
+    background: var(--surface-glass-max);
+    box-shadow: 0 32px 80px var(--black-28);
+    backdrop-filter: var(--backdrop-glass-strong);
+}
+
+.teacher-modal-close {
+    position: absolute;
+    z-index: 3;
+    top: 18px;
+    right: 18px;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-16);
+    color: var(--primary);
+    background: var(--white-90);
+    box-shadow: var(--shadow-xs);
+    cursor: pointer;
+    transition: var(--transition-soft);
+}
+
+.teacher-modal-close:hover {
+    color: var(--accent);
+    transform: rotate(90deg);
+}
+
+.teacher-modal-content {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.82fr) minmax(0, 1.18fr);
+    min-height: 620px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+}
+
+.teacher-modal-media {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-bg-600);
+}
+
+.teacher-modal-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, transparent 0%, rgba(47, 57, 75, 0.16) 100%),
+        radial-gradient(circle at top right, var(--accent-10) 0%, transparent 34%);
+    pointer-events: none;
+}
+
+.teacher-modal-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.teacher-modal-panel {
+    display: grid;
+    align-content: center;
+    gap: 18px;
+    padding: 48px;
+}
+
+.teacher-modal-topline {
+    width: fit-content;
+    padding: 6px 12px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-pill);
+    color: var(--accent);
+    background: var(--accent-10);
+    font-size: 0.76rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-uppercase);
+    text-transform: uppercase;
+}
+
+.teacher-modal-name {
+    margin: 0;
+    color: var(--primary);
+    font-size: clamp(2.2rem, 4vw, 4.2rem);
+    line-height: var(--line-height-heading);
+}
+
+.teacher-modal-subject {
+    color: var(--accent);
+    font-size: 1.02rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.55;
+}
+
+.teacher-modal-description {
+    max-width: 760px;
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.98rem;
+    line-height: var(--line-height-text);
+}
+
+.teacher-modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.teacher-modal-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 5px 10px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-pill);
+    color: var(--primary);
+    background: var(--primary-04);
+    font-size: 0.76rem;
+    font-weight: var(--font-weight-bold);
+}
+
+.teacher-modal-section {
+    display: grid;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 22px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-26);
+    background: var(--white-72);
+}
+
+.teacher-modal-section-title {
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.35;
+}
+
+.teacher-modal-awards {
+    display: grid;
+    gap: 10px;
+}
+
+.teacher-modal-awards li {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 10px;
+    color: var(--primary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.teacher-modal-awards i {
+    margin-top: 4px;
+    color: var(--accent);
+}

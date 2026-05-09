@@ -1,0 +1,35 @@
+:root {
+    /*
+     * Easing
+     */
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /*
+     * Duration
+     */
+    --duration-fast: 0.18s;
+    --duration-base: 0.25s;
+    --duration-md: 0.35s;
+    --duration-soft: 0.55s;
+    --duration-slow: 0.8s;
+    --duration-slower: 0.9s;
+
+    /*
+     * Ready-to-use transitions
+     */
+    --transition: all 0.35s var(--ease-standard);
+    --transition-fast: all 0.25s ease;
+    --transition-soft: all 0.55s var(--ease-emphasis);
+    --transition-slower: all 0.8s var(--ease-emphasis);
+
+    --transition-color: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+    --transition-transform: transform 0.35s var(--ease-emphasis);
+    --transition-shadow: box-shadow 0.35s ease;
+    --transition-fade: opacity 0.35s ease, visibility 0.35s ease;
+
+    --transition-panel: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s ease;
+    --transition-slide-soft: transform 0.6s var(--ease-emphasis);
+    --transition-transform-slower: transform 0.8s var(--ease-emphasis);
+}

@@ -1,0 +1,34 @@
+:root {
+    /*
+     * Glass surfaces
+     */
+    --surface-glass-soft: rgba(255, 255, 255, 0.72);
+    --surface-glass: rgba(255, 255, 255, 0.82);
+    --surface-glass-strong: rgba(255, 255, 255, 0.90);
+    --surface-glass-max: rgba(255, 255, 255, 0.96);
+
+    /*
+     * Cards and muted surfaces
+     */
+    --surface-card: rgba(255, 255, 255, 0.84);
+    --surface-card-strong: rgba(255, 255, 255, 0.88);
+    --surface-card-max: rgba(255, 255, 255, 0.96);
+
+    --surface-muted: rgba(57, 68, 88, 0.04);
+    --surface-muted-strong: rgba(57, 68, 88, 0.08);
+    --surface-muted-accent: rgba(74, 111, 165, 0.10);
+
+    /*
+     * Overlay surfaces
+     */
+    --surface-overlay-modal: rgba(19, 25, 35, 0.54);
+    --surface-overlay-strong: rgba(19, 25, 35, 0.72);
+
+    /*
+     * Semantic surfaces
+     */
+    --surface-page: var(--color-bg-100);
+    --surface-page-soft: var(--color-bg-600);
+    --surface-soft: var(--surface-glass);
+    --surface-overlay: var(--surface-overlay-modal);
+}

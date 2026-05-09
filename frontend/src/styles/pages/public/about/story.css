@@ -1,0 +1,298 @@
+.platform-story {
+    background: linear-gradient(180deg, var(--color-bg-600) 0%, var(--white) 100%);
+}
+
+.platform-story-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+    grid-template-areas:
+        "main side"
+        "bottom bottom";
+    gap: 24px;
+}
+
+.platform-story-main,
+.platform-story-side-card,
+.origin-showcase {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--primary-08);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-sm);
+}
+
+.platform-story-main {
+    grid-area: main;
+    display: grid;
+    gap: 20px;
+    padding: 36px;
+    border-radius: var(--radius-36);
+}
+
+.platform-story-main::before,
+.platform-story-side-card::before,
+.origin-showcase::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, var(--accent-08) 0%, transparent 34%);
+    pointer-events: none;
+}
+
+.platform-story-main > *,
+.platform-story-side-card > *,
+.origin-showcase > * {
+    position: relative;
+    z-index: 1;
+}
+
+.platform-story-title {
+    max-width: 780px;
+    margin: 0;
+    color: var(--primary);
+    font-size: clamp(2rem, 3.4vw, 3.4rem);
+    line-height: var(--line-height-heading);
+}
+
+.platform-story-text {
+    max-width: 780px;
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.98rem;
+    line-height: var(--line-height-text);
+}
+
+.platform-story-points {
+    display: grid;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.platform-story-point {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    padding: 18px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-24);
+    background: var(--white-72);
+}
+
+.platform-story-point > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border-radius: var(--radius-18);
+    color: var(--accent);
+    background: var(--accent-10);
+}
+
+.platform-story-point strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--primary);
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.platform-story-point span {
+    display: block;
+    color: var(--secondary);
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+.platform-story-side {
+    grid-area: side;
+    display: grid;
+    gap: 18px;
+}
+
+.platform-story-side-card {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 26px;
+    border-radius: var(--radius-30);
+    transition: var(--transition-soft);
+}
+
+.platform-story-side-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-16);
+    box-shadow: var(--shadow-md);
+}
+
+.platform-story-side-card h4 {
+    margin: 0;
+    color: var(--primary);
+    font-size: clamp(1.45rem, 2.2vw, 2rem);
+    line-height: var(--line-height-title);
+}
+
+.platform-story-side-card p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.92rem;
+    line-height: 1.72;
+}
+
+.platform-story-bottom {
+    grid-area: bottom;
+}
+
+.origin-showcase {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.85fr);
+    gap: 28px;
+    padding: 32px;
+    border-radius: var(--radius-38);
+}
+
+.origin-decor {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.origin-decor-line {
+    position: absolute;
+    right: 10%;
+    left: 10%;
+    height: 1px;
+    background: var(--gradient-accent-line);
+    opacity: 0.55;
+}
+
+.origin-decor-line.top {
+    top: 24%;
+}
+
+.origin-decor-line.bottom {
+    bottom: 18%;
+}
+
+.origin-decor-dot {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: var(--radius-round);
+    background: var(--accent);
+    box-shadow: 0 0 0 8px var(--accent-08);
+}
+
+.origin-decor-dot.one {
+    top: 22%;
+    left: 12%;
+}
+
+.origin-decor-dot.two {
+    right: 14%;
+    bottom: 20%;
+}
+
+.origin-text-col {
+    display: grid;
+    align-content: center;
+    gap: 18px;
+    padding: 10px 0;
+}
+
+.origin-icon-badge,
+.origin-highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: var(--font-weight-bold);
+}
+
+.origin-icon-badge {
+    min-height: 36px;
+    padding: 7px 12px;
+    color: var(--accent);
+    background: var(--accent-10);
+    border: 1px solid var(--accent-12);
+}
+
+.origin-text-col h3 {
+    max-width: 760px;
+    margin: 0;
+    color: var(--primary);
+    font-size: clamp(2rem, 3.6vw, 3.5rem);
+    line-height: var(--line-height-heading);
+}
+
+.origin-text-col p {
+    max-width: 760px;
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.96rem;
+    line-height: var(--line-height-text);
+}
+
+.origin-highlight {
+    min-height: 42px;
+    padding: 8px 14px;
+    color: var(--primary);
+    background: var(--white-82);
+    border: 1px solid var(--primary-08);
+    box-shadow: var(--shadow-xs);
+}
+
+.origin-highlight i {
+    color: var(--accent);
+}
+
+.origin-media-col {
+    display: grid;
+    align-items: stretch;
+}
+
+.origin-media-wrapper {
+    position: relative;
+    min-height: 420px;
+    overflow: hidden;
+    border-radius: var(--radius-32);
+    background: var(--color-bg-600);
+    box-shadow: var(--shadow-md);
+}
+
+.origin-media-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.origin-media-overlay {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    display: grid;
+    gap: 8px;
+    padding: 18px;
+    border: 1px solid var(--white-16);
+    border-radius: var(--radius-22);
+    color: var(--white);
+    background: rgba(47, 57, 75, 0.74);
+    backdrop-filter: var(--backdrop-glass);
+}
+
+.origin-media-overlay strong {
+    color: var(--white);
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.origin-media-overlay span {
+    color: var(--white-78);
+    font-size: 0.82rem;
+    line-height: 1.55;
+}

@@ -1,0 +1,205 @@
+:root {
+    /*
+     * Base colors
+     */
+    --color-white: #ffffff;
+    --color-black: #000000;
+
+    /*
+     * Brand palette
+     */
+    --color-primary-900: #2f394b;
+    --color-primary-800: #394458;
+    --color-primary-700: #4a6fa5;
+    --color-primary-600: #6a8cc5;
+
+    --color-secondary-500: #8a8a9f;
+
+    /*
+     * Neutral backgrounds
+     */
+    --color-bg-100: #ffffff;
+    --color-bg-200: #fcfcfd;
+    --color-bg-300: #f7f9fc;
+    --color-bg-400: #f6f8fc;
+    --color-bg-500: #f4f6fa;
+    --color-bg-600: #eef1f6;
+    --color-bg-700: #e8edf5;
+    --color-bg-800: #f8fafc;
+    --color-bg-850: #f2f5fa;
+    --color-bg-900: #f7f3ee;
+    --color-bg-950: #fbfcff;
+
+    /*
+     * Semantic colors
+     */
+    --color-info: #4a6fa5;
+    --color-success: #0fa0b3;
+    --color-warning: #ff8a3d;
+    --color-warning-dark: #b57b00;
+    --color-danger: #dc3545;
+    --color-danger-dark: #b54d4d;
+    --color-violet: #9b6bff;
+
+    /*
+     * AI palette
+     */
+    --color-ai-primary: #6A97CF;
+    --color-ai-secondary: #4a6f9d;
+
+    /*
+     * Text colors
+     */
+    --color-text-primary: #2f2f2f;
+    --color-text-secondary: #8a8a9f;
+    --color-text-muted: #6f7482;
+    --color-text-on-dark: rgba(255, 255, 255, 0.88);
+    --color-text-on-dark-muted: rgba(255, 255, 255, 0.72);
+
+    /*
+     * Background alpha scale
+     */
+    --bg-600-92: rgba(238, 241, 246, 0.92);
+    --bg-600-80: rgba(238, 241, 246, 0.80);
+    --bg-600-52: rgba(238, 241, 246, 0.52);
+
+    /*
+     * White alpha scale
+     */
+    --white-02: rgba(255, 255, 255, 0.02);
+    --white-03: rgba(255, 255, 255, 0.03);
+    --white-04: rgba(255, 255, 255, 0.04);
+    --white-05: rgba(255, 255, 255, 0.05);
+    --white-06: rgba(255, 255, 255, 0.06);
+    --white-07: rgba(255, 255, 255, 0.07);
+    --white-08: rgba(255, 255, 255, 0.08);
+    --white-10: rgba(255, 255, 255, 0.10);
+    --white-12: rgba(255, 255, 255, 0.12);
+    --white-14: rgba(255, 255, 255, 0.14);
+    --white-15: rgba(255, 255, 255, 0.15);
+    --white-16: rgba(255, 255, 255, 0.16);
+    --white-18: rgba(255, 255, 255, 0.18);
+    --white-20: rgba(255, 255, 255, 0.20);
+    --white-22: rgba(255, 255, 255, 0.22);
+    --white-32: rgba(255, 255, 255, 0.32);
+    --white-50: rgba(255, 255, 255, 0.50);
+    --white-52: rgba(255, 255, 255, 0.52);
+    --white-60: rgba(255, 255, 255, 0.60);
+    --white-62: rgba(255, 255, 255, 0.62);
+    --white-64: rgba(255, 255, 255, 0.64);
+    --white-66: rgba(255, 255, 255, 0.66);
+    --white-68: rgba(255, 255, 255, 0.68);
+    --white-70: rgba(255, 255, 255, 0.70);
+    --white-72: rgba(255, 255, 255, 0.72);
+    --white-74: rgba(255, 255, 255, 0.74);
+    --white-76: rgba(255, 255, 255, 0.76);
+    --white-78: rgba(255, 255, 255, 0.78);
+    --white-80: rgba(255, 255, 255, 0.80);
+    --white-82: rgba(255, 255, 255, 0.82);
+    --white-84: rgba(255, 255, 255, 0.84);
+    --white-86: rgba(255, 255, 255, 0.86);
+    --white-88: rgba(255, 255, 255, 0.88);
+    --white-90: rgba(255, 255, 255, 0.90);
+    --white-92: rgba(255, 255, 255, 0.92);
+    --white-94: rgba(255, 255, 255, 0.94);
+    --white-95: rgba(255, 255, 255, 0.95);
+    --white-96: rgba(255, 255, 255, 0.96);
+
+    /*
+     * Primary alpha scale
+     */
+    --primary-03: rgba(57, 68, 88, 0.03);
+    --primary-04: rgba(57, 68, 88, 0.04);
+    --primary-05: rgba(57, 68, 88, 0.05);
+    --primary-06: rgba(57, 68, 88, 0.06);
+    --primary-08: rgba(57, 68, 88, 0.08);
+    --primary-10: rgba(57, 68, 88, 0.10);
+    --primary-12: rgba(57, 68, 88, 0.12);
+    --primary-14: rgba(57, 68, 88, 0.14);
+    --primary-15: rgba(57, 68, 88, 0.15);
+    --primary-16: rgba(57, 68, 88, 0.16);
+    --primary-18: rgba(57, 68, 88, 0.18);
+    --primary-20: rgba(57, 68, 88, 0.20);
+    --primary-22: rgba(57, 68, 88, 0.22);
+    --primary-24: rgba(57, 68, 88, 0.24);
+    --primary-28: rgba(57, 68, 88, 0.28);
+    --primary-34: rgba(57, 68, 88, 0.34);
+    --primary-56: rgba(57, 68, 88, 0.56);
+    --primary-96: rgba(57, 68, 88, 0.96);
+    --primary-solid: rgba(57, 68, 88, 1);
+
+    /*
+     * Accent alpha scale
+     */
+    --accent-04: rgba(74, 111, 165, 0.04);
+    --accent-06: rgba(74, 111, 165, 0.06);
+    --accent-07: rgba(74, 111, 165, 0.07);
+    --accent-08: rgba(74, 111, 165, 0.08);
+    --accent-09: rgba(74, 111, 165, 0.09);
+    --accent-10: rgba(74, 111, 165, 0.10);
+    --accent-12: rgba(74, 111, 165, 0.12);
+    --accent-14: rgba(74, 111, 165, 0.14);
+    --accent-16: rgba(74, 111, 165, 0.16);
+    --accent-18: rgba(74, 111, 165, 0.18);
+    --accent-20: rgba(74, 111, 165, 0.20);
+    --accent-22: rgba(74, 111, 165, 0.22);
+    --accent-24: rgba(74, 111, 165, 0.24);
+    --accent-26: rgba(74, 111, 165, 0.26);
+    --accent-28: rgba(74, 111, 165, 0.28);
+    --accent-30: rgba(74, 111, 165, 0.30);
+    --accent-32: rgba(74, 111, 165, 0.32);
+    --accent-34: rgba(74, 111, 165, 0.34);
+    --accent-36: rgba(74, 111, 165, 0.36);
+    --accent-40: rgba(74, 111, 165, 0.40);
+    --accent-92: rgba(74, 111, 165, 0.92);
+    --accent-solid: rgba(74, 111, 165, 1);
+
+    /*
+     * Accent light alpha scale
+     */
+    --accent-light-06: rgba(106, 140, 197, 0.06);
+    --accent-light-07: rgba(106, 140, 197, 0.07);
+    --accent-light-08: rgba(106, 140, 197, 0.08);
+    --accent-light-10: rgba(106, 140, 197, 0.10);
+
+    /*
+     * Additional semantic alpha scales
+     */
+    --ai-04: rgba(107, 193, 255, 0.04);
+    --ai-08: rgba(107, 193, 255, 0.08);
+    --ai-10: rgba(107, 193, 255, 0.10);
+    --ai-16: rgba(107, 193, 255, 0.16);
+    --ai-20: rgba(107, 193, 255, 0.20);
+    --ai-24: rgba(107, 193, 255, 0.24);
+
+    --warning-05: rgba(255, 138, 61, 0.05);
+    --warning-08: rgba(255, 138, 61, 0.08);
+    --warning-12: rgba(255, 138, 61, 0.12);
+    --warning-18: rgba(255, 138, 61, 0.18);
+    --warning-20: rgba(255, 138, 61, 0.20);
+    --warning-24: rgba(255, 138, 61, 0.24);
+
+    --success-10: rgba(15, 160, 179, 0.10);
+    --success-12: rgba(15, 160, 179, 0.12);
+
+    --danger-08: rgba(220, 53, 69, 0.08);
+    --danger-10: rgba(220, 53, 69, 0.10);
+    --danger-12: rgba(220, 53, 69, 0.12);
+    --danger-14: rgba(220, 53, 69, 0.14);
+    --danger-18: rgba(220, 53, 69, 0.18);
+
+    /*
+     * Black and ink alpha scale
+     */
+    --black-02: rgba(0, 0, 0, 0.02);
+    --black-10: rgba(0, 0, 0, 0.10);
+    --black-16: rgba(0, 0, 0, 0.16);
+    --black-20: rgba(0, 0, 0, 0.20);
+    --black-28: rgba(0, 0, 0, 0.28);
+    --black-34: rgba(0, 0, 0, 0.34);
+
+    --ink-00: rgba(12, 18, 28, 0);
+    --ink-02: rgba(12, 18, 28, 0.02);
+    --ink-20: rgba(12, 18, 28, 0.20);
+    --ink-28: rgba(12, 18, 28, 0.28);
+}

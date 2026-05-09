@@ -1,0 +1,263 @@
+.teachers-catalog {
+    background:
+        radial-gradient(circle at 8% 18%, var(--accent-04) 0%, transparent 28%),
+        linear-gradient(180deg, var(--color-bg-600) 0%, var(--white) 100%);
+}
+
+.teachers-shell {
+    position: relative;
+    overflow: hidden;
+    padding: 32px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-38);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-sm);
+}
+
+.teachers-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at top right, var(--accent-08) 0%, transparent 34%),
+        radial-gradient(circle at bottom left, var(--primary-05) 0%, transparent 32%);
+    pointer-events: none;
+}
+
+.teachers-shell > * {
+    position: relative;
+    z-index: 1;
+}
+
+.teachers-organization-filter {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 22px;
+    padding: 22px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-28);
+    background: var(--white-82);
+    box-shadow: var(--shadow-xs);
+}
+
+.teachers-organization-filter-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.teachers-organization-filter-label {
+    color: var(--primary);
+    font-family: var(--font-heading);
+    font-size: clamp(1.45rem, 2.2vw, 2.2rem);
+    line-height: var(--line-height-title);
+}
+
+.teachers-organization-filter-hint {
+    max-width: 420px;
+    color: var(--secondary);
+    font-size: 0.84rem;
+    line-height: 1.55;
+    text-align: right;
+}
+
+.teachers-current-organization {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-24);
+    background: var(--white-76);
+}
+
+.teachers-current-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--accent);
+    font-size: 0.74rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-uppercase);
+    text-transform: uppercase;
+}
+
+.teachers-current-organization strong {
+    display: block;
+    color: var(--primary);
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.teachers-current-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 6px 12px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-pill);
+    color: var(--accent);
+    background: var(--accent-10);
+    font-size: 0.82rem;
+    font-weight: var(--font-weight-bold);
+    white-space: nowrap;
+}
+
+.teachers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.teacher-card {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    width: 100%;
+    min-height: 100%;
+    padding: 0;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-30);
+    color: var(--primary);
+    background: var(--white-86);
+    box-shadow: var(--shadow-xs);
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition-soft);
+}
+
+.teacher-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent-16);
+    box-shadow: var(--shadow-md);
+}
+
+.teacher-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at top right, var(--accent-08) 0%, transparent 34%),
+        linear-gradient(180deg, transparent 0%, var(--primary-03) 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition-soft);
+}
+
+.teacher-card:hover::after {
+    opacity: 1;
+}
+
+.teacher-card-media {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    background: var(--color-bg-600);
+}
+
+.teacher-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-transform-slower);
+}
+
+.teacher-card:hover .teacher-card-media img {
+    transform: scale(1.05);
+}
+
+.teacher-card-body {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 10px;
+    padding: 22px;
+}
+
+.teacher-card-role {
+    width: fit-content;
+    padding: 5px 10px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-pill);
+    color: var(--accent);
+    background: var(--accent-10);
+    font-size: 0.72rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+}
+
+.teacher-card-name {
+    margin: 0;
+    color: var(--primary);
+    font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+    line-height: var(--line-height-title);
+}
+
+.teacher-card-subject {
+    color: var(--secondary);
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.teacher-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.teacher-card-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 5px 9px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-pill);
+    color: var(--secondary);
+    background: var(--primary-04);
+    font-size: 0.72rem;
+    font-weight: var(--font-weight-bold);
+}
+
+.teachers-empty-state {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    min-height: 320px;
+    padding: 42px;
+    border: 1px dashed var(--accent-20);
+    border-radius: var(--radius-30);
+    background:
+        radial-gradient(circle at top right, var(--accent-06) 0%, transparent 34%),
+        var(--white-72);
+    text-align: center;
+}
+
+.teachers-empty-icon {
+    display: grid;
+    place-items: center;
+    width: 74px;
+    height: 74px;
+    border-radius: var(--radius-24);
+    color: var(--accent);
+    background: var(--accent-10);
+    font-size: 1.5rem;
+}
+
+.teachers-empty-state h3 {
+    margin: 0;
+    color: var(--primary);
+    font-size: clamp(1.45rem, 2.4vw, 2.2rem);
+    line-height: var(--line-height-title);
+}
+
+.teachers-empty-state p {
+    max-width: 540px;
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
