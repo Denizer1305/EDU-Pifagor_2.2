@@ -12,7 +12,7 @@ export const studentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["student"],
-            title: "Кабинет обучающегося — Пифагор",
+            title: "Кабинет обучающегося  | Пифагор",
         },
     },
     {
@@ -22,7 +22,7 @@ export const studentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["student"],
-            title: "Мои курсы — Пифагор",
+            title: "Мои курсы  | Пифагор",
         },
     },
     {
@@ -33,7 +33,7 @@ export const studentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["student"],
-            title: "Курс — Пифагор",
+            title: "Курс  | Пифагор",
         },
     },
     {
@@ -43,7 +43,7 @@ export const studentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["student"],
-            title: "Задания — Пифагор",
+            title: "Задания  | Пифагор",
         },
     },
     {
@@ -54,7 +54,7 @@ export const studentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["student"],
-            title: "Задание — Пифагор",
+            title: "Задание  | Пифагор",
         },
     },
     {
@@ -65,7 +65,7 @@ export const studentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["student"],
-            title: "Сдача работы — Пифагор",
+            title: "Сдача работы  | Пифагор",
         },
     },
     {
@@ -75,7 +75,7 @@ export const studentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["student"],
-            title: "Журнал — Пифагор",
+            title: "Журнал  | Пифагор",
         },
     },
     {
@@ -85,7 +85,7 @@ export const studentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["student"],
-            title: "Расписание — Пифагор",
+            title: "Расписание  | Пифагор",
         },
     },
 ];

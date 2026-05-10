@@ -12,7 +12,7 @@ export const parentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["parent"],
-            title: "Кабинет родителя — Пифагор",
+            title: "Кабинет родителя  | Пифагор",
         },
     },
     {
@@ -22,7 +22,7 @@ export const parentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["parent"],
-            title: "Дети — Пифагор",
+            title: "Дети  | Пифагор",
         },
     },
     {
@@ -32,7 +32,7 @@ export const parentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["parent"],
-            title: "Журнал — Пифагор",
+            title: "Журнал  | Пифагор",
         },
     },
     {
@@ -42,7 +42,7 @@ export const parentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["parent"],
-            title: "Посещаемость — Пифагор",
+            title: "Посещаемость  | Пифагор",
         },
     },
     {
@@ -52,7 +52,7 @@ export const parentRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["parent"],
-            title: "Расписание — Пифагор",
+            title: "Расписание  | Пифагор",
         },
     },
 ];

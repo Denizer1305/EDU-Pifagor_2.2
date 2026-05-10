@@ -11,7 +11,7 @@ export const authRoutes = [
                 name: "auth.login",
                 component: () => import("../pages/auth/LoginPage.vue"),
                 meta: {
-                    title: "Вход — Пифагор",
+                    title: "Вход в личный кабинет  | Пифагор",
                 },
             },
             {
@@ -19,7 +19,7 @@ export const authRoutes = [
                 name: "auth.register",
                 component: () => import("../pages/auth/RegisterPage.vue"),
                 meta: {
-                    title: "Регистрация — Пифагор",
+                    title: "Регистрация на платформе | Пифагор",
                 },
             },
             {
@@ -27,7 +27,7 @@ export const authRoutes = [
                 name: "auth.forgot-password",
                 component: () => import("../pages/auth/ForgotPasswordPage.vue"),
                 meta: {
-                    title: "Восстановление пароля — Пифагор",
+                    title: "Восстановление пароля  | Пифагор",
                 },
             },
             {
@@ -35,7 +35,7 @@ export const authRoutes = [
                 name: "auth.password-reset",
                 component: () => import("../pages/auth/PasswordResetPage.vue"),
                 meta: {
-                    title: "Сброс пароля — Пифагор",
+                    title: "Сброс пароля  | Пифагор",
                 },
             },
             {
@@ -43,7 +43,7 @@ export const authRoutes = [
                 name: "auth.email-verify",
                 component: () => import("../pages/auth/EmailVerifyPage.vue"),
                 meta: {
-                    title: "Подтверждение почты — Пифагор",
+                    title: "Подтверждение почты  | Пифагор",
                 },
             },
             {
@@ -51,7 +51,7 @@ export const authRoutes = [
                 name: "auth.teacher-organization",
                 component: () => import("../pages/auth/TeacherOrganizationPage.vue"),
                 meta: {
-                    title: "Код организации — Пифагор",
+                    title: "Код организации  | Пифагор",
                 },
             },
             {
@@ -59,7 +59,7 @@ export const authRoutes = [
                 name: "auth.logout",
                 component: () => import("../pages/auth/LogoutPage.vue"),
                 meta: {
-                    title: "Выход из аккаунта — Пифагор",
+                    title: "Выход из аккаунта  | Пифагор",
                 },
             },
             {
@@ -67,7 +67,7 @@ export const authRoutes = [
                 name: "auth.check-email",
                 component: () => import("../pages/auth/CheckEmailPage.vue"),
                 meta: {
-                    title: "Проверьте почту — Пифагор",
+                    title: "Проверьте почту  | Пифагор",
                 },
             },
             {
@@ -75,7 +75,7 @@ export const authRoutes = [
                 name: "auth.email-verified",
                 component: () => import("../pages/auth/EmailVerifiedPage.vue"),
                 meta: {
-                    title: "Почта подтверждена — Пифагор",
+                    title: "Почта подтверждена  | Пифагор",
                 },
             },
             {
@@ -83,7 +83,7 @@ export const authRoutes = [
                 name: "auth.teacher-pending",
                 component: () => import("../pages/auth/TeacherPendingPage.vue"),
                 meta: {
-                    title: "Заявка преподавателя — Пифагор",
+                    title: "Заявка преподавателя  | Пифагор",
                 },
             },
             {
@@ -91,7 +91,7 @@ export const authRoutes = [
                 name: "auth.link-expired",
                 component: () => import("../pages/auth/LinkExpiredPage.vue"),
                 meta: {
-                    title: "Ссылка недействительна — Пифагор",
+                    title: "Ссылка недействительна  | Пифагор",
                 },
             },
         ],

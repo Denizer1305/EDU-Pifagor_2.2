@@ -12,7 +12,7 @@ export const adminRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["admin"],
-            title: "Панель администратора — Пифагор",
+            title: "Панель администратора  | Пифагор",
         },
     },
     {
@@ -22,7 +22,7 @@ export const adminRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["admin"],
-            title: "Пользователи — Пифагор",
+            title: "Пользователи  | Пифагор",
         },
     },
     {
@@ -32,7 +32,7 @@ export const adminRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["admin"],
-            title: "Организации — Пифагор",
+            title: "Организации  | Пифагор",
         },
     },
     {
@@ -42,7 +42,7 @@ export const adminRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["admin"],
-            title: "Группы — Пифагор",
+            title: "Группы  | Пифагор",
         },
     },
     {
@@ -52,7 +52,7 @@ export const adminRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["admin"],
-            title: "Учебная структура — Пифагор",
+            title: "Учебная структура  | Пифагор",
         },
     },
     {
@@ -62,7 +62,7 @@ export const adminRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["admin"],
-            title: "Курсы — Пифагор",
+            title: "Курсы  | Пифагор",
         },
     },
     {
@@ -72,7 +72,7 @@ export const adminRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["admin"],
-            title: "Расписание — Пифагор",
+            title: "Расписание  | Пифагор",
         },
     },
     {
@@ -82,7 +82,7 @@ export const adminRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["admin"],
-            title: "Обращения — Пифагор",
+            title: "Обращения  | Пифагор",
         },
     },
 ];

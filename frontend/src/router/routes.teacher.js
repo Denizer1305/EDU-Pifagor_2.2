@@ -12,7 +12,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Кабинет преподавателя — Пифагор",
+            title: "Кабинет преподавателя  | Пифагор",
         },
     },
     {
@@ -22,7 +22,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Мои курсы — Пифагор",
+            title: "Мои курсы  | Пифагор",
         },
     },
     {
@@ -33,7 +33,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Курс — Пифагор",
+            title: "Курс  | Пифагор",
         },
     },
     {
@@ -44,7 +44,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Конструктор курса — Пифагор",
+            title: "Конструктор курса  | Пифагор",
         },
     },
     {
@@ -54,7 +54,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Задания — Пифагор",
+            title: "Задания  | Пифагор",
         },
     },
     {
@@ -65,7 +65,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Задание — Пифагор",
+            title: "Задание  | Пифагор",
         },
     },
     {
@@ -75,7 +75,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Сданные работы — Пифагор",
+            title: "Сданные работы  | Пифагор",
         },
     },
     {
@@ -85,7 +85,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Журнал — Пифагор",
+            title: "Журнал  | Пифагор",
         },
     },
     {
@@ -95,7 +95,7 @@ export const teacherRoutes = [
         meta: {
             requiresAuth: true,
             roles: ["teacher"],
-            title: "Расписание — Пифагор",
+            title: "Расписание  | Пифагор",
         },
     },
 ];

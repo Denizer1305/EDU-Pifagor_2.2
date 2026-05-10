@@ -5,7 +5,7 @@ export const errorRoutes = [
         component: () => import("../pages/errors/ForbiddenPage.vue"),
         meta: {
             isPublic: true,
-            title: "Доступ запрещён — Пифагор",
+            title: "Доступ запрещён  | Пифагор",
         },
     },
     {
@@ -14,7 +14,7 @@ export const errorRoutes = [
         component: () => import("../pages/errors/ServerErrorPage.vue"),
         meta: {
             isPublic: true,
-            title: "Ошибка сервера — Пифагор",
+            title: "Ошибка сервера  | Пифагор",
         },
     },
     {
@@ -23,7 +23,7 @@ export const errorRoutes = [
         component: () => import("../pages/errors/NotFoundPage.vue"),
         meta: {
             isPublic: true,
-            title: "Страница не найдена — Пифагор",
+            title: "Страница не найдена  | Пифагор",
         },
     },
 ];
