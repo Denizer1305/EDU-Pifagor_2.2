@@ -1,0 +1,206 @@
+.auth-status-page {
+    display: grid;
+    align-items: center;
+    padding: 154px 0 88px;
+}
+
+.auth-status-shell {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    min-height: calc(100vh - 242px);
+}
+
+.auth-status-card {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 20px;
+    width: min(100%, 720px);
+    overflow: hidden;
+    padding: 46px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-38);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    backdrop-filter: var(--backdrop-glass);
+}
+
+.auth-status-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at top right, var(--accent-08) 0%, transparent 34%),
+        radial-gradient(circle at bottom left, var(--primary-05) 0%, transparent 34%);
+    pointer-events: none;
+}
+
+.auth-status-icon,
+.auth-status-badge,
+.auth-status-title,
+.auth-status-text,
+.auth-status-list,
+.auth-status-actions,
+.auth-status-note {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-status-icon {
+    display: grid;
+    place-items: center;
+    width: 86px;
+    height: 86px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-28);
+    color: var(--accent);
+    background: var(--accent-08);
+    box-shadow: var(--shadow-sm);
+}
+
+.auth-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: fit-content;
+    min-height: 34px;
+    padding: 6px 12px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-pill);
+    color: var(--accent);
+    background: var(--accent-08);
+    font-size: 0.78rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+}
+
+.auth-status-badge .base-icon {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+}
+
+.auth-status-title {
+    max-width: 620px;
+    margin: 0;
+    color: var(--primary);
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 5vw, 4.2rem);
+    font-weight: var(--font-heading-strong-weight);
+    line-height: var(--line-height-heading);
+    font-synthesis-weight: auto;
+}
+
+.auth-status-text {
+    max-width: 600px;
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.96rem;
+    line-height: var(--line-height-text);
+}
+
+.auth-status-list {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.auth-status-list-item {
+    display: grid;
+    grid-template-columns: 50px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    padding: 14px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-22);
+    background: var(--white-68);
+    text-align: left;
+}
+
+.auth-status-list-icon {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-18);
+    color: var(--accent);
+    background: var(--accent-08);
+}
+
+.auth-status-list-item strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--primary);
+    font-size: 0.92rem;
+    line-height: 1.35;
+}
+
+.auth-status-list-item span {
+    color: var(--secondary);
+    font-size: 0.82rem;
+    line-height: 1.55;
+}
+
+.auth-status-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.auth-status-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 22px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    transition: var(--transition-soft);
+}
+
+.auth-status-btn--primary {
+    color: var(--white);
+    background: var(--primary);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-xs);
+}
+
+.auth-status-btn--primary:hover {
+    background: var(--color-primary-900);
+    transform: translateY(-2px);
+}
+
+.auth-status-btn--light {
+    color: var(--primary);
+    background: var(--white-82);
+    border-color: var(--primary-08);
+}
+
+.auth-status-btn--light:hover {
+    color: var(--accent);
+    background: var(--white);
+    transform: translateY(-2px);
+}
+
+.auth-status-note {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-18);
+    color: var(--secondary);
+    background: var(--white-62);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}

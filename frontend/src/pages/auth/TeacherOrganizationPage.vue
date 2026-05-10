@@ -1,15 +1,15 @@
 <script setup>
 import AuthIntroPanel from "../../modules/auth/components/AuthIntroPanel.vue";
-import RegisterForm from "../../modules/auth/components/RegisterForm.vue";
+import TeacherOrganizationForm from "../../modules/auth/components/TeacherOrganizationForm.vue";
 
 import {
-    registerFormContent,
-    registerIntroContent,
+    teacherOrganizationFormContent,
+    teacherOrganizationIntroContent,
 } from "../../modules/auth/data/authPages.data";
 </script>
 
 <template>
-    <main class="auth-section register-page">
+    <main class="auth-section teacher-organization-page">
         <div
             class="auth-grid-lines"
             aria-hidden="true"
@@ -38,10 +38,10 @@ import {
         </div>
 
         <div class="container">
-            <div class="auth-layout auth-layout--register">
-                <AuthIntroPanel :content="registerIntroContent" />
+            <div class="auth-layout auth-layout--teacher-organization">
+                <AuthIntroPanel :content="teacherOrganizationIntroContent" />
 
-                <RegisterForm :content="registerFormContent" />
+                <TeacherOrganizationForm :content="teacherOrganizationFormContent" />
             </div>
         </div>
     </main>

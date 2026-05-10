@@ -1,21 +1,50 @@
 <script setup>
-const pageTitle = "$title";
+import { RouterLink, RouterView } from "vue-router";
+
+import BaseIcon from "../components/ui/BaseIcon.vue";
+import { usePublicTheme } from "../modules/public/shared/composables/usePublicTheme";
+
+const {
+    toggleTheme,
+} = usePublicTheme();
 </script>
 
 <template>
-    <main class="page-placeholder">
-        <section class="page-placeholder__section">
-            <p class="page-placeholder__badge">
-                Раздел в разработке
-            </p>
+    <div class="auth-layout-page">
+        <header class="auth-header">
+            <div class="container">
+                <div class="auth-header-shell auth-header-shell--simple">
+                    <RouterLink
+                        to="/"
+                        class="auth-header-logo"
+                        aria-label="Пифагор — на главную"
+                    >
+                        <img
+                            src="/logo/light/logo.svg"
+                            alt="Пифагор"
+                        />
+                    </RouterLink>
 
-            <h1 class="page-placeholder__title">
-                {{ pageTitle }}
-            </h1>
+                    <button
+                        class="auth-theme-toggle"
+                        type="button"
+                        aria-label="Переключить тему"
+                        @click="toggleTheme"
+                    >
+                        <BaseIcon
+                            name="sun"
+                            size="18"
+                        />
 
-            <p class="page-placeholder__text">
-                Эта страница подготовлена в маршрутизации проекта и будет реализована на следующем этапе разработки.
-            </p>
-        </section>
-    </main>
+                        <BaseIcon
+                            name="moon"
+                            size="18"
+                        />
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <RouterView />
+    </div>
 </template>

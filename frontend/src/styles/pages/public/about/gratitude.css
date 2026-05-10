@@ -70,17 +70,6 @@
     background: var(--accent-10);
 }
 
-.gratitude-center-mark {
-    margin-inline: auto;
-    width: 72px;
-    height: 72px;
-    border-radius: var(--radius-24);
-    color: var(--white);
-    background: var(--gradient-primary);
-    font-size: 1.4rem;
-    box-shadow: var(--shadow-md);
-}
-
 .gratitude-card h3,
 .gratitude-center-title {
     margin: 0;

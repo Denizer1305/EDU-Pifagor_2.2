@@ -1,15 +1,13 @@
 <script setup>
-import AuthIntroPanel from "../../modules/auth/components/AuthIntroPanel.vue";
-import RegisterForm from "../../modules/auth/components/RegisterForm.vue";
+import LogoutConfirmCard from "../../modules/auth/components/LogoutConfirmCard.vue";
 
 import {
-    registerFormContent,
-    registerIntroContent,
+    logoutPageContent,
 } from "../../modules/auth/data/authPages.data";
 </script>
 
 <template>
-    <main class="auth-section register-page">
+    <main class="auth-section logout-page">
         <div
             class="auth-grid-lines"
             aria-hidden="true"
@@ -38,11 +36,7 @@ import {
         </div>
 
         <div class="container">
-            <div class="auth-layout auth-layout--register">
-                <AuthIntroPanel :content="registerIntroContent" />
-
-                <RegisterForm :content="registerFormContent" />
-            </div>
+            <LogoutConfirmCard :content="logoutPageContent" />
         </div>
     </main>
 </template>

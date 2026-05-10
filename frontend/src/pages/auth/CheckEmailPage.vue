@@ -1,15 +1,13 @@
 <script setup>
-import AuthIntroPanel from "../../modules/auth/components/AuthIntroPanel.vue";
-import RegisterForm from "../../modules/auth/components/RegisterForm.vue";
+import AuthStatusCard from "../../modules/auth/components/AuthStatusCard.vue";
 
 import {
-    registerFormContent,
-    registerIntroContent,
+    checkEmailPageContent,
 } from "../../modules/auth/data/authPages.data";
 </script>
 
 <template>
-    <main class="auth-section register-page">
+    <main class="auth-section auth-status-page check-email-page">
         <div
             class="auth-grid-lines"
             aria-hidden="true"
@@ -38,11 +36,7 @@ import {
         </div>
 
         <div class="container">
-            <div class="auth-layout auth-layout--register">
-                <AuthIntroPanel :content="registerIntroContent" />
-
-                <RegisterForm :content="registerFormContent" />
-            </div>
+            <AuthStatusCard :content="checkEmailPageContent" />
         </div>
     </main>
 </template>

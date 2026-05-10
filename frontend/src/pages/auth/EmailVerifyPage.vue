@@ -1,21 +1,48 @@
 <script setup>
-const pageTitle = "$title";
+import AuthIntroPanel from "../../modules/auth/components/AuthIntroPanel.vue";
+import EmailVerifyForm from "../../modules/auth/components/EmailVerifyForm.vue";
+
+import {
+    emailVerifyFormContent,
+    emailVerifyIntroContent,
+} from "../../modules/auth/data/authPages.data";
 </script>
 
 <template>
-    <main class="page-placeholder">
-        <section class="page-placeholder__section">
-            <p class="page-placeholder__badge">
-                Раздел в разработке
-            </p>
+    <main class="auth-section verify-page">
+        <div
+            class="auth-grid-lines"
+            aria-hidden="true"
+        >
+            <div class="auth-grid-line vertical left"></div>
+            <div class="auth-grid-line vertical center"></div>
+            <div class="auth-grid-line vertical right"></div>
+            <div class="auth-grid-line horizontal top"></div>
+            <div class="auth-grid-line horizontal bottom"></div>
+        </div>
 
-            <h1 class="page-placeholder__title">
-                {{ pageTitle }}
-            </h1>
+        <div
+            class="auth-decor"
+            aria-hidden="true"
+        >
+            <div class="auth-circle one"></div>
+            <div class="auth-circle two"></div>
+            <div class="auth-circle three"></div>
 
-            <p class="page-placeholder__text">
-                Эта страница подготовлена в маршрутизации проекта и будет реализована на следующем этапе разработки.
-            </p>
-        </section>
+            <div class="auth-glow one"></div>
+            <div class="auth-glow two"></div>
+
+            <div class="auth-moving-line one"></div>
+            <div class="auth-moving-line two"></div>
+            <div class="auth-moving-line three"></div>
+        </div>
+
+        <div class="container">
+            <div class="auth-layout">
+                <AuthIntroPanel :content="emailVerifyIntroContent" />
+
+                <EmailVerifyForm :content="emailVerifyFormContent" />
+            </div>
+        </div>
     </main>
 </template>

@@ -1,4 +1,9 @@
 @import "./auth-layout.css";
 @import "./login.css";
 @import "./register.css";
+@import "./verify-email.css";
+@import "./teacher-organization.css";
 @import "./password-reset.css";
+@import "./forgot-password.css";
+@import "./logout.css";
+@import "./status.css";

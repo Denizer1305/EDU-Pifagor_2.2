@@ -1,1 +1,207 @@
-/* В разработке */
+.login-form-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.login-form-meta-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-18);
+    color: var(--primary);
+    background: var(--white-72);
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.25;
+    text-align: center;
+}
+
+.login-form-meta-item .base-icon {
+    color: var(--accent);
+}
+
+.registration-form {
+    display: grid;
+    gap: 18px;
+    margin-top: 4px;
+}
+
+.form-group {
+    display: grid;
+    gap: 9px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-label {
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.35;
+}
+
+.input-shell {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-shell input {
+    width: 100%;
+    min-height: 56px;
+    padding: 0 18px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-20);
+    color: var(--primary);
+    background: var(--white-82);
+    box-shadow: inset 0 0 0 1px var(--white-50);
+    font: inherit;
+    transition: var(--transition-soft);
+}
+
+.input-shell input::placeholder {
+    color: var(--secondary);
+    opacity: 0.72;
+}
+
+.input-shell input:focus {
+    outline: none;
+    border-color: var(--accent-24);
+    background: var(--white);
+    box-shadow:
+        inset 0 0 0 1px var(--white-60),
+        0 0 0 4px var(--accent-08);
+}
+
+.input-shell input[type="password"],
+.input-shell input[type="text"] {
+    padding-right: 54px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 8px;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: var(--radius-14);
+    color: var(--secondary);
+    background: transparent;
+    cursor: pointer;
+    transition: var(--transition-soft);
+}
+
+.password-toggle:hover {
+    color: var(--accent);
+    background: var(--accent-08);
+}
+
+.form-check {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    padding: 15px 16px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-20);
+    background: var(--white-72);
+}
+
+.form-check input {
+    width: 18px;
+    height: 18px;
+    margin-top: 3px;
+    accent-color: var(--accent);
+}
+
+.form-check label {
+    color: var(--secondary);
+    font-size: 0.86rem;
+    line-height: 1.6;
+}
+
+.login-links-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 2px;
+}
+
+.auth-submit {
+    min-width: 180px;
+}
+
+.auth-submit .base-icon {
+    transition: var(--transition-soft);
+}
+
+.auth-submit:hover .base-icon {
+    transform: translateX(3px);
+}
+
+.login-forgot-link {
+    color: var(--accent);
+    font-size: 0.88rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.35;
+    transition: var(--transition-soft);
+}
+
+.login-forgot-link:hover {
+    color: var(--primary);
+}
+
+.login-register-box {
+    padding: 16px 18px;
+    border: 1px solid var(--accent-12);
+    border-radius: var(--radius-22);
+    color: var(--secondary);
+    background: var(--accent-06);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.login-register-box a {
+    color: var(--accent);
+    font-weight: var(--font-weight-bold);
+}
+
+.login-register-box a:hover {
+    color: var(--primary);
+}
+
+.auth-legal {
+    padding: 14px 16px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-18);
+    color: var(--secondary);
+    background: var(--white-62);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.login-form-meta-item .base-icon {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+}
+
+.password-toggle .base-icon {
+    width: 17px;
+    height: 17px;
+}
+
+.auth-submit .base-icon {
+    width: 15px;
+    height: 15px;
+}

@@ -133,6 +133,7 @@ export const ICON_ALIASES = {
     "fa-building": createCandidates("building", "bank", "school"),
     school: createCandidates("school", "bank", "building"),
     organization: createCandidates("school", "bank", "building"),
+    "fa-school": createCandidates("school", "bank", "building"),
     link: createCandidates("link"),
     "fa-link": createCandidates("link"),
     "feather-pointed": createCandidates("pencil", "edit-alt", "marker"),
@@ -193,6 +194,43 @@ export const ICON_ALIASES = {
     eye: createCandidates("eye"),
     "eye-crossed": createCandidates("eye-crossed"),
     star: createCandidates("star", "star-octogram"),
+
+    layers: createCandidates("layers"),
+    "layer-group": createCandidates("layers", "grid", "apps"),
+    "fa-layer-group": createCandidates("layers", "grid", "apps"),
+
+    "right-to-bracket": createCandidates("sign-in-alt", "sign-in"),
+    "fa-right-to-bracket": createCandidates("sign-in-alt", "sign-in"),
+
+    "people-roof": createCandidates("user", "users", "home-location"),
+    "fa-people-roof": createCandidates("user", "users", "home-location"),
+
+    "chalkboard-teacher": createCandidates("presentation", "school", "e-learning", "user"),
+    "fa-chalkboard-teacher": createCandidates("presentation", "school", "e-learning", "user"),
+
+    "user-check": createCandidates("user-add", "checkbox", "check"),
+    "fa-user-check": createCandidates("user-add", "checkbox", "check"),
+
+    "people-group": createCandidates("user", "users", "group"),
+    "fa-people-group": createCandidates("user", "users", "group"),
+
+    "graduation-cap": createCandidates("graduation-cap", "student"),
+    "fa-graduation-cap": createCandidates("graduation-cap", "student"),
+
+    "envelope-circle-check": createCandidates("envelope-open", "envelope", "mail", "checkbox"),
+    "fa-envelope-circle-check": createCandidates("envelope-open", "envelope", "mail", "checkbox"),
+
+    "envelope-open-text": createCandidates("envelope-open", "envelope", "mail"),
+    "fa-envelope-open-text": createCandidates("envelope-open", "envelope", "mail"),
+
+    "user-lock": createCandidates("lock-alt", "lock", "user"),
+    "fa-user-lock": createCandidates("lock-alt", "lock", "user"),
+
+    "user-time": createCandidates("user-time", "clock", "hourglass"),
+    "fa-user-time": createCandidates("user-time", "clock", "hourglass"),
+
+    "shield-check": createCandidates("shield-check", "shield", "check"),
+    "fa-shield-check": createCandidates("shield-check", "shield", "check"),
 };
 
 export function normalizeIconName(value) {

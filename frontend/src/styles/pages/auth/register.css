@@ -1,1 +1,99 @@
-/* В разработке */
+.auth-layout--register {
+    align-items: start;
+}
+
+.register-page .auth-intro {
+    position: sticky;
+    top: 142px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.role-switcher {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    padding: 6px;
+    border: 1px solid var(--primary-08);
+    border-radius: var(--radius-22);
+    background: var(--white-62);
+}
+
+.role-option {
+    position: relative;
+    display: grid;
+    cursor: pointer;
+}
+
+.role-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.role-option span {
+    display: grid;
+    place-items: center;
+    min-height: 46px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-18);
+    color: var(--secondary);
+    background: transparent;
+    font-size: 0.84rem;
+    font-weight: var(--font-weight-bold);
+    transition: var(--transition-soft);
+}
+
+.role-option input:checked + span {
+    color: var(--white);
+    background: var(--primary);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-xs);
+}
+
+.role-option:hover span {
+    color: var(--accent);
+    background: var(--accent-08);
+}
+
+.role-option input:checked:hover + span {
+    color: var(--white);
+    background: var(--primary);
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 2px;
+}
+
+.auth-login-link {
+    color: var(--secondary);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.auth-login-link a {
+    color: var(--accent);
+    font-weight: var(--font-weight-bold);
+}
+
+.auth-login-link a:hover {
+    color: var(--primary);
+}
+
+.form-check a {
+    color: var(--accent);
+    font-weight: var(--font-weight-bold);
+}
+
+.form-check a:hover {
+    color: var(--primary);
+}
